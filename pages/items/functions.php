@@ -17,6 +17,7 @@ function return_where_item_dropped_count($item_id){
         $spawn_entry_table,
         $merchants_dont_drop_stuff,
         $item_add_chance_to_drop,
+		$item_add_chance_to_drop_as_rarity,
         $ignore_zones;
 
     $is_item_dropped = get_field_result("item_id", "SELECT item_id FROM $loot_drop_entries_table WHERE item_id=$item_id LIMIT 1");
@@ -48,36 +49,82 @@ function return_where_item_dropped($item_id, $via_ajax = 0)
             $spawn_entry_table,
             $merchants_dont_drop_stuff,
             $item_add_chance_to_drop,
+			$item_add_chance_to_drop_as_rarity,
             $ignore_zones;
 
     $is_item_dropped = get_field_result("item_id", "SELECT item_id FROM $loot_drop_entries_table WHERE item_id=$item_id LIMIT 1");
 
     if($is_item_dropped) {
+		if ($item_add_chance_to_drop_as_rarity == TRUE) {
+			$query = "
+				SELECT
+					DISTINCT $npc_types_table.id,
+					$npc_types_table.`name`,
+					$spawn2_table.zone,
+					$zones_table.long_name,
+					$loot_table_entries.multiplier,
+					$loot_table_entries.probability,
+					CASE
+						WHEN $loot_drop_entries_table.chance BETWEEN 0 AND 5
+						THEN 'Ultra Rare'
+						WHEN $loot_drop_entries_table.chance BETWEEN 6 and 15
+						THEN 'Very Rare'
+						WHEN $loot_drop_entries_table.chance BETWEEN 16 AND 25
+						THEN 'Rare'
+						WHEN $loot_drop_entries_table.chance BETWEEN 26 and 49
+						THEN 'Uncommon'
+						WHEN $loot_drop_entries_table.chance BETWEEN 50 AND 75
+						THEN 'Common'
+						WHEN $loot_drop_entries_table.chance BETWEEN 75 AND 99
+						THEN 'Very Common'
+						WHEN $loot_drop_entries_table.chance >= 100
+						THEN 'Always'
+						END AS chance
+				FROM
+					$npc_types_table,
+					$spawn2_table,
+					$spawn_entry_table,
+					$loot_table_entries,
+					$loot_drop_entries_table,
+					$zones_table
+				WHERE
+					$npc_types_table.id = $spawn_entry_table.npcID
+				AND $spawn_entry_table.spawngroupID = $spawn2_table.spawngroupID
+				AND $npc_types_table.loottable_id = $loot_table_entries.loottable_id
+				AND $loot_table_entries.lootdrop_id = $loot_drop_entries_table.lootdrop_id
+				AND $loot_drop_entries_table.item_id = $item_id
+				AND $item_id < 600000
+				AND $zones_table.short_name = $spawn2_table.zone
+				AND $zones_table.min_status = 0
+				";	
+		} else {
 
-        $query = "
-            SELECT
-                $npc_types_table.id,
-                $npc_types_table.`name`,
-                $spawn2_table.zone,
-                $zones_table.long_name,
-                $loot_table_entries.multiplier,
-                $loot_table_entries.probability,
-                $loot_drop_entries_table.chance
-            FROM
-                $npc_types_table,
-                $spawn2_table,
-                $spawn_entry_table,
-                $loot_table_entries,
-                $loot_drop_entries_table,
-                $zones_table
-            WHERE
-                $npc_types_table.id = $spawn_entry_table.npcID
-            AND $spawn_entry_table.spawngroupID = $spawn2_table.spawngroupID
-            AND $npc_types_table.loottable_id = $loot_table_entries.loottable_id
-            AND $loot_table_entries.lootdrop_id = $loot_drop_entries_table.lootdrop_id
-            AND $loot_drop_entries_table.item_id = $item_id
-            AND $zones_table.short_name = $spawn2_table.zone
-    ";
+			$query = "
+				SELECT
+					$npc_types_table.id,
+					$npc_types_table.`name`,
+					$spawn2_table.zone,
+					$zones_table.long_name,
+					$loot_table_entries.multiplier,
+					$loot_table_entries.probability,
+					$loot_drop_entries_table.chance
+				FROM
+					$npc_types_table,
+					$spawn2_table,
+					$spawn_entry_table,
+					$loot_table_entries,
+					$loot_drop_entries_table,
+					$zones_table
+				WHERE
+					$npc_types_table.id = $spawn_entry_table.npcID
+				AND $spawn_entry_table.spawngroupID = $spawn2_table.spawngroupID
+				AND $npc_types_table.loottable_id = $loot_table_entries.loottable_id
+				AND $loot_table_entries.lootdrop_id = $loot_drop_entries_table.lootdrop_id
+				AND $loot_drop_entries_table.item_id = $item_id
+				AND $zones_table.short_name = $spawn2_table.zone
+				AND $zones_table.min_status = 0
+			";
+		}
         if ($merchants_dont_drop_stuff == TRUE) {
             $query .= " AND $npc_types_table.merchant_id=0";
         }
@@ -108,6 +155,9 @@ function return_where_item_dropped($item_id, $via_ajax = 0)
                 if ($item_add_chance_to_drop) {
                     $return_buffer .= " (" . ($row["chance"] * $row["probability"] / 100) . "% x " . $row["multiplier"] . ")";
                 }
+				if ($item_add_chance_to_drop_as_rarity) {
+					$return_buffer .= " - " . ($row["chance"]);
+				}
                 $return_buffer .= "</li>";
             }
             $return_buffer .= "</ul>";
