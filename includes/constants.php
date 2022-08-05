@@ -32,6 +32,7 @@ $spells_table               = "spells_new";
 $tasks_table                = "tasks";
 $activities_table           = "activities";
 $data_buckets_table = "data_buckets";
+$leaderboard_table = "char_leaderboard_data";
 
 // added tables, source the needed file from the includes/sql directory
 $tbspawnarea  = "spawnarea"; // Tool Specific Table

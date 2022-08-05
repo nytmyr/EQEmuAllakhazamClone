@@ -52,6 +52,10 @@ if ($route == "spells") {
     echo "<h2 class='section_header'>Zones</h2><br>";
     require_once('pages/zones/zones_by_era/' . $_GET['era'] . '.php');
     echo '</td></tr></table>';
+} else if ($route == "leaderboard") {
+	require_once('pages/leaderboard/leaderboard.php');
+} else if ($route == "leaderboard_byclass") {
+	require_once('pages/leaderboard/leaderboard_byclass.php');
 } else {
     if (file_exists('pages/front_page.php')) {
         require_once('pages/front_page.php');

@@ -183,6 +183,15 @@
                                                     </li>
                                                 </td>
                                             </tr>
+											<tr>
+                                                <td class="menuh" nowrap="1">Leaderboards...</td>
+                                            </tr>
+                                            <tr>
+                                                <td  class="menu_item">
+                                                    <li><a href="?a=leaderboard">Overall Rankings</a></li>
+													<li><a href="?a=leaderboard_byclass">Class Rankings</a></li>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
