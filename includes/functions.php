@@ -939,9 +939,13 @@ function return_item_stat_box($item, $show_name_icon)
         if ($item["bagtype"] > 0) {
             $html_string .= "<tr><td width='0%' nowrap='1'><b>Trade Skill Container: </b>" . $dbbagtypes[$item["bagtype"]] . "</td></tr>";
         }
-        if ($item["bagwr"] > 0) {
-            $html_string .= "<tr><td width='0%'  nowrap='1'><b>Weight Reduction: </b>" . $item["bagwr"] . "%</td></tr>";
-        }
+		if ($item["bagwr"] && $item["bagtype"] != 2) {
+			$html_string .= "<tr><td width='0%'  nowrap='1'><b>Weight Reduction: </b>" . $item["bagwr"] . "%</td></tr>";
+		}
+		if ($item["bagwr"] && $item["bagtype"] == 2) {
+			$html_string .= "<tr><td width='0%'  nowrap='1'><b>Weight Reduction: </b>" . $item["bagwr"] . "%</td></tr>";
+			$html_string .= "<tr><td width='0%'  nowrap='1'><b>Haste: ~</b>" . number_format($item["bagwr"] / 3.39) . "%</td></tr>";
+		}
         $html_string .= "<tr><td width='0%' nowrap='1' colspan='2'>This can hold " . strtoupper(
                 get_size_string($item["bagsize"])
             ) . " and smaller items.</td></tr>";
@@ -1103,9 +1107,13 @@ function return_item_stat_box($item, $show_name_icon)
                 "name",
                 "SELECT name FROM $spells_table WHERE id=" . $item["worneffect"]
             ) . "</a>";
-        if ($item["wornlevel"] > 0) {
+        if ($item["wornlevel"] > 0 && $item["worneffect"] != 998) {
             $html_string .= "<br><b>Level for effect: </b>" . $item["wornlevel"];
         }
+		if ($item["wornlevel"] > 0 && $item["worneffect"] == 998) {
+			$html_string .= "<br><b>Level for effect: </b>" . $item["wornlevel"];
+			$html_string .= "<br>" . $item["wornlevel"] . "<b>% Haste</b>";
+		}
         $html_string .= "</td></tr>";
     }
     // focus effect
