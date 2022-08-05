@@ -1145,6 +1145,22 @@ function return_item_stat_box($item, $show_name_icon)
         if ($item["clicklevel"] > 0) {
             $html_string .= "<br/><b>Level for effect: </b>" . $item["clicklevel"];
         }
+		$spellname = get_field_result("name",
+			"SELECT name
+				FROM $spells_table
+					WHERE id=" . $item["clickeffect"]
+					)
+					;
+		if ($spellname == "Summon Horse") {
+			$query  = "SELECT h.`mountspeed`
+						FROM horses h
+						INNER JOIN $spells_table s ON s.`teleport_zone` = h.`filename`
+						WHERE s.`id` = " . $item["clickeffect"];
+			$result = db_mysql_query($query);
+			while ($row = mysqli_fetch_array($result)) {
+				$html_string .= "<br/><b>Run Speed: </b>" . ($row["mountspeed"]*100) . "%<br/>";
+			}
+		}
         if ($item["maxcharges"] > 0) {
             $html_string .= "<br/><b>Charges: </b>" . $item["maxcharges"];
         } elseif ($item["maxcharges"] < 0) {
