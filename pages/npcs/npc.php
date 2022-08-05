@@ -245,7 +245,7 @@ if (($npc["loottable_id"] > 0) AND ((!in_array($npc["class"], $dbmerchants)) OR 
 			$loot_table_entries.multiplier
 		";
 	}
-
+	
     if ($discovered_items_only == TRUE) {
         $query .= " FROM $items_table,$loot_table_entries,$loot_drop_entries_table,$discovered_items_table";
     } else {
@@ -255,7 +255,10 @@ if (($npc["loottable_id"] > 0) AND ((!in_array($npc["class"], $dbmerchants)) OR 
     $query .= " WHERE $loot_table_entries.loottable_id=" . $npc["loottable_id"] . "
 			AND $loot_table_entries.lootdrop_id=$loot_drop_entries_table.lootdrop_id
 			AND $loot_drop_entries_table.item_id=$items_table.id";
-
+			
+	if ($item_custom_loot == TRUE) {
+		$query .= " AND $loot_table_entries.lootdrop_id NOT BETWEEN 300000 AND 399999";
+	}
     if ($discovered_items_only == TRUE) {
         $query .= " AND $discovered_items_table.item_id=$items_table.id";
     }
