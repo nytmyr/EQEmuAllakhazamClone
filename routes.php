@@ -13,6 +13,8 @@ if ($route == "spells") {
     require_once('pages/spells/spell.php');
 } else if ($route == "item") {
     require_once('pages/items/item.php');
+} else if ($route == "sharditems") {
+    require_once('pages/items/sharditems.php');
 } else if ($route == "pets") {
     require_once('pages/pets/pets.php');
 } else if ($route == "zonelist") {
