@@ -879,6 +879,9 @@ function return_item_stat_box($item, $show_name_icon)
     if ($item["norent"] == 0) {
         $item_tags .= " No Rent,";
     }
+	if ($item["questitemflag"] == 1) {
+		$item_tags .= " Quest Item,";
+	}
     if ($item_tags) {
         $html_string .= substr($item_tags, 0, -1);
     }
