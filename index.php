@@ -126,6 +126,7 @@
                                                     <li><a href="?a=zones">Populated Zones</a> </li>
                                                     <li><a href="?a=zones_by_level">Zones by Level</a> </li>
 													<li><a href="?a=zones_hotzones">Hot Zones</a> </li>
+													<li><a href="?a=zones_exp">Zone EXP by Level</a> </li>
                                                 </td>
                                             </tr>
                                             <tr>
