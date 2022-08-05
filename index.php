@@ -82,6 +82,8 @@
                         <ul>
                             <li class="first-child  nc-news-archives"><a href="http://eqemulator.org">EQEmulator</a> </li>
                             <li class="last-child  nc-zam-tools"><a href="http://everquest.allakhazam.com/"><span class="icon-tools">Official Allakhazam</span></a>
+							<li class="last-child  nc-zam-tools"><a href="/charbrowser"><span class="icon-tools">VegasEQ CharBrowser</span></a>
+							<li class="last-child  nc-zam-tools"><a href="http://discord.gg/nfzGmD8"><span class="icon-tools">VegasEQ Discord</span></a>
                             </li>
                         </ul>
                     </div>
@@ -113,7 +115,8 @@
                                             </tr>
                                             <tr>
                                                 <td  class="menu_item">
-                                                    <li><a href="http://www.eqemulator.org">EQEmulator</a>
+                                                    <li><a href="/charbrowser">CharBrowser</a></li>
+													<li><a href="http://discord.gg/nfzGmD8">Join the Discord</a></li>
                                                     </li>
                                                 </td>
                                             </tr>
@@ -135,7 +138,7 @@
                                             <tr>
                                                 <td  class="menu_item">
                                                     <li><a href="?a=items">Item Search</a> </li>
-													<li><a href="?a=sharditems">Shard Vendored Items</a> </li>
+													
                                                 </td>
                                             </tr>
                                             <tr>

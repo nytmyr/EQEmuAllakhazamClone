@@ -75,7 +75,7 @@ if ($route == "spells") {
         require_once('pages/front_page.php');
     } else {
         echo '
-            <h2>Welcome to ' . $site_name . ' EQEmu Allakhazam!</h2>
+            <h2>Welcome to ' . $site_name . ' VegasEQ Allakhazam!</h2>
             <br>
             Get started with the menu on the left!
         ';
