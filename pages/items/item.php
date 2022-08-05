@@ -13,6 +13,9 @@ $name    = (isset($_GET['name']) ? addslashes($_GET['name']) : '');
 if ($item_id != "" && is_numeric($item_id)) {
     if ($discovered_items_only == true) {
         $query = "SELECT * FROM $items_table, discovered_items WHERE $items_table.id='" . $item_id . "' AND discovered_items.item_id=$items_table.id";
+	} 
+	if ($item_first_discovered == true) {
+		$query = "SELECT * FROM $items_table i LEFT JOIN discovered_items d ON d.item_id = i.id WHERE i.id = " . $item_id . "";
     } else {
         $query = "SELECT * FROM $items_table WHERE id='" . $item_id . "'";
     }

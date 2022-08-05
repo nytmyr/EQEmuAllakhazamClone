@@ -1219,6 +1219,14 @@ function return_item_stat_box($item, $show_name_icon)
     $ItemValue   .= "</td></tr>";
     $html_string .= $ItemValue;
 
+	if (item_first_discovered == TRUE && ($item["discovered_date"] > 0)) {
+		$correctedtime = $item["discovered_date"] - 7 * 60 * 60;
+		$html_string .= "<td align=left>First Acquired By: <a href='/charbrowser/index.php?page=character&char=" . $item["char_name"] . "'>" . $item["char_name"] . "</a> - " . date('m-d-Y H:i:s', $correctedtime) . " </td>";
+	} else {
+		if ($item["id"] < 800000) {
+			$html_string .= "<td align=left>Not yet acquired. </td>";
+		}
+	}
     $html_string .= "<br></td></tr></table><br>";
 
     return $html_string;
