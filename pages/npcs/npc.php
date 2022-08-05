@@ -207,16 +207,44 @@ if ($npc["npc_spells_id"] > 0) {
 }
 
 if (($npc["loottable_id"] > 0) AND ((!in_array($npc["class"], $dbmerchants)) OR ($merchants_dont_drop_stuff == FALSE))) {
-    $query = "
-        SELECT
-        $items_table.id,
-        $items_table.Name,
-        $items_table.itemtype,
-        $loot_drop_entries_table.chance,
-        $loot_table_entries.probability,
-        $loot_table_entries.lootdrop_id,
-        $loot_table_entries.multiplier
-    ";
+	if ($show_npc_drop_chances_as_rarity == TRUE) {
+		$query = "
+			SELECT
+			$items_table.id,
+			$items_table.Name,
+			$items_table.itemtype,
+			CASE
+				WHEN $loot_drop_entries_table.chance BETWEEN 0 AND 5
+				THEN 'Ultra Rare'
+				WHEN $loot_drop_entries_table.chance BETWEEN 6 and 15
+				THEN 'Very Rare'
+				WHEN $loot_drop_entries_table.chance BETWEEN 16 AND 25
+				THEN 'Rare'
+				WHEN $loot_drop_entries_table.chance BETWEEN 26 and 49
+				THEN 'Uncommon'
+				WHEN $loot_drop_entries_table.chance BETWEEN 50 AND 75
+				THEN 'Common'
+				WHEN $loot_drop_entries_table.chance BETWEEN 75 AND 99
+				THEN 'Very Common'
+				WHEN $loot_drop_entries_table.chance >= 100
+				THEN 'Always'
+				END AS chance,
+			$loot_table_entries.probability,
+			$loot_table_entries.lootdrop_id,
+			$loot_table_entries.multiplier
+		";
+	} else {
+		$query = "
+			SELECT
+			$items_table.id,
+			$items_table.Name,
+			$items_table.itemtype,
+			$loot_drop_entries_table.chance,
+			$loot_table_entries.probability,
+			$loot_table_entries.lootdrop_id,
+			$loot_table_entries.multiplier
+		";
+	}
 
     if ($discovered_items_only == TRUE) {
         $query .= " FROM $items_table,$loot_table_entries,$loot_drop_entries_table,$discovered_items_table";
@@ -236,7 +264,7 @@ if (($npc["loottable_id"] > 0) AND ((!in_array($npc["class"], $dbmerchants)) OR 
         if ($show_npc_drop_chances == TRUE) {
             $print_buffer .= "<td><table border='0'><tr><td colspan='2' nowrap='1'><h2 class='section_header'>When killed, this NPC drops</h2><br/>";
         } else {
-            $print_buffer .= " <td><table border='0'><tr><td colspan='2' nowrap='1'><h2 class='section_header'>When killed, this NPCcan drop</h2><br/>";
+            $print_buffer .= " <td><table border='0'><tr><td colspan='2' nowrap='1'><h2 class='section_header'>When killed, this NPC can drop</h2><br/>";
         }
         $ldid = 0;
         while ($row = mysqli_fetch_array($result)) {
@@ -246,12 +274,23 @@ if (($npc["loottable_id"] > 0) AND ((!in_array($npc["class"], $dbmerchants)) OR 
                     $ldid = $row["lootdrop_id"];
                 }
             }
+			if ($show_npc_drop_chances_as_rarity == TRUE) {
+				if ($ldid != $row["lootdrop_id"]) {
+                    $print_buffer .= "</ol>";
+					$print_buffer .= "----------------";
+					$print_buffer .= "<ol>";
+                    $ldid = $row["lootdrop_id"];
+                }
+			}
             $print_buffer .= "<li>" . get_item_icon_from_id($row["id"]) . " <a href='?a=item&id=" . $row["id"] . "'>" . $row["Name"] . "</a>";
             $print_buffer .= " (" . $dbitypes[$row["itemtype"]] . ")";
             if ($show_npc_drop_chances == TRUE) {
                 $print_buffer .= " - " . $row["chance"] . "%";
                 $print_buffer .= " (" . ($row["chance"] * $row["probability"] / 100) . "% Global)";
             }
+			if ($show_npc_drop_chances_as_rarity == TRUE) {
+				$print_buffer .= " - " . $row["chance"] . "";
+			}
             $print_buffer .= "</li>";
         }
         $print_buffer .= "</td></tr></table></td>";
