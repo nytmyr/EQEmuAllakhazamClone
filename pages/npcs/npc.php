@@ -43,6 +43,7 @@ if ($use_custom_zone_list == TRUE) {
         AND $spawn_entry_table.spawngroupID = $spawn2_table.spawngroupID
         AND $spawn2_table.zone = $zones_table.short_name
         AND LENGTH($zones_table.note) > 0
+		AND $zones_table.min_status = 0
     ";
     $result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query, mysqli_error());
     if (mysqli_num_rows($result) > 0) {

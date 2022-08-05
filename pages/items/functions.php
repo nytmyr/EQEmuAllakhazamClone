@@ -99,31 +99,31 @@ function return_where_item_dropped($item_id, $via_ajax = 0)
 				";	
 		} else {
 
-			$query = "
-				SELECT
-					$npc_types_table.id,
-					$npc_types_table.`name`,
-					$spawn2_table.zone,
-					$zones_table.long_name,
-					$loot_table_entries.multiplier,
-					$loot_table_entries.probability,
-					$loot_drop_entries_table.chance
-				FROM
-					$npc_types_table,
-					$spawn2_table,
-					$spawn_entry_table,
-					$loot_table_entries,
-					$loot_drop_entries_table,
-					$zones_table
-				WHERE
-					$npc_types_table.id = $spawn_entry_table.npcID
-				AND $spawn_entry_table.spawngroupID = $spawn2_table.spawngroupID
-				AND $npc_types_table.loottable_id = $loot_table_entries.loottable_id
-				AND $loot_table_entries.lootdrop_id = $loot_drop_entries_table.lootdrop_id
-				AND $loot_drop_entries_table.item_id = $item_id
-				AND $zones_table.short_name = $spawn2_table.zone
-				AND $zones_table.min_status = 0
-			";
+        $query = "
+            SELECT
+                $npc_types_table.id,
+                $npc_types_table.`name`,
+                $spawn2_table.zone,
+                $zones_table.long_name,
+                $loot_table_entries.multiplier,
+                $loot_table_entries.probability,
+                $loot_drop_entries_table.chance
+            FROM
+                $npc_types_table,
+                $spawn2_table,
+                $spawn_entry_table,
+                $loot_table_entries,
+                $loot_drop_entries_table,
+                $zones_table
+            WHERE
+                $npc_types_table.id = $spawn_entry_table.npcID
+            AND $spawn_entry_table.spawngroupID = $spawn2_table.spawngroupID
+            AND $npc_types_table.loottable_id = $loot_table_entries.loottable_id
+            AND $loot_table_entries.lootdrop_id = $loot_drop_entries_table.lootdrop_id
+            AND $loot_drop_entries_table.item_id = $item_id
+            AND $zones_table.short_name = $spawn2_table.zone
+			AND $zones_table.min_status = 0
+		";
 		}
         if ($merchants_dont_drop_stuff == TRUE) {
             $query .= " AND $npc_types_table.merchant_id=0";
@@ -206,6 +206,7 @@ function return_where_item_sold($item_id){
             AND $spawn_entry_table.spawngroupID = $spawn2_table.spawngroupID
             AND $merchant_list_table.merchantid = $npc_types_table.merchant_id
             AND $zones_table.short_name = $spawn2_table.zone
+			AND $zones_table.min_status = 0
         ";
 
         $result = db_mysql_query($query);
@@ -270,6 +271,7 @@ function return_where_item_ground_spawn($item_id){
         WHERE
             item = $item_id
         AND $ground_spawns_table.zoneid = $zones_table.zoneidnumber
+		AND $zones_table.min_status = 0
     ";
 
     $return_buffer = "";
@@ -317,6 +319,7 @@ function return_where_item_foraged($item_id){
         WHERE
             $zones_table.zoneidnumber = $forage_table.zoneid
         AND $forage_table.itemid = $item_id
+		AND $zones_table.min_status = 0
         GROUP BY
             $zones_table.zoneidnumber
     ";

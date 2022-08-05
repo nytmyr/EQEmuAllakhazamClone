@@ -75,6 +75,7 @@ $query = "
     AND $npc_types_table.id = $spawn_entry_table.npcID
     AND $spawn2_table.spawngroupID = $spawn_entry_table.spawngroupID
     AND $zones_table.short_name = $spawn2_table.zone
+	AND $zones_table.min_status = 0
     GROUP BY
         $npc_types_table.id
     ORDER BY
@@ -104,6 +105,7 @@ $query = "
     AND $npc_types_table.id = $spawn_entry_table.npcID
     AND $spawn2_table.spawngroupID = $spawn_entry_table.spawngroupID
     AND $zones_table.short_name = $spawn2_table.zone
+	AND $zones_table.min_status = 0
     GROUP BY
         $npc_types_table.id
     ORDER BY
