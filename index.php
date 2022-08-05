@@ -174,7 +174,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="menuh" nowrap="1">Trade skills...</td>
+                                                <td class="menuh" nowrap="1">Tradeskills...</td>
                                             </tr>
                                             <tr>
                                                 <td  class="menu_item">
