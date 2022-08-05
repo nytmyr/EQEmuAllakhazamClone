@@ -877,6 +877,19 @@ $dbspelltypes = [
     64  => "Lifetap",
     128 => "Snare",
     256 => "Dot",
+	512 => "Dispel",
+	1024 => "In-Combat Buff",
+	2048 => "Mez",
+	4096 => "Charm",
+	8192 => "Slow",
+	16384 => "Debuff",
+	32678 => "Cure",
+	65536 => "Rez",
+	131072 => "Hate Redux",
+	262144 => "In-Combat Buff Song",
+	524288 => "Out-of-Combat Buff Song",
+	1048576 => "Pre-Combat Buff",
+	2097152 => "Pre-Combat Buff Song"
 ];
 
 $dbspellresists = [
