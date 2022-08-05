@@ -36,6 +36,7 @@ while ($res = mysqli_fetch_array($result)) {
     $zones[$cpt]["longname"] = $res["long_name"];
     $zones[$cpt]["npcs"] = 0;
     $zones[$cpt]["val"] = 0;
+	$zones[$cpt]["zem"] = $res["zone_exp_multiplier"];
     $query = "SELECT $npc_types_table.level
           FROM $npc_types_table,$spawn2_table,$spawn_entry_table
           WHERE $spawn2_table.zone='" . $res["short_name"] . "'
@@ -94,7 +95,7 @@ if ($sort_zone_level_list == TRUE) {
 $print_buffer .= "<table><tr valign=top><td width=100%>";
 $print_buffer .= "<table border=1 style='width:100%' class='display_table container_div datatable'>";
 $print_buffer .= "<thead class='menuh'><th>Name</th>
-       <th class=tab_title>Short name</th>";
+        <th class=tab_title>ZEM</th>";
 $LevelMax = 0;
 for ($i = 0; $i <= ($server_max_npc_level / 5); $i++) {
     $LevelMax += 5;
@@ -122,7 +123,7 @@ for ($i = 0; $i <= $cpt; $i++) {
         }
         $print_buffer .= "<tr>
            <td><a href=?a=zone&name=" . $zones[$i]["shortname"] . ">" . $zones[$i]["longname"] . "</a></td>
-           <td>" . $zones[$i]["shortname"] . "</td>";
+            <td>" . $zones[$i]["zem"] * 100 . "%</td>";
         if ($sort_zone_level_list == TRUE) {
             $print_buffer .= "<td align=center>" . round($zones[$i]["val"]) . "</td>";
         }
