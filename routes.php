@@ -56,6 +56,14 @@ if ($route == "spells") {
 	require_once('pages/leaderboard/leaderboard.php');
 } else if ($route == "leaderboard_byclass") {
 	require_once('pages/leaderboard/leaderboard_byclass.php');
+} else if ($route == "achiev_kills") {
+	require_once('pages/achievements/achiev_kills.php');
+} else if ($route == "achiev_items") {
+	require_once('pages/achievements/achiev_items.php');
+} else if ($route == "achiev_leveling") {
+	require_once('pages/achievements/achiev_leveling.php');
+} else if ($route == "achiev_misc") {
+	require_once('pages/achievements/achiev_misc.php');
 } else {
     if (file_exists('pages/front_page.php')) {
         require_once('pages/front_page.php');

@@ -184,6 +184,17 @@
                                                 </td>
                                             </tr>
 											<tr>
+                                                <td class="menuh" nowrap="1">Achievements...</td>
+                                            </tr>
+                                            <tr>
+                                                <td  class="menu_item">
+                                                    <li><a href="?a=achiev_kills">Kills</a></li>
+                                                    <li><a href="?a=achiev_items">Items</a> </li>
+													<li><a href="?a=achiev_leveling">Leveling</a> </li>
+													<li><a href="?a=achiev_misc">Misc</a> </li>
+                                                </td>
+                                            </tr>
+											<tr>
                                                 <td class="menuh" nowrap="1">Leaderboards...</td>
                                             </tr>
                                             <tr>
