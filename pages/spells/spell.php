@@ -142,7 +142,12 @@ $query = "
     FROM
         $items_table
     WHERE
-        $items_table.scrolleffect = $id
+        ($items_table.scrolleffect = $id
+		OR $items_table.clickeffect = $id
+		OR $items_table.proceffect = $id
+		OR $items_table.worneffect = $id
+		OR $items_table.focuseffect = $id)
+		AND $items_table.id < 600000
     ORDER BY
         $items_table.`name` ASC
 ";
