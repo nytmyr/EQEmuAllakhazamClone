@@ -1245,6 +1245,53 @@ function return_item_stat_box($item, $show_name_icon)
                     $Copper . " <img src='" . $icons_url . "item_647.png' width='14' height='14'/>";
     $ItemValue   .= "</td></tr>";
     $html_string .= $ItemValue;
+	
+	if (item_show_shard_value == true) {
+		$itemid = 0;
+		if ($item["id"] < 600000) {
+			$itemid = $item["id"] + 800000;
+		}
+		if ($item["id"] >= 600000 && $item["id"] < 800000) {
+			$itemid = $item["id"] + 200000;
+		}
+		if ($item["id"] >= 800000) {
+			$itemid = $item["id"];
+		}
+			
+		$query  = "SELECT i.`id`, i.`Name`, i.`GearScore`, m.`alt_currency_cost`
+		, 
+		CAST(CASE
+			WHEN i.`GearScore` > 257 THEN i.`GearScore` * 3.25
+			WHEN i.`GearScore` > 191 THEN i.`GearScore` * 3
+			WHEN i.`GearScore` > 156 THEN i.`GearScore` * 2.75
+			WHEN i.`GearScore` > 128 THEN i.`GearScore` * 2.5
+			WHEN i.`GearScore` > 106 THEN i.`GearScore` * 2.25
+			WHEN i.`GearScore` > 88 THEN i.`GearScore` * 2
+			WHEN i.`GearScore` > 72 THEN i.`GearScore` * 1.75
+			WHEN i.`GearScore` > 58 THEN i.`GearScore` * 1.5
+			WHEN i.`GearScore` > 45 THEN i.`GearScore` * 1.25
+			WHEN i.`GearScore` > 0 THEN i.`GearScore`
+			ELSE 0
+		END AS INT) AS Score
+					FROM items i
+					LEFT JOIN merchantlist m ON m.`item` = $itemid
+					WHERE i.`id` = " . $item["id"] . "
+					";
+		$result = db_mysql_query($query);
+		while ($row = mysqli_fetch_array($result)) {
+			if ($row["alt_currency_cost"]) {
+				$html_string .= "<tr><td>";
+				$html_string .= "<br><b>Shard Value: </b>" . $row["alt_currency_cost"] . "<img src='$icons_url\item_2240.png' width='50px' height='10px'/><br>";
+				$html_string .= "<br><b><font color=green>This item can be found on Valeen.<font color=black</b><br>";
+				$html_string .= "</tr></td>";
+			} else {
+				$html_string .= "<tr><td>";
+				$html_string .= "<br><b>Shard Value: </b>" . $row["Score"] . "<img src='$icons_url\item_2240.png' width='50px' height='10px'/><br>";
+				$html_string .= "<br><b><font color=red>This is not sold by Valeen.<font color=black></b><br>";
+				$html_string .= "</tr></td>";
+			}
+		}
+	}
 
 	if (item_first_discovered == TRUE && ($item["discovered_date"] > 0)) {
 		$correctedtime = $item["discovered_date"] - 7 * 60 * 60;
@@ -1255,7 +1302,7 @@ function return_item_stat_box($item, $show_name_icon)
 		}
 	}
     $html_string .= "<br></td></tr></table><br>";
-
+	
     return $html_string;
 
 }
