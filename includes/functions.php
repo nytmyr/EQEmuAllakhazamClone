@@ -1111,8 +1111,7 @@ function return_item_stat_box($item, $show_name_icon)
             $html_string .= "<br><b>Level for effect: </b>" . $item["wornlevel"];
         }
 		if ($item["wornlevel"] > 0 && $item["worneffect"] == 998) {
-			$html_string .= "<br><b>Level for effect: </b>" . $item["wornlevel"];
-			$html_string .= "<br>" . $item["wornlevel"] . "<b>% Haste</b>";
+			$html_string .= " - " . $item["wornlevel"] . "<b>% Haste</b>";
 		}
         $html_string .= "</td></tr>";
     }
