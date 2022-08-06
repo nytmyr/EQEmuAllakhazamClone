@@ -848,7 +848,7 @@ function Pagination($targetpage, $page, $total_pages, $limit, $adjacents)
 function return_item_stat_box($item, $show_name_icon)
 {
 
-    global $dbitypes, $dam2h, $dbbagtypes, $dbskills, $icons_url, $spells_table, $dbiaugrestrict, $dbiracenames;
+    global $dbitypes, $dam2h, $dbbagtypes, $dbskills, $icons_url, $spells_table, $dbiaugrestrict, $dbiracenames, $item_first_discovered, $item_show_shard_value;
 
     $html_string = "";
     $html_string .= "<table width='100%'><tr><td valign='top'>";
@@ -1245,7 +1245,7 @@ function return_item_stat_box($item, $show_name_icon)
     $ItemValue   .= "</td></tr>";
     $html_string .= $ItemValue;
 	
-	if (item_show_shard_value == true) {
+	if ($item_show_shard_value == true) {
 		$itemid = 0;
 		if ($item["id"] < 600000) {
 			$itemid = $item["id"] + 800000;
@@ -1292,7 +1292,7 @@ function return_item_stat_box($item, $show_name_icon)
 		}
 	}
 
-	if (item_first_discovered == TRUE && ($item["discovered_date"] > 0)) {
+	if ($item_first_discovered == TRUE && ($item["discovered_date"] > 0)) {
 		$correctedtime = $item["discovered_date"] - 7 * 60 * 60;
 		$html_string .= "<td align=left>First Acquired By: <a href='/charbrowser/index.php?page=character&char=" . $item["char_name"] . "'>" . $item["char_name"] . "</a> - " . date('m-d-Y H:i:s', $correctedtime) . " </td>";
 	} else {
