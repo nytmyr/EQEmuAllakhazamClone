@@ -19,6 +19,7 @@ if ($itemtype == "null") {
 	$CountItems = 0;
 	$CountTokens = 0;
 	$CountShards = 0;
+	$CountUniqueItems = 0;
 	$platinum  = 0;
 	$gold = 0;
 	$silver = 0;
@@ -34,7 +35,7 @@ if ($itemtype == "null") {
 	$CountValeen = 0;
 	
 	$query = "
-		SELECT COUNT(distinct kr.fight_id) AS Count
+		SELECT COUNT(distinct kr.fight_id) AS Count, COUNT(distinct kr.npc_id) AS UniqueCount
 		FROM qs_player_npc_kill_record kr
 		INNER JOIN qs_player_npc_kill_record_entries kre ON kr.fight_id = kre.event_id
 		INNER JOIN character_data cd ON cd.id = kre.char_id
@@ -47,12 +48,14 @@ if ($itemtype == "null") {
 	"
 		<table class='container_div display_table'		style='width:500px'>
 		<td style='font-weight:bold' align=center>NPCs Killed</td>
+		<td style='font-weight:bold' align=center>Unique NPCs Killed</td>
 	";
 	while ($row = mysqli_fetch_array($result)) {
 		$print_buffer .=
 		"
 			<tr>
 				<td align=center>" . number_format($row["Count"]) . " <img src='$icons_url\item_1070.png' width='15px' height='15px'/></td>
+				<td align=center>" . number_format($row["UniqueCount"]) . " <img src='$icons_url\item_1070.png' width='15px' height='15px'/></td>
 			</tr>
 		";
 	}
@@ -71,6 +74,19 @@ if ($itemtype == "null") {
 		$CountItems = number_format($row["Count"]);
 	}
 	
+	$query = "
+		SELECT COUNT(DISTINCT r.item_id) AS Count
+		FROM rng_items r
+		INNER JOIN character_data cd ON cd.id = r.charid
+		INNER JOIN account a ON a.id = cd.account_id
+		WHERE a.`status` < 20
+	";
+
+	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
+
+	while ($row = mysqli_fetch_array($result)) {
+		$CountUniqueItems = number_format($row["Count"]);
+	}
 	$query = "
 		SELECT 
 			CAST(d.`value` AS INT) AS Count
@@ -200,21 +216,18 @@ if ($itemtype == "null") {
 	"
 		<table class='container_div display_table'		style='width:500px'>
 		<td style='font-weight:bold' align=left><u> Random Drops </u></td>
-		<td style='font-weight:bold' align=left><u> Tokens </u></td>
-		<td style='font-weight:bold' align=center><u> Shards </u></td>
-		<td style='font-weight:bold' align=right><u> Cash </u></td>
+		<td style='font-weight:bold' align=left><u> Unique Items </u></td>
+		<td style='font-weight:bold' align=center><u> Tokens </u></td>
+		<td style='font-weight:bold' align=right><u> Shards </u></td>
 	";
 	
 	$print_buffer .=
 	"
 		<tr>
 			<td style='font-weight:bold' align=left> " . $CountItems . " <img src='$icons_url\item_2011.png' width='15px' height='15px'/> </td>
-			<td style='font-weight:bold' align=left> " . $CountTokens . " <img src='$icons_url\item_647.png' width='15px' height='15px'/> </td>
-			<td style='font-weight:bold' align=center> " . $CountShards . " <img src='$icons_url\item_2240.png' width='50px' height='10px'/> </td>
-			<td style='font-weight:bold' align=right> " . number_format($platinum) . " <img src='$icons_url\item_644.png' width='10px' height='10px'/>
-			" . number_format($gold) . " <img src='$icons_url\item_645.png' width='10px' height='10px'/>
-			" . number_format($silver) . " <img src='$icons_url\item_646.png' width='10px' height='10px'/>
-			" . number_format($copper) . " <img src='$icons_url\item_647.png' width='10px' height='10px'/> </td>
+			<td style='font-weight:bold' align=left> " . $CountUniqueItems . " <img src='$icons_url\item_2011.png' width='15px' height='15px'/> </td>
+			<td style='font-weight:bold' align=center> " . $CountTokens . " <img src='$icons_url\item_647.png' width='15px' height='15px'/> </td>
+			<td style='font-weight:bold' align=right> " . $CountShards . " <img src='$icons_url\item_2240.png' width='50px' height='10px'/> </td>
 			</td>
 		</tr>
 	";
@@ -225,6 +238,7 @@ if ($itemtype == "null") {
 	"
 		<table class='container_div display_table'		style='width:500px'>
 		<td style='font-weight:bold' align=left><u> Given To Vendors </u></td>
+		<td style='font-weight:bold' align=center><u> Dropped Cash </u></td>
 		<td style='font-weight:bold' align=right><u> Received From Vendors </u></td>
 	";
 	
@@ -235,6 +249,11 @@ if ($itemtype == "null") {
 			" . number_format($bgold) . " <img src='$icons_url\item_645.png' width='10px' height='10px'/>
 			" . number_format($bsilver) . " <img src='$icons_url\item_646.png' width='10px' height='10px'/>
 			" . number_format($bcopper) . " <img src='$icons_url\item_647.png' width='10px' height='10px'/>
+			</td>
+			<td style='font-weight:bold' align=center> " . number_format($platinum) . " <img src='$icons_url\item_644.png' width='10px' height='10px'/>
+			" . number_format($gold) . " <img src='$icons_url\item_645.png' width='10px' height='10px'/>
+			" . number_format($silver) . " <img src='$icons_url\item_646.png' width='10px' height='10px'/>
+			" . number_format($copper) . " <img src='$icons_url\item_647.png' width='10px' height='10px'/> </td>
 			</td>
 			<td style='font-weight:bold' align=right> " . number_format($splatinum) . " <img src='$icons_url\item_644.png' width='10px' height='10px'/>
 			" . number_format($sgold) . " <img src='$icons_url\item_645.png' width='10px' height='10px'/>
