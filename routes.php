@@ -21,6 +21,8 @@ if ($route == "spells") {
     require_once('pages/zones/zonelist.php');
 } else if ($route == "items") {
     require_once('pages/items/items.php');
+} else if ($route == "sharditems") {
+    require_once('pages/items/sharditems.php');
 } else if ($route == "tasks") {
     require_once('pages/tasks/tasks.php');
 } else if ($route == "factions") {
