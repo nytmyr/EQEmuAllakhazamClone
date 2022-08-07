@@ -153,9 +153,30 @@ $query = "
 ";
 $result = db_mysql_query($query);
 if (mysqli_num_rows($result)) {
-    $print_buffer .= "<h2 class='section_header'>Items with spell</h2><ul>";
+    $print_buffer .= "<h2 class='section_header'>Items with this spell:</h2>";
     while ($row = mysqli_fetch_array($result)) {
         $print_buffer .= "<a href=?a=item&id=" . $row["id"] . ">" . get_item_icon_from_id($row['id']) . ' ' . $row["name"] . "</a><br>";
+    }
+}
+
+$query = "
+    SELECT
+        $npc_types_table.id,
+        $npc_types_table.`name`
+    FROM
+        $npc_types_table
+	INNER JOIN
+		$npc_spells_entries_table ON $npc_spells_entries_table.npc_spells_id = $npc_types_table.npc_spells_id
+    WHERE
+        $npc_spells_entries_table.spellid = $id
+    ORDER BY
+        $npc_types_table.`name` ASC
+";
+$result = db_mysql_query($query);
+if (mysqli_num_rows($result)) {
+    $print_buffer .= "<h2 class='section_header'>NPCs that use this spell:</h2><ul>";
+    while ($row = mysqli_fetch_array($result)) {
+        $print_buffer .= "<a href=?a=npc&id=" . $row["id"] . ">" . $row["name"] . "</a><br>";
     }
 }
 $print_buffer .= "</ul></td></tr></table>";
