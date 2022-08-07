@@ -129,7 +129,9 @@ $print_buffer .= "<tr><td colspan='2'><h2 class='section_header'>Spell Effects</
 
 $print_buffer .= '<td colspan=2><small>';
 for ($n = 1; $n <= 12; $n++) {
-    $print_buffer .= SpellDescription($spell, $n);
+	if ($spell['effectid'.$n.''] != 10 || ($spell['effectid'.$n.''] == 10 && ($spell['effect_base_value'.$n.''] != 0 || $spell['effect_limit_value'.$n.''] != 0 || $spell['max'.$n.''] != 0))) {
+		$print_buffer .= SpellDescription($spell, $n);
+	}
 }
 $print_buffer .= '</small></td>';
 

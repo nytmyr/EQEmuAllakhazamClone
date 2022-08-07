@@ -153,7 +153,9 @@ if (($type != 0 && $level != 0) || $namestring != '') {
 					<td valign="top">' . $ClassName . " " . $LevelCheck . '</td>
 					<td valign="top"><small>';
 		for ($n = 1; $n <= 12; $n++) {
-			$print_buffer .= SpellDescription(getspell($row['id']), $n);
+			if ($row['effectid'.$n.''] != 10 || ($row['effectid'.$n.''] == 10 && ($row['effect_base_value'.$n.''] != 0 || $row['effect_limit_value'.$n.''] != 0 || $row['max'.$n.''] != 0))) {
+				$print_buffer .= SpellDescription(getspell($row['id']), $n);
+			}
 		}
 		$print_buffer .= '</small></td>
 					<td>' . $row['mana'] . '</td>

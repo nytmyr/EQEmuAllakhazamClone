@@ -6,7 +6,7 @@ function SpellDescription($spell, $n, $csv = false)
 
     $print_buffer = '<ul>';
 
-    if (($spell["effectid$n"] != 254) AND ($spell["effectid$n"] != 10)) {
+    if (($spell["effectid$n"] != 254)) {
         $maxlvl = $spell["effect_base_value$n"];
         $minlvl = $server_max_level;
         for ($i = 1; $i <= 16; $i++) {
@@ -418,6 +418,7 @@ function SpellDescription($spell, $n, $csv = false)
             case 7: // Increase STA
             case 8: // Increase INT
             case 9: // Increase WIS
+			case 10: // Increase CHA
             case 19: // Increase Faction
             case 35: // Increase Disease Counter
             case 36: // Increase Poison Counter
