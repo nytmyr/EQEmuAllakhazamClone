@@ -121,7 +121,15 @@ if (($type != 0 && $level != 0) || $namestring != '') {
     $print_buffer .= ' <table border="0" cellpadding="5" cellspacing="0">';
     $LevelCheck = $level + $OpDiff;
     $Class = 'classes' . $type;
-    $ClassName = $dbclasses[$type];
+	if ($type == 0) {
+		#$classcount = 1;
+		#while ($classcount <= 16 && ($LevelCheck != $row[$Class])) {
+		#	$ClassName .= " | " . $dbclasses[$classcount];
+		#	$classcount++;
+		#}
+    } else {
+		$ClassName = $dbclasses[$type];
+	}
 
     $RowClass = "lr";
     while ($row = mysqli_fetch_array($result)) {
