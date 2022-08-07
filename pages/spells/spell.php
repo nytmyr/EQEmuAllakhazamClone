@@ -30,7 +30,7 @@ $minlvl = 70;
 $class_found = 0;
 $class_data = "";
 for ($i = 1; $i <= 16; $i++) {
-    if (($spell["classes$i"] > 0) AND ($spell["classes$i"] < 255)) {
+    if (($spell["classes$i"] > 0) AND ($spell["classes$i"] < 254)) {
         $class_found = 1;
         $class_data .= "$v " . $dbclasses[$i] . " (" . $spell["classes$i"] . ")";
         $v = ",";
