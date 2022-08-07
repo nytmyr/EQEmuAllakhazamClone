@@ -1,6 +1,6 @@
 <?php
 
-$order = (isset($_GET['order']) ? addslashes($_GET["order"]) : "hotzonescore ASC, Bonus DESC, long_name");
+$order = (isset($_GET['order']) ? addslashes($_GET["order"]) : "Bonus DESC, long_name");
 $zonetype = (isset($_GET['zonetype']) ? $_GET['zonetype'] : "null");
 
 $page_title = "Zone Experience Rates (Including Hot Zone Bonuses)";
@@ -21,22 +21,22 @@ if (isset($zonetype) && $zonetype != "null") {
 				SELECT z.short_name, z.long_name, z.zoneidnumber, z.flag_needed, z.min_level, z.hotzone, z.hotzone_range
 				, CAST((((z.zone_exp_multiplier/1) + (CASE WHEN z.hotzone = 1 THEN .5 ELSE 0 END)) - 1)*100 AS INT) AS Bonus
 				, (CASE
-						WHEN hotzone_range = 'City' THEN 0
-						WHEN hotzone_range = 'Newbie' THEN 1
-						WHEN hotzone_range = '5 to 15' THEN 2
-						WHEN hotzone_range = '16 to 25' THEN 3
-						WHEN hotzone_range = '26 to 35' THEN 4
-						WHEN hotzone_range = '36 to 45' THEN 5
-						WHEN hotzone_range = '46 to 55' THEN 6
-						WHEN hotzone_range = '56 to 60' THEN 7
-						WHEN hotzone_range = '61 to 65' THEN 8
-						WHEN hotzone_range = 'Raid' THEN 9
+						WHEN hotzone_range LIKE '%City%' THEN 0
+						WHEN hotzone_range LIKE '%Newbie%' THEN 1
+						WHEN hotzone_range LIKE '%5 to 15%' THEN 2
+						WHEN hotzone_range LIKE '%16 to 25%' THEN 3
+						WHEN hotzone_range LIKE '%26 to 35%' THEN 4
+						WHEN hotzone_range LIKE '%36 to 45%' THEN 5
+						WHEN hotzone_range LIKE '%46 to 55%' THEN 6
+						WHEN hotzone_range LIKE '%56 to 60%' THEN 7
+						WHEN hotzone_range LIKE '%61 to 65%' THEN 8
+						WHEN hotzone_range LIKE '%Raid%' THEN 9
 						ELSE 0
 					END) as hotzonescore
 				FROM $zones_table z
 				WHERE z.min_status = 0
 				AND z.`expansion`< 99
-				AND z.hotzone_range = '$zonetype'
+				AND z.hotzone_range LIKE '%$zonetype%'
 				ORDER BY $order
 	";
 	
@@ -46,9 +46,9 @@ if (isset($zonetype) && $zonetype != "null") {
 	$print_buffer .= 
 	"
 		<table class='display_table datatable container_div'><tr>
-		<td style='font-weight:bold' align=left><u><b>Zone Name</u></b></td>
+		<td style='font-weight:bold' align=left><u><b><a href=?a=zones_exp&zonetype=" . rawurlencode($zonetype) . "&order=long_name>Zone Name</a></b></u></td>
 		<td style='font-weight:bold' align=center><u><b>Level Range</u></b></td>
-		<td style='font-weight:bold' align=right><u><b>Bonus</u></b></td>
+		<td style='font-weight:bold' align=right><a href=?a=zones_exp&zonetype=" . rawurlencode($zonetype) . "&order=Bonus%20DESC>Bonus</a></b></u></td>
 		<td style='font-weight:bold' align=right><u><b>Pre-Reqs</u></b></td>
 	";
 	
@@ -96,7 +96,7 @@ if (isset($zonetype) && $zonetype != "null") {
 		"
 			<tr>
 				<td><a href='?a=zone&name=" . $row["short_name"] . "''>" . $row["long_name"] . " " . $hotzone . "</a></td>
-				<td align=center>" . $row["hotzone_range"] . "</td>
+				<td align=center>" . $zonetype . "</td>
 				<td align=right><font color=" . $setcolor . ">" . $row["Bonus"] . "%</td>
 				<td align=right><font color=" . $setcolor . ">$req</td>
 			</tr>
