@@ -20,7 +20,16 @@ function return_where_item_dropped_count($item_id){
 		$item_add_chance_to_drop_as_rarity,
         $ignore_zones;
 
-    $is_item_dropped = get_field_result("item_id", "SELECT item_id FROM $loot_drop_entries_table WHERE item_id=$item_id LIMIT 1");
+    $is_item_dropped = get_field_result("item_id", 
+		"
+		SELECT item_id 
+		FROM $loot_drop_entries_table 
+			INNER JOIN $loot_table_entries on $loot_table_entries.lootdrop_id = $loot_drop_entries_table.lootdrop_id 
+			INNER JOIN $npc_types_table ON $npc_types_table.loottable_id = $loot_table_entries.loottable_id 
+		WHERE item_id=$item_id
+			AND $loot_drop_entries_table.chance > 0 
+		LIMIT 1
+		");
 
     $return_buffer = "";
     if($is_item_dropped) {
