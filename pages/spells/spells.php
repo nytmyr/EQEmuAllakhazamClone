@@ -144,10 +144,10 @@ if (($type != 0 && $level != 0) || $namestring != '') {
 					<td valign="top"><a href="?a=spell&id=' . $row['id'] . '">' . $row['name'] . '</a></td>
 					<td valign="top">' . $ClassName . " " . $LevelCheck . '</td>
 					<td valign="top"><small>';
-        for ($n = 1; $n <= 12; $n++) {
-            SpellDescription($row, $n);
-        }
-        $print_buffer .= '</small></td>
+		for ($n = 1; $n <= 12; $n++) {
+			$print_buffer .= SpellDescription(getspell($row['id']), $n);
+		}
+		$print_buffer .= '</small></td>
 					<td>' . $row['mana'] . '</td>
 					<td>' . ucwords(strtolower($DBSkill)) . '</td>
 					<td>';
