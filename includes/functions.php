@@ -1271,9 +1271,11 @@ function return_item_stat_box($item, $show_name_icon)
 			WHEN i.`GearScore` > 45 THEN i.`GearScore` * 1.25
 			WHEN i.`GearScore` > 0 THEN i.`GearScore`
 			ELSE 0
-		END AS INT) AS Score
+		END AS INT) AS Score,
+		n.is_valeen_spawned AS SpawnStatus
 					FROM items i
 					LEFT JOIN merchantlist m ON m.`item` = $itemid
+					LEFT JOIN npc_types n ON n.merchant_id = m.merchantid
 					WHERE i.`id` = " . $item["id"] . "
 					";
 		$result = db_mysql_query($query);
@@ -1281,8 +1283,13 @@ function return_item_stat_box($item, $show_name_icon)
 			if ($row["alt_currency_cost"]) {
 				$html_string .= "<tr><td>";
 				$html_string .= "<br><b>Shard Value: </b>" . $row["alt_currency_cost"] . "<img src='$icons_url\item_2240.png' width='50px' height='10px'/><br>";
-				$html_string .= "<br><b><font color=green>This item can be found on Valeen.<font color=black</b><br>";
-				$html_string .= "</tr></td>";
+				if ($row["SpawnStatus"] == 1) {
+					$html_string .= "<br><b><font color=green>This item is <u>CURRENTLY</u> for sale on Valeen.<font color=black</b><br>";
+					$html_string .= "</tr></td>";
+				} else {
+					$html_string .= "<br><b><font color=green>This item can be found on Valeen but is not currently being sold.<font color=black</b><br>";
+					$html_string .= "</tr></td>";
+				}
 			} else {
 				$html_string .= "<tr><td>";
 				$html_string .= "<br><b>Shard Value: </b>" . $row["Score"] . "<img src='$icons_url\item_2240.png' width='50px' height='10px'/><br>";
