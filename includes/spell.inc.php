@@ -262,6 +262,27 @@ function SpellDescription($spell, $n, $csv = false)
                 $print_buffer .= $dbspelleffects[$spell["effectid$n"]];
                 $print_buffer .= $dbiracenames[$spell["effect_base_value$n"]];
                 break;
+			case 59: // Damage Shield:
+				$name = $dbspelleffects[$spell["effectid$n"]];
+                if ($max > 0) {
+                    $name = str_replace("Increase", "Decrease", $name);
+                }
+                $print_buffer .= $name;
+                if ($min != $max) {
+					if ($min < 0) {
+                        $min = -$min;
+                    }
+					if ($max < 0) {
+                        $max = -$max;
+                    }
+                    $print_buffer .= " by $min to $max";
+                } else {
+                    if ($max < 0) {
+                        $max = -$max;
+                    }
+                    $print_buffer .= " by $max";
+                }
+                break;
             case 63: // Memblur
             case 120: // Set Healing Effectiveness
             case 330: // Critical Damage Mob
@@ -406,7 +427,6 @@ function SpellDescription($spell, $n, $csv = false)
             case 49: // Increase Magic Disease
             case 50: // Increase Magic Resist
             case 55: // Increase Absorb Damage
-            case 59: // Increase Damage Shield
             case 69: // Increase Max Hitpoints
             case 78: // Increase Absorb Magic Damage
             case 79: // Increase HP when cast
@@ -426,6 +446,12 @@ function SpellDescription($spell, $n, $csv = false)
                 }
                 $print_buffer .= $name;
                 if ($min != $max) {
+					if ($min < 0) {
+                        $min = -$min;
+                    }
+					if ($max < 0) {
+                        $max = -$max;
+                    }
                     $print_buffer .= " by $min to $max";
                 } else {
                     if ($max < 0) {
