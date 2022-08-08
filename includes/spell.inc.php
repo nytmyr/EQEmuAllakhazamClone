@@ -26,6 +26,9 @@ function SpellDescription($spell, $n, $csv = false)
             $spell["max$n"],
             $server_max_level
         );
+		$duration = $spell["buffduration"];
+		$durationmin = CalcBuffDuration($minlvl, $spell["buffdurationformula"], $spell["buffduration"]);
+		$durationmax = CalcBuffDuration($server_max_level, $spell["buffdurationformula"], $spell["buffduration"]);
         $base_limit = $spell["effect_limit_value$n"];
         if (($min < $max) AND ($max < 0)) {
             $tn  = $min;
@@ -159,13 +162,25 @@ function SpellDescription($spell, $n, $csv = false)
             case 100: // Increase Hitpoints v2 per tick
                 $print_buffer .= $dbspelleffects[$spell["effectid$n"]];
                 if ($min != $max) {
-                    $print_buffer .= " by " . abs($min) . " to " . abs(
-                            $max
-                        ) . " per tick (total " . abs($min * $duration) . " to " . abs(
-                                         $max * $duration
-                                     ) . ")";
+                    $print_buffer .= " by " . abs($min) . " to " . abs($max);
+					if ($duration >= 30) {
+						$print_buffer .= " per tick";
+					}
+					if ($duration > 0 && $duration < 30) {
+						if ($durationmin == $durationmax) {
+							$print_buffer .= " per tick for " . $duration . " ticks (total " . abs($min * $duration) . " to " . abs($max * $duration) . ")";
+						} else {
+							$print_buffer .= " per tick for " . $durationmin . " to " . $durationmax . " ticks (total " . abs($min * $durationmin) . " to " . abs($max * $durationmax) . ")";
+						}
+					}
                 } else {
-                    $print_buffer .= " by $max per tick (total " . abs($max * $duration) . ")";
+					 $print_buffer .= " by " . abs($max);
+					if ($duration >= 30) {
+						$print_buffer .= " per tick";
+					}
+					if ($duration > 0 && $duration < 30) {
+						$print_buffer .= " per tick for " . $duration . " ticks (total " . abs($max * $duration) . ")";
+					}
                 }
                 break;
             case 30: // Frenzy Radius
@@ -447,18 +462,34 @@ function SpellDescription($spell, $n, $csv = false)
                 }
                 $print_buffer .= $name;
                 if ($min != $max) {
+					$print_buffer .= " by " . abs($min) . " to " . abs($max);
 					if ($min < 0) {
                         $min = -$min;
                     }
 					if ($max < 0) {
                         $max = -$max;
                     }
-                    $print_buffer .= " by $min to $max";
+					if ($duration >= 30 && $spell["max$n"] == 0 && ($spell["effectid$n"] == 0 || $spell["effectid$n"] == 15)) {
+						$print_buffer .= " per tick";
+					}
+					if ($duration > 0 && $duration < 30 && $spell["max$n"] == 0 && ($spell["effectid$n"] == 0 || $spell["effectid$n"] == 15)) {
+						if ($durationmin == $durationmax) {
+							$print_buffer .= " per tick for " . $duration . " ticks (total " . abs($min * $duration) . " to " . abs($max * $duration) . ")";
+						} else {
+							$print_buffer .= " per tick for " . $durationmin . " to " . $durationmax . " ticks (total " . abs($min * $durationmin) . " to " . abs($max * $durationmax) . ")";
+						}
+					}
                 } else {
+					$print_buffer .= " by " . abs($max);
                     if ($max < 0) {
                         $max = -$max;
                     }
-                    $print_buffer .= " by $max";
+					if ($duration >= 30 && $spell["max$n"] == 0 && ($spell["effectid$n"] == 0 || $spell["effectid$n"] == 15)) {
+						$print_buffer .= " per tick";
+					}
+					if ($duration > 0 && $duration < 30 && $spell["max$n"] == 0 && ($spell["effectid$n"] == 0 || $spell["effectid$n"] == 15)) {
+						$print_buffer .= " per tick for " . $duration . " ticks (total " . abs($max * $duration) . ")";
+					}
                 }
                 break;
         }
