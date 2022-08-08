@@ -1194,15 +1194,24 @@ function return_item_stat_box($item, $show_name_icon)
                 "name",
                 "SELECT name FROM $spells_table WHERE id=" . $item["clickeffect"]
             ) . "</a> (";
-        if ($item["clicktype"] == 4) {
-            $html_string .= "Must Equip. ";
-        }
         if ($item["casttime"] > 0) {
             $html_string .= "<b>Casting time: </b>" . ($item["casttime"] / 1000) . " sec";
         } else {
             $html_string .= "<b>Casting time: </b>Instant";
         }
         $html_string .= ")";
+		if ($item["clicktype"] == 1) {
+            $html_string .= "<br><b>Click Type:</b> Inventory with Level requirement. ";
+        }
+		if ($item["clicktype"] == 3) {
+            $html_string .= "<br><b>Click Type:</b> Expendable. ";
+        }
+        if ($item["clicktype"] == 4) {
+            $html_string .= "<br><b>Click Type:</b> Must Equip. ";
+        }
+		if ($item["clicktype"] == 5) {
+            $html_string .= "<br><b>Click Type:</b> Inventory with Level/Class/Race requirement. ";
+        }
         if ($item["clicklevel"] > 0) {
             $html_string .= "<br/><b>Level for effect: </b>" . $item["clicklevel"];
         }
