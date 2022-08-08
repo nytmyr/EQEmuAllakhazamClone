@@ -206,7 +206,11 @@ function translate_time($sec)
         $h      = floor($sec / 3600);
         $m      = floor(($sec - $h * 3600) / 60);
         $s      = $sec - $h * 3600 - $m * 60;
-        $Result = ($h > 1 ? "$h hours " : "") . ($h == 1 ? "1 hour " : "") . ($m > 0 ? "$m min " : "") . ($s > 0 ? "$s sec" : "");
+		if ($h > 25) {
+			$d = ($h / 24);
+			$h = $h - ($d * 24);
+		}
+        $Result = ($d > 1 ? "$d days " : "") . ($d == 1 ? "1 day " : "") . ($h > 1 ? "$h hours " : "") . ($h == 1 ? "1 hour " : "") . ($m > 0 ? "$m min " : "") . ($s > 0 ? "$s sec" : "");
     }
 
     return $Result;
