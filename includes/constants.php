@@ -194,6 +194,25 @@ $db_classes_short[4]     = "PAL";
 $db_classes_short[2]     = "CLR";
 $db_classes_short[1]     = "WAR";
 
+
+$db_spell_classes        = [];
+$db_spell_classes[16] = "BER";
+$db_spell_classes[15] = "BST";
+$db_spell_classes[14]  = "ENC";
+$db_spell_classes[13]  = "MAG";
+$db_spell_classes[12]  = "WIZ";
+$db_spell_classes[11]  = "NEC";
+$db_spell_classes[10]   = "SHM";
+$db_spell_classes[9]   = "ROG";
+$db_spell_classes[8]   = "BRD";
+$db_spell_classes[7]    = "MNK";
+$db_spell_classes[6]    = "DRU";
+$db_spell_classes[5]    = "SHD";
+$db_spell_classes[4]     = "RNG";
+$db_spell_classes[3]     = "PAL";
+$db_spell_classes[2]     = "CLR";
+$db_spell_classes[1]     = "WAR";
+
 // races
 $dbraces        = [];
 $dbraces[65535] = "All Races";

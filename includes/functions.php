@@ -260,6 +260,22 @@ function get_class_usable_string($val)
     return $res;
 }
 
+function get_spell_class_usable_string($val)
+{
+    global $db_spell_classes;
+    reset($db_spell_classes);
+    do {
+        $key = key($db_spell_classes);
+        if ($key <= $val) {
+            $val -= $key;
+            $res .= $v . current($db_spell_classes);
+            $v   = " ";
+        }
+    } while (next($db_spell_classes));
+
+    return $res;
+}
+
 function get_race_usable_string($val)
 {
     global $db_races_short;
@@ -952,7 +968,26 @@ function return_item_stat_box($item, $show_name_icon)
 
     /* Classes */
     if ($item["classes"] > 0) {
-        $html_string .= "<tr><td colspan='2'><b>Class: </b>" . get_class_usable_string($item["classes"]) . "</td></tr>";
+		if ($item["scrolleffect"] > 0) {
+			$v = "";
+			$t = 0;
+			$spell = getspell($item["scrolleffect"]);
+			$html_string .= "<tr><td colspan='2'><b>Class: </b>";
+			$i = 1;
+			while ($i <= 16) {
+				if ($spell["classes$i"] < 254) {
+					$html_string .= "$v" . get_spell_class_usable_string($i) . "(" . $spell["classes$i"] . ") ";
+					$t++;
+				}
+				$i++;
+			}
+			if ($t == 0) {
+				$html_string .= "NONE";
+			}
+			$html_string .= "</td></tr>";
+		} else {
+			$html_string .= "<tr><td colspan='2'><b>Class: </b>" . get_class_usable_string($item["classes"]) . "</td></tr>";
+		}
     }
 
     /* Races */
