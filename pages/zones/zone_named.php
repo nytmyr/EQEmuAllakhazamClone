@@ -281,7 +281,7 @@ if ($mode == "npcs") {
 
 
 $print_buffer .= "</td><td width=0% nowrap>"; // end first column
-$print_buffer .= "<p class=page_small_title>Ressources</p>";
+$print_buffer .= "<p class=page_small_title>Resources</p>";
 $print_buffer .= "<li><a href=?a=zone&name=$name&mode=npcs>" . $zone["long_name"] . " Bestiary List</a>";
 $print_buffer .= "<li><a href=?a=zone_named&name=$name&mode=npcs>" . $zone["long_name"] . " Named Mobs List</a>";
 $print_buffer .= "<li><a href=?a=zone&name=$name&mode=items>" . $zone["long_name"] . " Equipment List </a>";
