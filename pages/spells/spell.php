@@ -105,12 +105,18 @@ $print_buffer .= "<tr><td style='text-align:right; padding-right: 5px;'><b>Inter
 if ($spell["TimeOfDay"] == 2) {
     $print_buffer .= "<tr><td style='text-align:right; padding-right: 5px;'><b>Casting restriction</b></td><td>Nighttime</td></tr>";
 }
-$duration = CalcBuffDuration($minlvl, $spell["buffdurationformula"], $spell["buffduration"]);
+$durationmin = CalcBuffDuration($minlvl, $spell["buffdurationformula"], $spell["buffduration"]);
+$durationmaxlevel = MaxDurationLevel($minlvl, $spell["buffdurationformula"], $spell["buffduration"]);
+$durationmax = CalcBuffDuration($durationmaxlevel, $spell["buffdurationformula"], $spell["buffduration"]);
 $print_buffer .= "<tr><td style='text-align:right; padding-right: 5px;'><b>Duration</b></td><td>";
-if ($duration == 0) {
+if ($durationmin == 0) {
     $print_buffer .= "Instant";
 } else {
-    $print_buffer .= translate_time($duration * 6) . " ($duration ticks)";
+	if ($minlvl != $durationmaxlevel) {
+		$print_buffer .= translate_time($durationmin * 6) . " @ L" . $minlvl . " to " . translate_time($durationmax * 6) . " @ L" . $durationmaxlevel . " ($durationmin ticks)";
+	} else {
+		$print_buffer .= translate_time($durationmin * 6) . " ($durationmin ticks)";
+	}
 }
 $print_buffer .= "</td></tr>";
 for ($i = 1; $i <= 4; $i++) {

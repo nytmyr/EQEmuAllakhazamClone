@@ -588,6 +588,68 @@ function CalcBuffDuration($lvl, $form, $duration)
     }
 }
 
+function MaxDurationLevel($lvl, $form, $duration)
+{ // spells.cpp, carefull, return value in ticks, not in seconds
+    //$return_buffer .= " Duration lvl=$lvl, form=$form, duration=$duration ";
+    switch ($form) {
+        case 0:
+            return $lvl;
+            break;
+        case 1:
+		case 6:
+			if ($lvl / 2 >= $duration) {
+				return $lvl;
+			} else {
+				return $duration * 2;
+			}
+            break;
+        case 2:
+            return $lvl;
+            break;
+        case 3:
+			if ($lvl * 30 >= $duration) {
+				return $lvl;
+			} else {
+				return $duration / 30;
+			}
+            break;
+        case 4:
+        case 5:
+        case 7:
+			return $lvl;
+            break;
+        case 8:
+            if ($lvl + 10 >= $duration) {
+				return $lvl;
+			} else {
+				return $duration - 10;
+			}
+            break;
+        case 9:
+            if (($lvl * 2) + 10 >= $duration) {
+				return $lvl;
+			} else {
+				return ($duration / 2) - 10;
+			}
+        case 10:
+            if (($lvl * 3) + 10 >= $duration) {
+				return $lvl;
+			} else {
+				return ($duration / 3) - 10;
+			}
+        case 11:
+        case 12:
+		case 13:
+		case 14:
+		case 15:
+        case 50:
+		case 51:
+        case 3600:
+            return $lvl;
+			break;
+    }
+}
+
 function SpecialAttacks($att)
 {
     $data = '';
