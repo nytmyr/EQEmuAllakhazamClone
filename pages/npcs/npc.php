@@ -390,6 +390,8 @@ $result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query
 if (mysqli_num_rows($result) > 0) {
     $print_buffer .= "<h2 class='section_header'>This NPC spawns in</h2>";
     $z = "";
+	$respawntimemin = 9999999999999;
+	$respawntimemax = 0;
     while ($row = mysqli_fetch_array($result)) {
         if ($z != $row["short_name"]) {
             $print_buffer .= "<p><a href='?a=zone&name=" . $row["short_name"] . "'>" . $row["long_name"] . "</a>";
@@ -404,7 +406,20 @@ if (mysqli_num_rows($result) > 0) {
             $print_buffer .= "<li><a href='spawngroup.php?id=" . $row["spawngroupID"] . "'>" . $row["spawngroup"] . "</a> : " . floor($row["y"]) . " / " . floor($row["x"]) . " / " . floor($row["z"]);
             $print_buffer .= "<br/>Spawns every " . translate_time($row["respawntime"]);
         }
+		if ($row["respawntime"] < $respawntimemin) {
+			$respawntimemin = $row["respawntime"];
+		}
+		if ($row["respawntime"] > $respawntimemax) {
+			$respawntimemax = $row["respawntime"];
+		}
     }
+	if (display_spawn_times == TRUE) {
+		if ($respawntimemin == $respawntimemax) {
+			$print_buffer .= "<br/>Spawns every " . translate_time($respawntimemin);
+		} else {
+			$print_buffer .= "<br/>Spawns every " . translate_time($respawntimemin) . " to " . translate_time($respawntimemax);
+		}
+	}
 }
 // factions
 $query = "
