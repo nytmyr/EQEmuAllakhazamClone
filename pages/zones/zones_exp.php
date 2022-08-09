@@ -59,8 +59,8 @@ if (isset($zonetype) && $zonetype != "null") {
 		if ($row["flag_needed"] > 0) {
 			$req .= "<img src='$icons_url\item_flag.png' width='15px' height='15px'/>";
 		}
-		if ($row["zoneidnumber"] == 89 || $row["zoneidnumber"] == 105 || $row["zoneidnumber"] == 108 || $row["zoneidnumber"] == 128) {
-			$req = "<img src='$icons_url\item_1077.png' width='25px' height='15px'/>";
+		if ($row["zoneidnumber"] == 39 || $row["zoneidnumber"] == 89 || $row["zoneidnumber"] == 105 || $row["zoneidnumber"] == 108 || $row["zoneidnumber"] == 128) {
+			$req .= "<img src='$icons_url\item_1077.png' width='25px' height='15px'/>";
 		}
 		if ($row["min_level"] > 0) {
 			$req .= "L" . $row["min_level"];
