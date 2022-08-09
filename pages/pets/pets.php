@@ -30,7 +30,11 @@ if (isset($class) && $class != 0) {
 			$spells_table.id,
 			$spells_table.new_icon,
 			$spells_table.teleport_zone,
-			$spells_table.classes" . $class . ",
+			CASE
+				WHEN $spells_table.classes" . $class . " = 255
+					THEN 'Epic'
+				ELSE $spells_table.classes" . $class . "
+			END AS classes" . $class . ",
 			$npc_types_table.race,
 			$npc_types_table.level,
 			$npc_types_table.class,
@@ -44,7 +48,8 @@ if (isset($class) && $class != 0) {
 			INNER JOIN $pets_table ON $pets_table.type = $spells_table.teleport_zone
 			INNER JOIN $npc_types_table ON $npc_types_table.`name` = $spells_table.teleport_zone
 			WHERE $spells_table.classes" . $class . " > 0
-			AND $spells_table.classes" . $class . " < " . $server_max_level;
+			AND $spells_table.classes" . $class . " < " . $server_max_level
+			. " OR ($spells_table.name LIKE 'Manifest Elements' AND " . $class . " = 13)";
 
     if ($use_spell_globals == true) {
         $Query .= " AND ISNULL((SELECT spell_globals.spellid FROM spell_globals WHERE spell_globals.spellid = $spells_table.`id`))";
