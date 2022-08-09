@@ -15,7 +15,7 @@ if (isset($killtype) && $killtype != "null") {
 		$query = "
 			SELECT 
 				n.id AS NPCID, 
-				n.`name` AS NPCName, 
+				REPLACE(REPLACE(n.`name`,'_',' '),'#','') AS NPCName, 
 				cd.id AS CharID, 
 				CASE
 					WHEN cd.`name` LIKE '%-deleted-%'
@@ -61,7 +61,7 @@ if (isset($killtype) && $killtype != "null") {
 		$query = "
 			SELECT 
 				n.id AS NPCID, 
-				n.`name` AS NPCName, 
+				REPLACE(REPLACE(n.`name`,'_',' '),'#','') AS NPCName, 
 				cd.id AS CharID, 
 				CASE
 					WHEN cd.`name` LIKE '%-deleted-%'
