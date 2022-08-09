@@ -60,9 +60,37 @@ $result = db_mysql_query($query) or message_die('zones.php', 'MYSQL_QUERY', $que
 $zone = mysqli_fetch_array($result);
 $print_buffer .= "<table style='width:100%'><tr valign=top><td>";
 $print_buffer .= "<p><b>Succor point : X (</b>" . floor($zone["safe_x"]) . ")  Y (" . floor($zone["safe_y"]) . ") Z (" . floor($zone["safe_z"]) . ")";
-if ($zone["minium_level"] > 0) {
-    $print_buffer .= "<br><b>Minimum level : </b>" . floor($zone["minium_level"]);
+
+$req = "";
+if ($zone["flag_needed"] > 0) {
+	$req .= "[Flag Required]";
 }
+if ($zone["zoneidnumber"] == 39 || $zone["zoneidnumber"] == 89 || $zone["zoneidnumber"] == 105 || $zone["zoneidnumber"] == 108 || $zone["zoneidnumber"] == 128) {
+	if ($show_item_as_key_req == true) {
+		if ($zone["zoneidnumber"] == 39) {
+			$req .= "[<img src='$icons_url\item_539.png' width='25px' height='25px'/><a href=?a=item&id=6379>Hole Key</a>]";
+		}
+		if ($zone["zoneidnumber"] == 89) {
+			$req .= "[<img src='$icons_url\item_894.png' width='25px' height='25px'/><a href=?a=item&id=20883>Trakanon Idol</a>]";
+		}
+		if ($zone["zoneidnumber"] == 105) {
+			$req .= "[<img src='$icons_url\item_1081.png' width='25px' height='25px'/><a href=?a=item&id=20600>Key to Charasis</a>]";
+		}
+		if ($zone["zoneidnumber"] == 108) {
+			$req .= "[<img src='$icons_url\item_1081.png' width='25px' height='25px'/><a href=?a=item&id=20884>Key of Veeshan</a>]";
+		}
+		if ($zone["zoneidnumber"] == 128) {
+			$req .= "[<img src='$icons_url\item_1080.png' width='25px' height='25px'/><a href=?a=item&id=27265>Sleeper's Key</a>]";
+		}
+	} else {
+		$req .= "[Key Required]";
+	}
+}
+if ($zone["min_level"] > 0) {
+	$req .= "[Level " . $zone["min_level"] . "]";
+}
+
+$print_buffer .= "<p><u><b><font color=firebrick>Requirements To Enter: $req </b></u><font color=black>";
 
 if ($mode == "npcs") {
     ////////////// NPCS
