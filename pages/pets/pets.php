@@ -84,7 +84,7 @@ if (isset($class) && $class != 0) {
         $print_buffer .= "<td><a href='?a=pet&name=" . $row['teleport_zone'] . "'>View</a></td>";
         $print_buffer .= "<td>" . $dbiracenames[$row["race"]] . "</td>";
         $print_buffer .= "<td>" . $row["level"] . "</td>";
-        $print_buffer .= "<td>" . $row["class"] . "</td>";
+        $print_buffer .= "<td>" . $dbclasses[$row["class"]] . "</td>";
         $print_buffer .= "<td>" . $row["hp"] . "</td>";
         $print_buffer .= "<td>" . $row["mana"] . "</td>";
         $print_buffer .= "<td>" . $row["ac"] . "</td>";
