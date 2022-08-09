@@ -232,7 +232,7 @@ function return_where_item_dropped($item_id, $via_ajax = 0)
                     $return_buffer .= "<ul>";
                     $current_zone_iteration = $row["short_name"];
                 }
-                $return_buffer .= "<li><a href='?a=npc&id=" . $row["id"] . "'>" . str_replace("_", " ", $row["name"]) . "</a>";
+                $return_buffer .= "<li><a href='?a=npc&id=" . $row["id"] . "'>" . get_npc_name_human_readable($row["name"]) . "</a>";
                 if ($item_add_chance_to_drop) {
                     $return_buffer .= " (" . ($row["chance"] * $row["probability"] / 100) . "% x " . $row["multiplier"] . ")";
                 }
