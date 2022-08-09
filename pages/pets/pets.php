@@ -36,7 +36,7 @@ if (isset($class) && $class != 0) {
 			$npc_types_table.class,
 			$npc_types_table.hp,
 			$npc_types_table.mana,
-			$npc_types_table.AC,
+			$npc_types_table.ac,
 			$npc_types_table.mindmg,
 			$npc_types_table.maxdmg
 			FROM
