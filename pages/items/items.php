@@ -205,7 +205,6 @@ if (isset($QueryResult)) {
                 <th class='menuh'>Mana</th>
                 <th class='menuh'>Damage</th>
                 <th class='menuh'>Delay</th>
-                <th class='menuh'>Item ID</th>
             </thead>
         ";
         $RowClass = "lr";
@@ -237,8 +236,6 @@ if (isset($QueryResult)) {
             $TableData .= $row["delay"];
 
             $TableData .= "</td><td>";
-            $TableData .= $row["id"];
-            $TableData .= "</td></tr>";
 
             if ($RowClass == "lr") {
                 $RowClass = "dr";
