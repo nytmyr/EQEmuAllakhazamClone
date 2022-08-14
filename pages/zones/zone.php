@@ -50,7 +50,7 @@ $print_buffer .= $resources_menu;
 
 $query = "
     SELECT
-        $zones_table.*
+        $zones_table.*, CAST(((($zones_table.zone_exp_multiplier/1) + (CASE WHEN $zones_table.hotzone = 1 THEN .5 ELSE 0 END)) - 1)*100 AS INT) AS Bonus
     FROM
         $zones_table
     WHERE
@@ -58,15 +58,45 @@ $query = "
 ";
 $result = db_mysql_query($query) or message_die('zones.php', 'MYSQL_QUERY', $query, mysqli_error());
 $zone = mysqli_fetch_array($result);
+$set_color = "black";
+$hotzone = "";
+if ($zone["Bonus"] < -20) {
+	$setcolor = "firebrick";
+}
+if ($zone["Bonus"] < 0) {
+	$setcolor = "red";
+}
+if ($zone["Bonus"] == 0) {
+	$setcolor = "grey";
+}
+if ($zone["Bonus"] > 0) {
+	$setcolor = "CornflowerBlue";
+}
+if ($zone["Bonus"] >= 36) {
+	$setcolor = "blue";
+}
+if ($zone["Bonus"] >= 70) {
+	$setcolor = "green";
+}
+if ($zone["Bonus"] >= 100) {
+	$setcolor = "limegreen";
+}
+if ($zone["hotzone"] == 1) {
+	//$setcolor = "green";
+	$hotzone = "<font color=red>[HOTZONE]";
+}
+$print_buffer .= "<br><br><br><p><b>Zone Experience Rate: <font color=" . $setcolor . ">" . $zone["Bonus"] . "% " . $hotzone . "</b><font color=black>";
 $print_buffer .= "<table style='width:100%'><tr valign=top><td>";
 $print_buffer .= "<p><b>Succor point : X (</b>" . floor($zone["safe_x"]) . ")  Y (" . floor($zone["safe_y"]) . ") Z (" . floor($zone["safe_z"]) . ")";
 
 $req = "";
-if ($zone["flag_needed"] > 0) {
+if ($zone["flag_needed"] != '') {
+	$setcolor = "red";
 	$req .= "[Flag Required]";
 }
 if ($zone["zoneidnumber"] == 39 || $zone["zoneidnumber"] == 89 || $zone["zoneidnumber"] == 105 || $zone["zoneidnumber"] == 108 || $zone["zoneidnumber"] == 128) {
 	if ($show_item_as_key_req == true) {
+		$setcolor = "red";
 		if ($zone["zoneidnumber"] == 39) {
 			$req .= "[<img src='$icons_url\item_539.png' width='25px' height='25px'/><a href=?a=item&id=6379>Hole Key</a>]";
 		}
@@ -83,14 +113,21 @@ if ($zone["zoneidnumber"] == 39 || $zone["zoneidnumber"] == 89 || $zone["zoneidn
 			$req .= "[<img src='$icons_url\item_1080.png' width='25px' height='25px'/><a href=?a=item&id=27265>Sleeper's Key</a>]";
 		}
 	} else {
+		$setcolor = "red";
 		$req .= "[Key Required]";
 	}
 }
 if ($zone["min_level"] > 0) {
 	$req .= "[Level " . $zone["min_level"] . "]";
+	$setcolor = "red";
 }
 
-$print_buffer .= "<p><u><b><font color=firebrick>Requirements To Enter: $req </b></u><font color=black>";
+if ($zone["flag_needed"] == "" && $zone["min_level"] == 0 && $zone["zoneidnumber"] != 39 && $zone["zoneidnumber"] != 89 && $zone["zoneidnumber"] != 105 && $zone["zoneidnumber"] != 108 && $zone["zoneidnumber"] != 128) {
+	$req .= "None";
+	$setcolor = "green";
+}
+
+$print_buffer .= "<p><u><b><font color=" . $setcolor . ">Requirements To Enter: $req </b></u><font color=black>";
 
 if ($mode == "npcs") {
     ////////////// NPCS
