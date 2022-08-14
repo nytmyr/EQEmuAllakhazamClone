@@ -1,5 +1,11 @@
 <?php
 $page_title = "Current Hot Zones";
+$print_buffer .= "<b>Hot Zones reset weekly on Monday at 12:00AM Midnight CST</b>";
+
+date_default_timezone_set("America/Chicago");
+$timetoreset = strtotime('next Monday');
+$print_buffer .= "<br><br><font color=dodgerblue>Reset in: " . dateDifference($timetoreset, time() + 6) . "<font color=black>";
+
 $print_buffer .= "<table class=''><tr valign=top><td>";
 
 $query = "
@@ -59,4 +65,25 @@ while ($row = mysqli_fetch_array($result)) {
 $print_buffer .= "</table>";
 $print_buffer .= "</td><td width=0% nowrap>";
 $print_buffer .= "</td></tr></table>";
+
+function dateDifference($startdate, $enddate)
+{
+    $d1 = $startdate;
+    $d2 = $enddate;
+
+    $diff_secs = abs($d1 - $d2);
+
+    $diff = mktime(0, 0, $diff_secs, 1, 1, $base_year);
+	
+	$days = floor($diff_secs / (3600 * 24));
+	$diff_secs = $diff_secs - ($days * (3600 * 24));
+	$hours = floor($diff_secs / 3600);
+	$diff_secs = $diff_secs - ($hours * (3600));
+	$minutes = floor($diff_secs / 60);
+	$diff_secs = $diff_secs - ($minutes * (60));
+	$seconds = $diff_secs;
+    
+	$remain = "" . $days . " days, " . $hours . " hours, " . $minutes . " minutes and " . $seconds . " seconds.";
+	return $remain;
+}
 ?>
