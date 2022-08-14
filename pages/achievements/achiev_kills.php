@@ -100,7 +100,7 @@ if (isset($killtype) && $killtype != "null") {
 			INNER JOIN $character_table cd ON cd.id = SUBSTRING(d.`value`, INSTR(d.`value`,':')+1,INSTR(d.`value`,']')-INSTR(d.`value`,':')-1)
 			INNER JOIN $zones_table z ON z.short_name = SUBSTRING(d.`value`, INSTR(d.`value`,']')+1,INSTR(d.`value`,'|')-INSTR(d.`value`,']')-1)
 			WHERE d.`key` LIKE 'FirstRaidKill%' 
-			ORDER BY '$order'
+			ORDER BY $order
 		";
 	}
 	$result = db_mysql_query($query) or message_die('achiev_kills.php', 'MYSQL_QUERY', $query, mysqli_error());
