@@ -10,33 +10,21 @@ $print_buffer .= "<table class=''><tr valign=top><td>";
 
 $query = "
 			SELECT 
-			short_name, long_name, hotzone_range
-			, (CASE
-					WHEN hotzone_range LIKE '%Raid%' THEN 9
-					WHEN hotzone_range LIKE '%61 to 65%' THEN 8
-					WHEN hotzone_range LIKE '%56 to 60%' THEN 7
-					WHEN hotzone_range LIKE '%46 to 55%' THEN 6
-					WHEN hotzone_range LIKE '%36 to 45%' THEN 5
-					WHEN hotzone_range LIKE '%26 to 35%' THEN 4
-					WHEN hotzone_range LIKE '%16 to 25%' THEN 3
-					WHEN hotzone_range LIKE '%5 to 15%' THEN 2
-					WHEN hotzone_range LIKE '%Newbie%' THEN 1
-					WHEN hotzone_range LIKE '%City%' THEN 0
+			short_name, long_name, chosen_range,
+			(CASE
+					WHEN chosen_range LIKE '%Raid%' THEN 9
+					WHEN chosen_range LIKE '%61 to 65%' THEN 8
+					WHEN chosen_range LIKE '%56 to 60%' THEN 7
+					WHEN chosen_range LIKE '%46 to 55%' THEN 6
+					WHEN chosen_range LIKE '%36 to 45%' THEN 5
+					WHEN chosen_range LIKE '%26 to 35%' THEN 4
+					WHEN chosen_range LIKE '%16 to 25%' THEN 3
+					WHEN chosen_range LIKE '%5 to 15%' THEN 2
+					WHEN chosen_range LIKE '%Newbie%' THEN 1
+					WHEN chosen_range LIKE '%City%' THEN 0
 					ELSE 0
-				END) as hotzonescore
-			, (CASE
-					WHEN hotzone_range LIKE '%Raid%' THEN 'Raid'
-					WHEN hotzone_range LIKE '%61 to 65%' THEN '61 to 65'
-					WHEN hotzone_range LIKE '%56 to 60%' THEN '56 to 60'
-					WHEN hotzone_range LIKE '%46 to 55%' THEN '46 to 55'
-					WHEN hotzone_range LIKE '%36 to 45%' THEN '36 to 45'
-					WHEN hotzone_range LIKE '%26 to 35%' THEN '26 to 35'
-					WHEN hotzone_range LIKE '%16 to 25%' THEN '16 to 25'
-					WHEN hotzone_range LIKE '%5 to 15%' THEN '5 to 15'
-					WHEN hotzone_range LIKE '%Newbie%' THEN 'Newbie'
-					WHEN hotzone_range LIKE '%City%' THEN 'City'
-					ELSE 0
-				END) as hotzone_title
+				END) as hotzonescore,
+			chosen_range as hotzone_title
 			FROM $zones_table 
 			WHERE hotzone != 0 
 			ORDER BY hotzonescore ASC
