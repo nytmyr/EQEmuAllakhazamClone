@@ -12,6 +12,10 @@ $irace = (isset($_GET['irace']) ? $_GET['irace'] : '');
 if ($irace == 0) {
     $irace = '';
 }
+$ibodytype = (isset($_GET['ibodytype']) ? $_GET['ibodytype'] : '');
+if ($ibodytype == 0) {
+    $ibodytype = '';
+}
 
 $print_buffer .= "<table border=0 width=0%><tr valign=top><td>";
 $print_buffer .= "<table border=0 width=0%>";
@@ -25,6 +29,9 @@ $print_buffer .= SelectLevel("imaxlevel", $server_max_npc_level, $imaxlevel);
 $print_buffer .= "</tr>";
 $print_buffer .= "<tr><td><b>Race : </b></td><td>";
 $print_buffer .= SelectMobRace("irace", $irace);
+$print_buffer .= "</td></tr>";
+$print_buffer .= "<tr><td><b>Body Type : </b></td><td>";
+$print_buffer .= SelectMobBodyType("ibodytype", $ibodytype);
 $print_buffer .= "</td></tr>";
 $print_buffer .= "<tr><td><b>Named mob : </b></td><td><input type=checkbox name=inamed " . ($inamed ? " checked" : "") . "></td></tr>";
 $print_buffer .= "</table></td><td><table border=0 width=0%>";
@@ -60,6 +67,9 @@ if (isset($isearch) && $isearch != '') {
     }
     if ($irace > 0 && is_numeric($irace)) {
         $query .= " AND $npc_types_table.race=$irace";
+    }
+	if ($ibodytype > 0 && is_numeric($ibodytype)) {
+        $query .= " AND $npc_types_table.bodytype=$ibodytype";
     }
     if ($iname != "") {
         $iname = str_replace('`', '%', str_replace(' ', '%', addslashes($iname)));

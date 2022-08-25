@@ -369,6 +369,23 @@ function SelectMobRace($name, $selected)
     return $return_buffer;
 }
 
+function SelectMobBodyType($name, $selected)
+{
+    global $dbbodytypes;
+    $return_buffer = "<SELECT name=\"$name\" style='width:100%'>";
+    $return_buffer .= "<option value='0'>-</option>";
+    foreach ($dbbodytypes as $key => $value) {
+        $return_buffer .= "<option value='" . $key . "'";
+        if ($key == $selected) {
+            $return_buffer .= " selected='1'";
+        }
+        $return_buffer .= ">" . $value . "</option>";
+    }
+    $return_buffer .= "</SELECT>";
+
+    return $return_buffer;
+}
+
 function SelectLevel($name, $maxlevel, $selevel)
 {
     $return_buffer = "<SELECT name=\"$name\">";
