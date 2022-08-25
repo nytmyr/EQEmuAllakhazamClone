@@ -1,6 +1,7 @@
 <?php
 
 $itemtype = (isset($_GET['itemtype']) ? $_GET['itemtype'] : "null");
+$order = (isset($_GET['order']) ? addslashes($_GET["order"]) : "SkillName ASC");
 
 $page_title = "Miscellaneous Achievements";
 $print_buffer .= "<table class=''><tr valign=top><td>";
@@ -671,6 +672,8 @@ if (isset($itemtype) && $itemtype != "null") {
 						THEN 'Bind Wound [210]'
 					WHEN CAST(SUBSTRING(d.`key`, 15, 2) AS INT) = 16
 						THEN 'Disarm [200]'
+					WHEN CAST(SUBSTRING(d.`key`, 15, 2) AS INT) = 17
+						THEN 'Disarm Traps [200]'
 					WHEN CAST(SUBSTRING(d.`key`, 15, 2) AS INT) = 25
 						THEN 'Feign Death [200]'
 					WHEN CAST(SUBSTRING(d.`key`, 15, 2) AS INT) = 27
@@ -697,6 +700,8 @@ if (isset($itemtype) && $itemtype != "null") {
 						THEN 'Tracking [200]'
 					WHEN CAST(SUBSTRING(d.`key`, 15, 2) AS INT) = 55
 						THEN 'Fishing [200]'
+					WHEN CAST(SUBSTRING(d.`key`, 15, 2) AS INT) = 62
+						THEN 'Sense Traps [200]'
 					WHEN CAST(SUBSTRING(d.`key`, 15, 2) AS INT) = 66
 						THEN 'Alcohol Tolerance [200]'
 					WHEN CAST(SUBSTRING(d.`key`, 15, 2) AS INT) = 67
@@ -711,14 +716,43 @@ if (isset($itemtype) && $itemtype != "null") {
 							THEN SUBSTRING(cd.`name`, 1, INSTR(cd.`name`, '-deleted-')-1)
 						ELSE cd.`name` 
 					END AS CharName,
-				SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) AS 'Time'
+				SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) AS 'Time',
+				CASE
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jan%' THEN (60 * 60 * 31 * 12) * 1 -- Years 
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Feb%' THEN (60 * 60 * 31 * 12) * 2
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Mar%' THEN (60 * 60 * 31 * 12) * 3
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Apr%' THEN (60 * 60 * 31 * 12) * 4
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%May%' THEN (60 * 60 * 31 * 12) * 5
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jun%' THEN (60 * 60 * 31 * 12) * 6
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jul%' THEN (60 * 60 * 31 * 12) * 7
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Aug%' THEN (60 * 60 * 31 * 12) * 8
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Sep%' THEN (60 * 60 * 31 * 12) * 9
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Oct%' THEN (60 * 60 * 31 * 12) * 10
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Nov%' THEN (60 * 60 * 31 * 12) * 11
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Dec%' THEN (60 * 60 * 31 * 12) * 12 -- Years
+				END 
+				+
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-15), 2) AS INT) * (60 * 60 * 31) -- Day
+				+
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-12), 2) AS INT) * (60 * 60) -- Hours
+				+
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-10), 2) AS INT) * 60 -- Minutes
+				+
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-8), 2) AS INT) -- Seconds
+				AS TimeScore
 			FROM data_buckets d
 			INNER JOIN character_data cd ON cd.id = SUBSTRING(d.`value`, INSTR(d.`value`,':')+1,INSTR(d.`value`,'|')-INSTR(d.`value`,':')-1)
 			WHERE d.`key` LIKE 'FirstSkillMax-%'
+			ORDER BY $order
 		";
 		$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 		$columns = mysqli_num_fields($result);
-
+		$print_buffer .= "
+		<table class='display_table datatable container_div'><tr>
+		<td style='font-weight:bold' align=center><u><b><a href=?a=achiev_misc&itemtype=skills&order=SkillName>Skill</a></b></u></td>
+		<td style='font-weight:bold' align=center><u><b><a href=?a=achiev_misc&itemtype=skills&order=CharName>Player</a></b></u></td>
+		<td style='font-weight:bold' align=right><u><b><a href=?a=achiev_misc&itemtype=skills&order=TimeScore>Time</a></b></u></td>
+		";
 		while ($row = mysqli_fetch_array($result)) {
 			$print_buffer .=
 			"
@@ -774,14 +808,43 @@ if (isset($itemtype) && $itemtype != "null") {
 							THEN SUBSTRING(cd.`name`, 1, INSTR(cd.`name`, '-deleted-')-1)
 						ELSE cd.`name` 
 					END AS CharName,
-				SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) AS 'Time'
+				SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) AS 'Time',
+				CASE
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jan%' THEN (60 * 60 * 31 * 12) * 1 -- Years 
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Feb%' THEN (60 * 60 * 31 * 12) * 2
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Mar%' THEN (60 * 60 * 31 * 12) * 3
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Apr%' THEN (60 * 60 * 31 * 12) * 4
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%May%' THEN (60 * 60 * 31 * 12) * 5
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jun%' THEN (60 * 60 * 31 * 12) * 6
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jul%' THEN (60 * 60 * 31 * 12) * 7
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Aug%' THEN (60 * 60 * 31 * 12) * 8
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Sep%' THEN (60 * 60 * 31 * 12) * 9
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Oct%' THEN (60 * 60 * 31 * 12) * 10
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Nov%' THEN (60 * 60 * 31 * 12) * 11
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Dec%' THEN (60 * 60 * 31 * 12) * 12 -- Years
+				END 
+				+
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-15), 2) AS INT) * (60 * 60 * 31) -- Day
+				+
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-12), 2) AS INT) * (60 * 60) -- Hours
+				+
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-10), 2) AS INT) * 60 -- Minutes
+				+
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-8), 2) AS INT) -- Seconds
+				AS TimeScore
 			FROM data_buckets d
 			INNER JOIN character_data cd ON cd.id = SUBSTRING(d.`value`, INSTR(d.`value`,':')+1,INSTR(d.`value`,'|')-INSTR(d.`value`,':')-1)
 			WHERE d.`key` LIKE 'FirstTradeskillMax-%'
+			ORDER BY $order
 		";
 		$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 		$columns = mysqli_num_fields($result);
-
+		$print_buffer .= "
+		<table class='display_table datatable container_div'><tr>
+		<td style='font-weight:bold' align=center><u><b><a href=?a=achiev_misc&itemtype=tradeskills&order=SkillName>Tradeskill</a></b></u></td>
+		<td style='font-weight:bold' align=center><u><b><a href=?a=achiev_misc&itemtype=tradeskills&order=CharName>Player</a></b></u></td>
+		<td style='font-weight:bold' align=right><u><b><a href=?a=achiev_misc&itemtype=tradeskills&order=TimeScore>Time</a></b></u></td>
+		";
 		while ($row = mysqli_fetch_array($result)) {
 			$print_buffer .=
 			"
@@ -808,27 +871,61 @@ if (isset($itemtype) && $itemtype != "null") {
 			SELECT 
 				CASE
 					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 0
-						THEN 'Make Poison [250]'
-					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 57
-						THEN 'Tinkering [250]'
-					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 58
-						THEN 'Research [250]'
-					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 59
-						THEN 'Alchemy [250]'
-					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 60
-						THEN 'Baking [250]'
-					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 61
-						THEN 'Tailoring [250]'
-					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 63
-						THEN 'Blacksmithing [250]'
-					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 64
-						THEN 'Fletching [250]'
-					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 65
-						THEN 'Brewing [250]'
-					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 68
-						THEN 'Jewelry Making [250]'
-					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 69
-						THEN 'Pottery [250]'
+						THEN 'Common Tongue [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 1
+						THEN 'Barbarian [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 2
+						THEN 'Erudian [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 3
+						THEN 'Elvish [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 4
+						THEN 'Dark Elvish [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 5
+						THEN 'Dwarvish [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 6
+						THEN 'Troll [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 7
+						THEN 'Ogre [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 8
+						THEN 'Gnomish [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 9
+						THEN 'Halfling [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 10
+						THEN 'Thieves Cant [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 11
+						THEN 'Old Erudian [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 12
+						THEN 'Elder Elvish [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 13
+						THEN 'Froglok [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 14
+						THEN 'Goblin [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 15
+						THEN 'Gnoll [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 16
+						THEN 'Combine Tonuge [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 17
+						THEN 'Elder Teirdal [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 18
+						THEN 'Lizardman [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 19
+						THEN 'Orcish [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 20
+						THEN 'Faerie [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 21
+						THEN 'Dragon [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 22
+						THEN 'Elder Dragon [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 23
+						THEN 'Dark Speech [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 24
+						THEN 'Vah Shir [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 25
+						THEN 'Alaran [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 26
+						THEN 'Hadal [100]'
+					WHEN CAST(SUBSTRING(d.`key`, 20, 2) AS INT) = 27
+						THEN 'Unknown [100]'
 					ELSE 'None'
 				END AS SkillName,
 				cd.id AS CharID,
@@ -837,14 +934,42 @@ if (isset($itemtype) && $itemtype != "null") {
 							THEN SUBSTRING(cd.`name`, 1, INSTR(cd.`name`, '-deleted-')-1)
 						ELSE cd.`name` 
 					END AS CharName,
-				SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) AS 'Time'
+				SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) AS 'Time',
+				CASE
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jan%' THEN (60 * 60 * 31 * 12) * 1 -- Years 
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Feb%' THEN (60 * 60 * 31 * 12) * 2
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Mar%' THEN (60 * 60 * 31 * 12) * 3
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Apr%' THEN (60 * 60 * 31 * 12) * 4
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%May%' THEN (60 * 60 * 31 * 12) * 5
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jun%' THEN (60 * 60 * 31 * 12) * 6
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jul%' THEN (60 * 60 * 31 * 12) * 7
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Aug%' THEN (60 * 60 * 31 * 12) * 8
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Sep%' THEN (60 * 60 * 31 * 12) * 9
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Oct%' THEN (60 * 60 * 31 * 12) * 10
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Nov%' THEN (60 * 60 * 31 * 12) * 11
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Dec%' THEN (60 * 60 * 31 * 12) * 12 -- Years
+				END 
+				+
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-15), 2) AS INT) * (60 * 60 * 31) -- Day
+				+
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-12), 2) AS INT) * (60 * 60) -- Hours
+				+
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-10), 2) AS INT) * 60 -- Minutes
+				+
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-8), 2) AS INT) -- Seconds
+				AS TimeScore
 			FROM data_buckets d
 			INNER JOIN character_data cd ON cd.id = SUBSTRING(d.`value`, INSTR(d.`value`,':')+1,INSTR(d.`value`,'|')-INSTR(d.`value`,':')-1)
 			WHERE d.`key` LIKE 'FirstTradeskillMax-%'
 		";
 		$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 		$columns = mysqli_num_fields($result);
-
+		$print_buffer .= "
+		<table class='display_table datatable container_div'><tr>
+		<td style='font-weight:bold' align=center><u><b><a href=?a=achiev_misc&itemtype=languages&order=SkillName>Language</a></b></u></td>
+		<td style='font-weight:bold' align=center><u><b><a href=?a=achiev_misc&itemtype=languages&order=CharName>Player</a></b></u></td>
+		<td style='font-weight:bold' align=right><u><b><a href=?a=achiev_misc&itemtype=languages&order=TimeScore>Time</a></b></u></td>
+		";
 		while ($row = mysqli_fetch_array($result)) {
 			$print_buffer .=
 			"
