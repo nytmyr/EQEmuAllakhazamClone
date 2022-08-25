@@ -26,6 +26,9 @@ $iheroicsvalue = (isset($_GET['iheroicsvalue']) ? addslashes($_GET['iheroicsvalu
 $imod = (isset($_GET['imod']) ? addslashes($_GET['imod']) : '');
 $imodcomp = (isset($_GET['imodcomp']) ? addslashes($_GET['imodcomp']) : '');
 $imodvalue = (isset($_GET['imodvalue']) ? addslashes($_GET['imodvalue']) : '');
+$iskillmod = (isset($_GET['iskillmod']) ? addslashes($_GET['iskillmod']) : '');
+$iskillmodcomp = (isset($_GET['iskillmodcomp']) ? addslashes($_GET['iskillmodcomp']) : '');
+$iskillmodvalue = (isset($_GET['iskillmodvalue']) ? addslashes($_GET['iskillmodvalue']) : '');
 $itype = (isset($_GET['itype']) ? addslashes($_GET['itype']) : -1);
 $iaugslot = (isset($_GET['iaugslot']) ? addslashes($_GET['iaugslot']) : '');
 $ieffect = (isset($_GET['ieffect']) ? addslashes($_GET['ieffect']) : '');
@@ -84,6 +87,10 @@ if (count($_GET) > 2) {
         $query .= " $s ($items_table.$imod $imodcomp $imodvalue)";
         $s = "AND";
     }
+	if (($iskillmod != "") AND ($iskillmodvalue != "")) {
+		$query .= " $s ($items_table.skillmodtype = $iskillmod AND $items_table.skillmodvalue $iskillmodcomp $iskillmodvalue)";
+		$s = "AND";
+	}
     if ($iavailability == 1) // mob dropped
     {
         $query .= " $s $loot_drop_entries_table.item_id=$items_table.id
