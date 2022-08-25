@@ -1085,7 +1085,7 @@ if (isset($itemtype) && $itemtype != "null") {
 				INNER JOIN $character_table cd ON cd.id = SUBSTRING(d.`value`, INSTR(d.`value`,':')+1,INSTR(d.`value`,'|')-INSTR(d.`value`,':')-1)
 				LEFT JOIN $items_table i ON i.id = SUBSTRING(d.`key`, INSTR(d.`key`,'-')+1)
 			WHERE d.`key` LIKE 'First%TurnIn%'
-			ORDER BY i.`Name` ASC
+			ORDER BY ItemName ASC
 		";
 		$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 		$columns = mysqli_num_fields($result);
@@ -1125,7 +1125,7 @@ if (isset($itemtype) && $itemtype != "null") {
 				INNER JOIN $character_table cd ON cd.id = SUBSTRING(d.`value`, INSTR(d.`value`,':')+1,INSTR(d.`value`,'|')-INSTR(d.`value`,':')-1)
 				INNER JOIN $items_table i ON i.id = SUBSTRING(d.`key`, INSTR(d.`key`,'-')+1)
 			WHERE d.`key` LIKE '%thQuest%TurnIn%'
-			ORDER BY i.Name ASC, 'Time' ASC
+			ORDER BY ItemName ASC, 'Time' ASC
 		";
 		$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 		$columns = mysqli_num_fields($result);
