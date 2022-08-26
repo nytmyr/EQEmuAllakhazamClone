@@ -83,6 +83,10 @@ if (count($_GET) > 2) {
             $s = "AND";
         }
     }
+	if (($iresists != "") AND ($iresistsvalue != "")) {
+        $query .= " $s ($items_table.$iresists $iresistscomp $iresistsvalue)";
+        $s = "AND";
+    }
     if (($imod != "") AND ($imodvalue != "")) {
         $query .= " $s ($items_table.$imod $imodcomp $imodvalue)";
         $s = "AND";
@@ -91,6 +95,7 @@ if (count($_GET) > 2) {
 		$query .= " $s ($items_table.skillmodtype = $iskillmod AND $items_table.skillmodvalue $iskillmodcomp $iskillmodvalue)";
 		$s = "AND";
 	}
+	
     if ($iavailability == 1) // mob dropped
     {
         $query .= " $s $loot_drop_entries_table.item_id=$items_table.id
@@ -212,8 +217,72 @@ if (isset($QueryResult)) {
                 <th class='menuh'>Mana</th>
                 <th class='menuh'>Damage</th>
                 <th class='menuh'>Delay</th>
-            </thead>
+				<th class='menuh'>Dmg Bonus</th>
         ";
+		if (($istat1 != "") AND ($istat1value != "")) {
+			if ($istat1 == "attack") { $istat1chosen = "ATK";}
+			if ($istat1 == "aagi") { $istat1chosen = "AGI";}
+			if ($istat1 == "acha") { $istat1chosen = "CHA";}
+			if ($istat1 == "adex") { $istat1chosen = "DEX";}
+			if ($istat1 == "aint") { $istat1chosen = "INT";}
+			if ($istat1 == "asta") { $istat1chosen = "STA";}
+			if ($istat1 == "astr") { $istat1chosen = "STR";}
+			if ($istat1 == "awis") { $istat1chosen = "WIS";}
+			if ($istat1 == "ratio") { $istat1chosen = "Ratio";}
+			if ($istat1 == "haste") { $istat1chosen = "Haste";}
+			if ($istat1 == "regen") { $istat1chosen = "Regen";}
+			if ($istat1 == "manaregen") { $istat1chosen = "Mana Regen";}
+			if ($istat1 == "enduranceregen") { $istat1chosen = "End Regen";}
+			$print_buffer .= "
+				<th class='menuh'>$istat1chosen</th>
+			";
+		}
+		if (($istat2 != "") AND ($istat2value != "")) {
+			if ($istat2 == "attack") { $istat2chosen = "ATK";}
+			if ($istat2 == "aagi") { $istat2chosen = "AGI";}
+			if ($istat2 == "acha") { $istat2chosen = "CHA";}
+			if ($istat2 == "adex") { $istat2chosen = "DEX";}
+			if ($istat2 == "aint") { $istat2chosen = "INT";}
+			if ($istat2 == "asta") { $istat2chosen = "STA";}
+			if ($istat2 == "astr") { $istat2chosen = "STR";}
+			if ($istat2 == "awis") { $istat2chosen = "WIS";}
+			if ($istat2 == "ratio") { $istat2chosen = "Ratio";}
+			if ($istat2 == "haste") { $istat2chosen = "Haste";}
+			if ($istat2 == "regen") { $istat2chosen = "Regen";}
+			if ($istat2 == "manaregen") { $istat2chosen = "Mana Regen";}
+			if ($istat2 == "enduranceregen") { $istat2chosen = "End Regen";}
+			$print_buffer .= "
+				<th class='menuh'>$istat2chosen</th>
+			";
+		}
+		if (($iresists != "") AND ($iresistsvalue != "")) {
+			if ($iresists == "mr") { $iresistschosen = "MR";}
+            if ($iresists == "fr") { $iresistschosen = "FR";}
+            if ($iresists == "cr") { $iresistschosen = "CR";}
+            if ($iresists == "pr") { $iresistschosen = "PR";}
+            if ($iresists == "dr") { $iresistschosen = "DR";}
+			$print_buffer .= "
+				<th class='menuh'>$iresistschosen</th>
+			";
+		}
+		if (($imod != "") AND ($imodvalue != "")) {
+			$imodchosen = 1;
+			$print_buffer .= "
+				<th class='menuh'>Mod</th>
+			";
+		}
+		if (($iskillmod != "") AND ($iskillmodvalue != "")) {
+			$iskillchosen = $dbskills[$iskillmod];
+			$print_buffer .= "
+				<th class='menuh'>$iskillchosen</th>
+			";
+		}
+		if ($ireqlevel > 0 OR $iminlevel > 0) {
+			$print_buffer .= "
+				<th class='menuh'>LvlReq</th>
+			";
+		}
+		$print_buffer .= "</thead>";
         $RowClass = "lr";
         for ($count = 1; $count <= $num_rows; $count++) {
             $TableData = "";
@@ -241,7 +310,32 @@ if (isset($QueryResult)) {
             $TableData .= $row["damage"];
             $TableData .= "</td><td>";
             $TableData .= $row["delay"];
-
+			$TableData .= "</td><td>";
+			$TableData .= $dam2h[$row["delay"]];
+			if ($istat1chosen) {
+				$TableData .= "</td><td>";
+				$TableData .= $row["$istat1"];
+			}
+			if ($istat2chosen) {
+				$TableData .= "</td><td>";
+				$TableData .= $row["$istat2"];
+			}
+			if ($iresistschosen) {
+				$TableData .= "</td><td>";
+				$TableData .= $row["$iresists"];
+			}
+			if ($iskillchosen) {
+				$TableData .= "</td><td>";
+				$TableData .= $row["skillmodvalue"];
+			}
+			if ($imodchosen) {
+				$TableData .= "</td><td>";
+				$TableData .= $row["$imod"];
+			}
+			if ($ireqlevel OR $iminlevel) {
+				$TableData .= "</td><td>";
+				$TableData .= $row["reqlevel"];
+			}
             $TableData .= "</td><td>";
 
             if ($RowClass == "lr") {
