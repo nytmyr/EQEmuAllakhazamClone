@@ -60,17 +60,20 @@ $group_npcs_by_name                 = true; // groups the NPCs by their name in 
 $max_npcs_returned                  = 50; // max number of npcs returned by search engines (0=all)
 $server_max_npc_level               = 95; // Max Level for any NPCs on the Server
 $show_npc_drop_chances              = true; // if TRUE, chances of droping of each item will be shown when browsing npcs
+$show_npc_drop_chances_as_rarity	= true; // if TRUE, shows drop chance as a Ultra Rare, Rare, etc. instead of a %
 $show_npc_number_in_zone_level_list = true; // choose between number and x for npcs in zone levels list
 $show_npcs_attack_speed             = true; // shows informations about NPCs' attack speed
 $show_npcs_average_damages          = true; // How much NPC does as melee damages, in average, this allows to comparate mobs together
 $spawngroup_around_range            = 100; // range of surrounding spawngroups, spawngroups page
 $trackable_npcs_only                = true; // If TRUE, will only display NPCs that are set to be trackable in search results
 $hide_invisible_men                 = true; // hide the invisible mens in bestiaries
+$display_spawn_times          		= true; // If TRUE, will display the spawn times on zone pages
 
 /**
  * Items
  */
 $item_add_chance_to_drop     = true; // shows what are the chances to see the item droped by the npcs
+$item_add_chance_to_drop_as_rarity	= true; // if TRUE, shows drop chance as a Ultra Rare, Rare, etc. instead of a %
 $discovered_items_max_status = 20; // Max account status for a discovered item entry
 $discovered_items_only       = false; // If TRUE, only Discovered Items will be displayed
 $max_items_returned          = 50; // max number of items returned by search engines (0=all)
@@ -79,6 +82,11 @@ $max_items_returned          = 50; // max number of items returned by search eng
  * This can increase page load times up to 3-6 seconds without caching
  */
 $item_found_info = true; // If TRUE, it displays where items can drop or be purchased (longer item page load times)
+$item_custom_loot = false; // IF TRUE, custom loot displays on drops
+$item_first_discovered = true; // If TRUE, shows when and who first discovered the item
+$item_show_shard_value = true; // If TRUE, shows the value of the item in Shards
+$item_shard_cost_multiplier = 2; //Shard cost Multiplier
+$show_all_item_drops = true; // If TRUE, this will shows items dropped by mobs that are triggered spawns.
 
 /**
  * Tasks
@@ -93,6 +101,7 @@ $max_recently_discovered_items = 25; // Max number of recently discovered items 
 $merchants_dont_drop_stuff     = true; // if TRUE, you won't see merchants drops, damned PEQ world builders ! :)
 $server_max_level              = 80; // Max Level for Characters on the Server
 $sort_zone_level_list          = true; // sort or not the zones in zone levels list
+$show_item_as_key_req		   = true; // Displays the item required on the Zone Page.
 
 /**
  * Spells
