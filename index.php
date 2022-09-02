@@ -138,8 +138,6 @@
                                             <tr>
                                                 <td  class="menu_item">
                                                     <li><a href="?a=items">Item Search</a> </li>
-													<li><a href="?a=sharditems">Shard Vendored Items</a> </li>
-													
                                                 </td>
                                             </tr>
                                             <tr>
