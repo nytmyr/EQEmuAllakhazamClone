@@ -308,6 +308,50 @@
         <td>
             <table border="0" width="0%">
                 <tbody>
+				<tr>
+                    <td style="text-align:right"><b>Currently On Valeen</b></td>
+                    <td>
+                        <select id="ibeingsold" style="width:100%">
+                            <option value="-1">-</option>
+                            <option value="1">Yes</option>
+                            <option value="2">No</option>
+							<option value="3">Either</option>
+                        </select>
+                    </td>
+                </tr>
+				<tr>
+                    <td style="text-align:right"><b>Tier</b></td>
+                    <td>
+                        <select id="itier" style="width:100%">
+                            <option value="-1">-</option>
+                            <option value="1">Tier 1</option>
+                            <option value="2">Tier 2</option>
+                            <option value="3">Tier 3</option>
+                            <option value="4">Tier 4</option>
+                            <option value="5">Tier 5</option>
+                            <option value="6">Tier 6</option>
+                            <option value="7">Tier 7</option>
+                            <option value="8">Tier 8</option>
+                            <option value="9">Tier 9</option>
+                            <option value="10">Tier 10</option>
+                        </select>
+                    </td>
+                </tr>
+				<tr>
+                    <td style="text-align:right"><b>Low Price</b></td>
+                    <td>
+                            <input type="text" size="4" id="ilowprice" value="">
+                    </td>
+                </tr>
+				<tr>
+                    <td style="text-align:right"><b>High Price</b></td>
+                    <td>
+                            <input type="text" size="4" id="ihighprice" value="">
+                    </td>
+                </tr>
+				<tr>
+                    <td style="text-align:right"><b>------</b></td>
+                </tr>
                 <tr>
                     <td style="text-align:right"><b>Item Type</b></td>
                     <td>
@@ -445,21 +489,6 @@
                             <option value="63">63</option>
                             <option value="64">64</option>
                             <option value="65">65</option>
-                            <option value="66">66</option>
-                            <option value="67">67</option>
-                            <option value="68">68</option>
-                            <option value="69">69</option>
-                            <option value="70">70</option>
-                            <option value="71">71</option>
-                            <option value="72">72</option>
-                            <option value="73">73</option>
-                            <option value="74">74</option>
-                            <option value="75">75</option>
-                            <option value="76">76</option>
-                            <option value="77">77</option>
-                            <option value="78">78</option>
-                            <option value="79">79</option>
-                            <option value="80">80</option>
                         </select>
                     </td>
                 </tr>
@@ -533,27 +562,18 @@
                             <option value="63">63</option>
                             <option value="64">64</option>
                             <option value="65">65</option>
-                            <option value="66">66</option>
-                            <option value="67">67</option>
-                            <option value="68">68</option>
-                            <option value="69">69</option>
-                            <option value="70">70</option>
-                            <option value="71">71</option>
-                            <option value="72">72</option>
-                            <option value="73">73</option>
-                            <option value="74">74</option>
-                            <option value="75">75</option>
-                            <option value="76">76</option>
-                            <option value="77">77</option>
-                            <option value="78">78</option>
-                            <option value="79">79</option>
-                            <option value="80">80</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td style="text-align:right"><b>Tradeable Items Only</b></td>
-                    <td><input type="checkbox" id="inodrop"></td>
+					<td>
+						<select id="inodrop" style="width:100%">
+							<option value="0">-</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>	
+					</td>
                 </tr>
                 <tr>
                     <td style="text-align:right"><b>Deity</b></td>
@@ -576,6 +596,15 @@
                             <option value="16384">The Tribunal</option>
                             <option value="32768">Tunare</option>
                             <option value="65536">Veeshan</option>
+                        </select>
+                    </td>
+                </tr>
+				<tr>
+                    <td style="text-align:right"><b>Display Vegas Items</b></td>
+                    <td>
+                        <select id="ivegas" style="width:100%">
+                            <option value="0">Yes</option>
+                            <option value="1">No</option>
                         </select>
                     </td>
                 </tr>

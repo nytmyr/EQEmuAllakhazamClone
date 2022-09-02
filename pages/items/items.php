@@ -38,9 +38,22 @@ $inodrop = (isset($_GET['inodrop']) ? addslashes($_GET['inodrop']) : '');
 $iavailability = (isset($_GET['iavailability']) ? addslashes($_GET['iavailability']) : '');
 $iavailevel = (isset($_GET['iavailevel']) ? addslashes($_GET['iavailevel']) : '');
 $ideity = (isset($_GET['ideity']) ? addslashes($_GET['ideity']) : '');
-
+$ibeingsold = (isset($_GET['ibeingsold']) ? addslashes($_GET['ibeingsold']) : '');
+$itier = (isset($_GET['itier']) ? addslashes($_GET['itier']) : '');
+$ilowprice = (isset($_GET['ilowprice']) ? addslashes($_GET['ilowprice']) : '');
+$ihighprice = (isset($_GET['ihighprice']) ? addslashes($_GET['ihighprice']) : '');
+$ivegas = (isset($_GET['ivegas']) ? addslashes($_GET['ivegas']) : '');
 if (count($_GET) > 2) {
-    $query = "SELECT $items_table.* FROM ($items_table";
+    $query = "SELECT *, $items_table.icon AS ItemIcon ";
+	
+	if ($ibeingsold != -1) {
+		$query .= ", $items_table.id AS ItemID, $items_table.Name AS ItemName, $items_table.hp AS ItemHP, $items_table.mana AS ItemMana, npc.lastname AS LastName, npc.is_valeen_spawned AS ValeenStatus";
+	}
+	
+	if ($ieffect != "") {
+		$query .= ", proc_s.icon AS ProcIcon, worn_s.icon AS WornIcon, focus_s.icon AS FocusIcon, click_s.icon AS ClickIcon";
+	}
+	$query .= " FROM ($items_table";
 
     if ($discovered_items_only == TRUE) {
         $query .= ",discovered_items";
@@ -50,8 +63,16 @@ if (count($_GET) > 2) {
         // mob dropped
         $query .= ",$loot_drop_entries_table,$loot_table_entries,$npc_types_table";
     }
-    $query .= ")";
-    $s = " WHERE";
+	
+	$query .= ")";
+	
+	$s = " WHERE";
+	
+	if ($ibeingsold != -1) {
+		$query .= " INNER JOIN $merchant_list_table AS merch ON merch.item = $items_table.`id`";
+		$query .= " INNER JOIN $npc_types_table AS npc ON npc.merchant_id = merch.merchantid";
+	}
+	
     if ($ieffect != "") {
         $effect = "%" . str_replace(',', '%', str_replace(' ', '%', addslashes($ieffect))) . "%";
 
@@ -65,6 +86,30 @@ if (count($_GET) > 2) {
 				OR click_s.`name` LIKE '$effect') ";
         $s = "AND";
     }
+	
+	$query .= " $s $items_table.minstatus = 0";
+	$s = "AND";	
+	
+	if ($ivegas == 1) {
+		$query .= " $s $items_table.name NOT LIKE '%*'";
+		$s = "AND";
+	}
+	if ($ibeingsold == 1) {
+		$query .= " $s npc.is_valeen_spawned = 1 AND npc.`name` LIKE 'Valeen'";
+		$s = "AND";
+	}
+	if ($ibeingsold != -1 AND $itier > 0) {
+		$query .= " $s npc.`lastname` LIKE CONCAT('T', $itier,'')";
+		$s = "AND";
+	}
+	if ($ibeingsold != -1 AND $ilowprice > 0) {
+		$query .= " $s merch.alt_currency_cost >= $ilowprice";
+		$s = "AND";
+	}
+	if ($ibeingsold != -1 AND $ihighprice > 0) {
+		$query .= " $s merch.alt_currency_cost <= $ihighprice";
+		$s = "AND";
+	}
     if (($istat1 != "") AND ($istat1value != "")) {
         if ($istat1 == "ratio") {
             $query .= " $s ($items_table.delay/$items_table.damage $istat1comp $istat1value) AND ($items_table.damage>0)";
@@ -132,7 +177,11 @@ if (count($_GET) > 2) {
         $query .= " $s ($items_table.races   & $irace) ";
         $s = "AND";
     }
-    if ($itype >= 0) {
+	if ($itype == 0) {
+		$query .= " $s ($items_table.itemtype=$itype AND $items_table.slots != 0 AND ($items_table.damage > 0 OR $items_table.delay > 0)) ";
+		$s = "AND";
+	}
+    if ($itype > 0) {
         $query .= " $s ($items_table.itemtype=$itype) ";
         $s = "AND";
     }
@@ -153,7 +202,7 @@ if (count($_GET) > 2) {
         $query .= " $s ($items_table.reqlevel<=$ireqlevel) ";
         $s = "AND";
     }
-    if ($inodrop) {
+    if ($inodrop == 1) {
         $query .= " $s ($items_table.nodrop=1)";
         $s = "AND";
     }
@@ -206,20 +255,20 @@ if (isset($QueryResult)) {
         # $print_buffer .= "<b>" . $num_rows . " " . ($num_rows == 1 ? "item" : "items") . " displayed</b>" . $OutOf . "<br>";
         $print_buffer .= "<br>";
 
-        $print_buffer .= "<table class='display_table container_div datatable' id='item_search_results' style='width:100%'>";
+        $print_buffer .= "<table class='display_table container_div datatable' id='item_search_results' style='width:100%'overflow--x:auto;>";
         $print_buffer .= "
             <thead>
                 <th class='menuh'>Icon</th>
                 <th class='menuh'>Item Name</th>
                 <th class='menuh'>Item Type</th>
                 <th class='menuh'>AC</th>
-                <th class='menuh'>HPs</th>
+                <th class='menuh'>HP</th>
                 <th class='menuh'>Mana</th>
                 <th class='menuh'>Damage</th>
                 <th class='menuh'>Delay</th>
 				<th class='menuh'>Dmg Bonus</th>
         ";
-		if (($istat1 != "") AND ($istat1value != "")) {
+		if (($istat1 != "") AND ($istat1value != "") AND ($istat1 != "ac") AND ($istat1 != "hp") AND ($istat1 != "mana") AND ($istat1 != "damage") AND ($istat1 != "delay")) {
 			if ($istat1 == "attack") { $istat1chosen = "ATK";}
 			if ($istat1 == "aagi") { $istat1chosen = "AGI";}
 			if ($istat1 == "acha") { $istat1chosen = "CHA";}
@@ -237,7 +286,7 @@ if (isset($QueryResult)) {
 				<th class='menuh'>$istat1chosen</th>
 			";
 		}
-		if (($istat2 != "") AND ($istat2value != "")) {
+		if (($istat2 != "") AND ($istat2value != "") AND ($istat2 != "ac") AND ($istat2 != "hp") AND ($istat2 != "mana") AND ($istat2 != "damage") AND ($istat2 != "delay")) {
 			if ($istat2 == "attack") { $istat2chosen = "ATK";}
 			if ($istat2 == "aagi") { $istat2chosen = "AGI";}
 			if ($istat2 == "acha") { $istat2chosen = "CHA";}
@@ -272,14 +321,28 @@ if (isset($QueryResult)) {
 			";
 		}
 		if (($iskillmod != "") AND ($iskillmodvalue != "")) {
-			$iskillchosen = $dbskills[$iskillmod];
 			$print_buffer .= "
-				<th class='menuh'>$iskillchosen</th>
+				<th class='menuh'>SkillMod</th>
 			";
 		}
 		if ($ireqlevel > 0 OR $iminlevel > 0) {
 			$print_buffer .= "
 				<th class='menuh'>LvlReq</th>
+			";
+		}
+		if ($ibeingsold != -1) {
+			$print_buffer .= "
+				<th class='menuh'>In Stock</th>
+			";
+		}
+		if ($ibeingsold != -1) {
+			$print_buffer .= "
+				<th class='menuh'>Tier</th>
+			";
+		}
+		if ($ibeingsold != -1 AND ($ilowprice > 0 || $ihighprice > 0)) {
+			$print_buffer .= "
+				<th class='menuh'>Price</th>
 			";
 		}
 		$print_buffer .= "</thead>";
@@ -288,24 +351,36 @@ if (isset($QueryResult)) {
             $TableData = "";
             $row = mysqli_fetch_array($QueryResult);
             $TableData .= "<tr valign='top' class='" . $RowClass . "'><td>";
-            if (file_exists($icons_dir . "item_" . $row["icon"] . ".png")) {
-                $TableData .= "<img src='" . $icons_url . "item_" . $row["icon"] . ".png' align='left'/>";
+            if (file_exists($icons_dir . "item_" . $row["ItemIcon"] . ".png")) {
+                $TableData .= "<img src='" . $icons_url . "item_" . $row["ItemIcon"] . ".png' align='left'/>";
             } else {
                 $TableData .= "<img src='" . $icons_url . "item_.gif' align='left'/>";
             }
             $TableData .= "</td><td>";
 
             # CreateToolTip($row["id"], return_item_stat_box($row, 1));
-            $TableData .= "<a href='?a=item&id=" . $row["id"] . "' id='" . $row["id"] . "'>" . $row["Name"] . "</a>";
+			if ($ibeingsold == -1) {
+				$TableData .= "<a href='?a=item&id=" . $row["id"] . "' id='" . $row["id"] . "'>" . $row["Name"] . "</a>";
+			} else {
+				$TableData .= "<a href='?a=item&id=" . $row["ItemID"] . "' id='" . $row["ItemID"] . "'>" . $row["ItemName"] . "</a>";
+			}
 
             $TableData .= "</td><td>";
             $TableData .= $dbitypes[$row["itemtype"]];
             $TableData .= "</td><td>";
             $TableData .= $row["ac"];
             $TableData .= "</td><td>";
-            $TableData .= $row["hp"];
+			if ($ibeingsold == -1) {
+				$TableData .= $row["hp"];
+			} else {
+				$TableData .= $row["ItemHP"];
+			}
             $TableData .= "</td><td>";
-            $TableData .= $row["mana"];
+            if ($ibeingsold == -1) {
+				$TableData .= $row["mana"];
+			} else {
+				$TableData .= $row["ItemMana"];
+			}
             $TableData .= "</td><td>";
             $TableData .= $row["damage"];
             $TableData .= "</td><td>";
@@ -324,7 +399,7 @@ if (isset($QueryResult)) {
 				$TableData .= "</td><td>";
 				$TableData .= $row["$iresists"];
 			}
-			if ($iskillchosen) {
+			if (($iskillmod != "") AND ($iskillmodvalue != "")) {
 				$TableData .= "</td><td>";
 				$TableData .= $row["skillmodvalue"];
 			}
@@ -336,6 +411,23 @@ if (isset($QueryResult)) {
 				$TableData .= "</td><td>";
 				$TableData .= $row["reqlevel"];
 			}
+			if ($ibeingsold != -1) {
+				$TableData .= "</td><td>";
+				if ($row["ValeenStatus"] == 1) {
+					$valeenstatus = "<font color=green>Yes";
+				} else {
+					$valeenstatus = "<font color=red>No";
+				}
+				$TableData .= $valeenstatus;
+			}
+			if ($ibeingsold != -1) {
+				$TableData .= "</td><td>";
+				$TableData .= $row["LastName"];
+			}
+			if ($ibeingsold != -1 AND ($ilowprice > 0 OR $ihighprice > 0)) {
+				$TableData .= "</td><td>";
+				$TableData .= $row["alt_currency_cost"] . "<img src='$icons_url\item_2240.png' width='20px' height='10px'/>";
+			}
             $TableData .= "</td><td>";
 
             if ($RowClass == "lr") {
@@ -346,7 +438,7 @@ if (isset($QueryResult)) {
 
             $print_buffer .= $TableData;
         }
-        $print_buffer .= "</table>";
+        $print_buffer .= "</td></table>";
     }
 
     $footer_javascript .= '
@@ -364,7 +456,7 @@ if (isset($QueryResult)) {
     ';
 }
 
-$print_buffer .= '</td></tr></table>';
+$print_buffer .= '</tr></table>';
 
 
 ?>
