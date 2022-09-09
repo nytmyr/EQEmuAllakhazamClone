@@ -768,6 +768,118 @@ function SpecialAttacks($att)
     return $data;
 }
 
+function SpecialAbilities($att)
+{
+	$SpecialAbilities = $att;
+	$SpecialAbilitiesArray = explode ("^", $SpecialAbilities); 
+    $data = '';
+    $v    = '';
+    foreach ($SpecialAbilitiesArray as $sab) {
+		if (preg_match('/\b^2,1\b/', $sab)) {
+			$data .= $v . " Enrages";
+			$v = ', ';
+		}
+		if (preg_match('/\b^3,1\b/', $sab)) {
+			$data .= $v . " Rampages";
+			$v = ', ';
+		}
+		if (preg_match('/\b^4,1\b/', $sab)) {
+			$data .= $v . " AE Rampages";
+			$v = ', ';
+		}
+		if (preg_match('/\b^5,1\b/', $sab)) {
+			$data .= $v . " Flurries";
+			$v = ', ';
+		}
+		if (preg_match('/\b^6,1\b/', $sab)) {
+			$data .= $v . " Triple Attack";
+			$v = ', ';
+		}
+		if (preg_match('/\b^7,1\b/', $sab)) {
+			$data .= $v . " Quad Attack";
+			$v = ', ';
+		}
+		if (preg_match('/\b^8,1\b/', $sab)) {
+			$data .= $v . " Dual Wield";
+			$v = ', ';
+		}
+		if (preg_match('/\b^9,1\b/', $sab)) {
+			$data .= $v . " Bane Attack";
+			$v = ', ';
+		}
+		if (preg_match('/\b^10,1\b/', $sab)) {
+			$data .= $v . " Magic Attack";
+			$v = ', ';
+		}
+		if (preg_match('/\b^12,1\b/', $sab)) {
+			$data .= $v . " Unslowable";
+			$v = ', ';
+		}
+		if (preg_match('/\b^13,1\b/', $sab)) {
+			$data .= $v . " Unmezzable";
+			$v = ', ';
+		}
+		if (preg_match('/\b^14,1\b/', $sab)) {
+			$data .= $v . " Uncharmable";
+			$v = ', ';
+		}
+		if (preg_match('/\b^15,1\b/', $sab)) {
+			$data .= $v . " Unstunnable";
+			$v = ', ';
+		}
+		if (preg_match('/\b^16,1\b/', $sab)) {
+			$data .= $v . " Unsnarable";
+			$v = ', ';
+		}
+		if (preg_match('/\b^17,1\b/', $sab)) {
+			$data .= $v . " Unfearable";
+			$v = ', ';
+		}
+		if (preg_match('/\b^18,1\b/', $sab)) {
+			$data .= $v . " Immune to Dispel";
+			$v = ', ';
+		}
+		if (preg_match('/\b^19,1\b/', $sab)) {
+			$data .= $v . " Immune to Melee";
+			$v = ', ';
+		}
+		if (preg_match('/\b^20,1\b/', $sab)) {
+			$data .= $v . " Immune to Magic";
+			$v = ', ';
+		}
+		if (preg_match('/\b^21,1\b/', $sab)) {
+			$data .= $v . " Does not flee";
+			$v = ', ';
+		}
+		if (preg_match('/\b^22,1\b/', $sab)) {
+			$data .= $v . " Immune to Non-Bane Melee";
+			$v = ', ';
+		}
+		if (preg_match('/\b^23,1\b/', $sab)) {
+			$data .= $v . " Immune to Non-Magic Melee";
+			$v = ', ';
+		}
+		if (preg_match('/\b^26,1\b/', $sab)) {
+			$data .= $v . " Resists Ranged Spells";
+			$v = ', ';
+		}
+		if (preg_match('/\b^27,1\b/', $sab)) {
+			$data .= $v . " Sees through Feign Death";
+			$v = ', ';
+		}
+		if (preg_match('/\b^28,1\b/', $sab)) {
+			$data .= $v . " Immune to Taunt";
+			$v = ', ';
+		}
+		if (preg_match('/\b^31,1\b/', $sab)) {
+			$data .= $v . " Unpacifiable";
+			$v = ', ';
+		}
+	}
+
+    return $data;
+}
+
 function price($price)
 {
     $res = "";

@@ -145,9 +145,9 @@ $npc_data = '
             </tr>
             ' . $npc_attack_speed . '
             <tr>
-                <td style="text-align:right"><b>Special attacks</b>
+                <td style="text-align:right"><b>Special Attacks</b>
                 </td>
-                <td>' . SpecialAttacks($npc["npcspecialattks"]) . '</td>
+                <td>' . SpecialAbilities($npc["special_abilities"]) . '</td>
             </tr>
         </tbody>
     </table>
