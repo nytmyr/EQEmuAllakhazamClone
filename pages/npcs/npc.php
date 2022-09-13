@@ -381,6 +381,7 @@ $query = "
     AND $spawn_entry_table.spawngroupID = $spawn2_table.spawngroupID
     AND $spawn2_table.zone = $zones_table.short_name
     AND $spawn_entry_table.spawngroupID = $spawn_group_table.id
+	AND $spawn2_table.enabled = 1
 ";
 foreach ($ignore_zones AS $zid) {
     $query .= " AND $zones_table.short_name!='$zid'";
