@@ -72,11 +72,19 @@ $page_title = "NPC :: " . get_npc_name_human_readable($name);
 
 $DebugNpc = FALSE; // for world builders, set this to false for common use
 
+if ($npc["raid_target"] == 1) {
+	$npctype = "- <font color=red>[Raid Encounter]<font color=black>";
+}
+
+if ($npc["rare_spawn"] == 1) {
+	$npctype = "- <font color=green>[Named/Rare]<font color=black>";
+}
+
 $print_buffer .= "
     <table class='display_table container_div'>
         <tr valign='top'>
             <td colspan='2'>
-                <h1>" . get_npc_name_human_readable($npc["name"]) . "</h1>
+                <h1>" . get_npc_name_human_readable($npc["name"]) . " " . $npctype . "</h1>
             </td>
         </tr>
 ";
