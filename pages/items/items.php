@@ -98,8 +98,12 @@ if (count($_GET) > 2) {
 		$query .= " $s $items_table.name NOT LIKE '%*'";
 		$s = "AND";
 	}
+	if ($ibeingsold != -1) {
+		$query .= " $s npc.`name` LIKE 'Valeen'";
+		$s = "AND";
+	}
 	if ($ibeingsold == 1) {
-		$query .= " $s npc.is_valeen_spawned = 1 AND npc.`name` LIKE 'Valeen'";
+		$query .= " $s npc.is_valeen_spawned = 1";
 		$s = "AND";
 	}
 	if ($ibeingsold != -1 AND $itier > 0) {
