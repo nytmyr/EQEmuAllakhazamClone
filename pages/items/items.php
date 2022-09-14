@@ -6,6 +6,7 @@
  *  For compatbility with Wikis and multi-word searches, underscores are treated as jokers in 'iname'.
  */
 
+$order = (isset($_GET['order']) ? addslashes($_GET["order"]) : "$items_table.Name ASC");
 $isearch = (isset($_GET['isearch']) ? $_GET['isearch'] : '');
 $iname = (isset($_GET['iname']) ? $_GET['iname'] : '');
 $iclass = (isset($_GET['iclass']) ? addslashes($_GET['iclass']) : '');
@@ -29,6 +30,9 @@ $imodvalue = (isset($_GET['imodvalue']) ? addslashes($_GET['imodvalue']) : '');
 $iskillmod = (isset($_GET['iskillmod']) ? addslashes($_GET['iskillmod']) : '');
 $iskillmodcomp = (isset($_GET['iskillmodcomp']) ? addslashes($_GET['iskillmodcomp']) : '');
 $iskillmodvalue = (isset($_GET['iskillmodvalue']) ? addslashes($_GET['iskillmodvalue']) : '');
+$ibardskillmod = (isset($_GET['ibardskillmod']) ? addslashes($_GET['ibardskillmod']) : '');
+$ibardskillmodcomp = (isset($_GET['ibardskillmodcomp']) ? addslashes($_GET['ibardskillmodcomp']) : '');
+$ibardskillmodvalue = (isset($_GET['ibardskillmodvalue']) ? addslashes($_GET['ibardskillmodvalue']) : '');
 $itype = (isset($_GET['itype']) ? addslashes($_GET['itype']) : -1);
 $iaugslot = (isset($_GET['iaugslot']) ? addslashes($_GET['iaugslot']) : '');
 $ieffect = (isset($_GET['ieffect']) ? addslashes($_GET['ieffect']) : '');
@@ -140,6 +144,10 @@ if (count($_GET) > 2) {
 		$query .= " $s ($items_table.skillmodtype = $iskillmod AND $items_table.skillmodvalue $iskillmodcomp $iskillmodvalue)";
 		$s = "AND";
 	}
+	if (($ibardskillmod != "") AND ($ibardskillmodvalue != "")) {
+		$query .= " $s ($items_table.bardtype = $ibardskillmod AND $items_table.bardvalue $ibardskillmodcomp $ibardskillmodvalue)";
+		$s = "AND";
+	}
 	
     if ($iavailability == 1) // mob dropped
     {
@@ -206,7 +214,7 @@ if (count($_GET) > 2) {
         $query .= " $s ($items_table.nodrop=1)";
         $s = "AND";
     }
-    $query .= " GROUP BY $items_table.id ORDER BY $items_table.Name LIMIT " . (get_max_query_results_count($max_items_returned) + 1);
+    $query .= " GROUP BY $items_table.id ORDER BY $order LIMIT " . (get_max_query_results_count($max_items_returned) + 1);
     $QueryResult = db_mysql_query($query);
 
     $field_values = '';
@@ -256,12 +264,19 @@ if (isset($QueryResult)) {
         $print_buffer .= "<br>";
 
         $print_buffer .= "<table class='display_table container_div datatable' id='item_search_results' style='width:100%'overflow--x:auto;>";
+		$url = $_SERVER['QUERY_STRING'];
+		$url = str_replace("&v_ajax","",$url);
+		#$url = $_SERVER['REQUEST_URI'];
+		#$url = str_replace("Allaclone/?","",$url);
+		#$print_buffer .= "<br><br>" . $url . "<br><br>";
+		#<th class='menuh'><a href=?" . $url . "&order=ac%20desc>AC</a></th>
+		#<th class='menuh'>AC</th>
         $print_buffer .= "
             <thead>
                 <th class='menuh'>Icon</th>
                 <th class='menuh'>Item Name</th>
                 <th class='menuh'>Item Type</th>
-                <th class='menuh'>AC</th>
+                <th class='menuh'><a href=?" . $url . "&order=ac%20desc>AC</a></th>
                 <th class='menuh'>HP</th>
                 <th class='menuh'>Mana</th>
                 <th class='menuh'>Damage</th>
@@ -325,6 +340,11 @@ if (isset($QueryResult)) {
 				<th class='menuh'>SkillMod</th>
 			";
 		}
+		if (($ibardskillmod != "") AND ($ibardskillmodvalue != "")) {
+			$print_buffer .= "
+				<th class='menuh'>BardMod</th>
+			";
+		}
 		if ($ireqlevel > 0 OR $iminlevel > 0) {
 			$print_buffer .= "
 				<th class='menuh'>LvlReq</th>
@@ -340,7 +360,7 @@ if (isset($QueryResult)) {
 				<th class='menuh'>Tier</th>
 			";
 		}
-		if ($ibeingsold != -1 AND ($ilowprice > 0 || $ihighprice > 0)) {
+		if ($ibeingsold != -1) {
 			$print_buffer .= "
 				<th class='menuh'>Price</th>
 			";
@@ -364,7 +384,6 @@ if (isset($QueryResult)) {
 			} else {
 				$TableData .= "<a href='?a=item&id=" . $row["ItemID"] . "' id='" . $row["ItemID"] . "'>" . $row["ItemName"] . "</a>";
 			}
-
             $TableData .= "</td><td>";
             $TableData .= $dbitypes[$row["itemtype"]];
             $TableData .= "</td><td>";
@@ -403,6 +422,10 @@ if (isset($QueryResult)) {
 				$TableData .= "</td><td>";
 				$TableData .= $row["skillmodvalue"];
 			}
+			if (($ibardskillmod != "") AND ($ibardskillmodvalue != "")) {
+				$TableData .= "</td><td>";
+				$TableData .= $row["bardvalue"];
+			}
 			if ($imodchosen) {
 				$TableData .= "</td><td>";
 				$TableData .= $row["$imod"];
@@ -424,7 +447,7 @@ if (isset($QueryResult)) {
 				$TableData .= "</td><td>";
 				$TableData .= $row["LastName"];
 			}
-			if ($ibeingsold != -1 AND ($ilowprice > 0 OR $ihighprice > 0)) {
+			if ($ibeingsold != -1) {
 				$TableData .= "</td><td>";
 				$TableData .= $row["alt_currency_cost"] . "<img src='$icons_url\item_2240.png' width='20px' height='10px'/>";
 			}
