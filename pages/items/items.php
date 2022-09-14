@@ -38,6 +38,8 @@ $iaugslot = (isset($_GET['iaugslot']) ? addslashes($_GET['iaugslot']) : '');
 $ieffect = (isset($_GET['ieffect']) ? addslashes($_GET['ieffect']) : '');
 $ireqlevel = (isset($_GET['ireqlevel']) ? addslashes($_GET['ireqlevel']) : '');
 $iminlevel = (isset($_GET['iminlevel']) ? addslashes($_GET['iminlevel']) : '');
+$imaxreclevel = (isset($_GET['imaxreclevel']) ? addslashes($_GET['imaxreclevel']) : '');
+$iminreclevel = (isset($_GET['iminreclevel']) ? addslashes($_GET['iminreclevel']) : '');
 $inodrop = (isset($_GET['inodrop']) ? addslashes($_GET['inodrop']) : '');
 $iavailability = (isset($_GET['iavailability']) ? addslashes($_GET['iavailability']) : '');
 $iavailevel = (isset($_GET['iavailevel']) ? addslashes($_GET['iavailevel']) : '');
@@ -120,7 +122,7 @@ if (count($_GET) > 2) {
 	}
     if (($istat1 != "") AND ($istat1value != "")) {
         if ($istat1 == "ratio") {
-            $query .= " $s ($items_table.delay/$items_table.damage $istat1comp $istat1value) AND ($items_table.damage>0)";
+            $query .= " $s ($items_table.damage/$items_table.delay $istat1comp $istat1value) AND ($items_table.damage>0)";
             $s = "AND";
         } else {
             $query .= " $s ($items_table.$istat1 $istat1comp $istat1value)";
@@ -129,7 +131,7 @@ if (count($_GET) > 2) {
     }
     if (($istat2 != "") AND ($istat2value != "")) {
         if ($istat2 == "ratio") {
-            $query .= " $s ($items_table.delay/$items_table.damage $istat2comp $istat2value) AND ($items_table.damage>0)";
+            $query .= " $s ($items_table.damage/$items_table.delay $istat2comp $istat2value) AND ($items_table.damage>0)";
             $s = "AND";
         } else {
             $query .= " $s ($items_table.$istat2 $istat2comp $istat2value)";
@@ -214,6 +216,14 @@ if (count($_GET) > 2) {
         $query .= " $s ($items_table.reqlevel<=$ireqlevel) ";
         $s = "AND";
     }
+	if ($iminreclevel > 0) {
+        $query .= " $s ($items_table.reclevel>=$iminreclevel) ";
+        $s = "AND";
+    }
+    if ($imaxreclevel > 0) {
+        $query .= " $s ($items_table.reclevel<=$imaxreclevel) ";
+        $s = "AND";
+    }
     if ($inodrop == 1) {
         $query .= " $s ($items_table.nodrop=1)";
         $s = "AND";
@@ -280,11 +290,11 @@ if (isset($QueryResult)) {
                 <th class='menuh'>Icon</th>
                 <th class='menuh'>Item Name</th>
                 <th class='menuh'>Item Type</th>
-                <th class='menuh'><a href=?" . $url . "&order=ac%20desc>AC</a></th>
-                <th class='menuh'>HP</th>
-                <th class='menuh'>Mana</th>
-                <th class='menuh'>Damage</th>
-                <th class='menuh'>Delay</th>
+                <th class='menuh'>AC<a href=?" . $url . "&order=ac%20desc>-</a>/<a href=?" . $url . "&order=ac%20asc>+</a></th>
+                <th class='menuh'>HP<a href=?" . $url . "&order=hp%20desc>-</a>/<a href=?" . $url . "&order=hp%20asc>+</a></th>
+				<th class='menuh'>Mana<a href=?" . $url . "&order=mana%20desc>-</a>/<a href=?" . $url . "&order=mana%20asc>+</a></th>
+                <th class='menuh'>Damage<a href=?" . $url . "&order=damage%20desc>-</a>/<a href=?" . $url . "&order=damage%20asc>+</a></th>
+                <th class='menuh'>Delay<a href=?" . $url . "&order=delay%20desc>-</a>/<a href=?" . $url . "&order=delay%20asc>+</a></th>
 				<th class='menuh'>Dmg Bonus</th>
         ";
 		if (($istat1 != "") AND ($istat1value != "") AND ($istat1 != "ac") AND ($istat1 != "hp") AND ($istat1 != "mana") AND ($istat1 != "damage") AND ($istat1 != "delay")) {
@@ -301,9 +311,20 @@ if (isset($QueryResult)) {
 			if ($istat1 == "regen") { $istat1chosen = "Regen";}
 			if ($istat1 == "manaregen") { $istat1chosen = "Mana Regen";}
 			if ($istat1 == "enduranceregen") { $istat1chosen = "End Regen";}
-			$print_buffer .= "
-				<th class='menuh'>$istat1chosen</th>
-			";
+			if ($istat1 == "aagi" OR $istat1 == "acha" OR $istat1 == "adex" OR $istat1 == "aint" OR $istat1 == "asta" OR $istat1 == "astr" OR $istat1 == "awis") {
+				$print_buffer .= "
+					<th class='menuh'>$istat1chosen<a href=?" . $url . "&order=a$istat1chosen%20desc>-</a>/<a href=?" . $url . "&order=a$istat1chosen%20asc>+</a></th>
+				";
+			} 
+			else if ($istat1 == "ratio") {
+				$print_buffer .= "
+					<th class='menuh'>$istat1chosen<a href=?" . $url . "&order=damage/delay%20desc>-</a>/<a href=?" . $url . "&order=damage/delay%20asc>+</a></th>
+				";
+			} else {
+				$print_buffer .= "
+					<th class='menuh'>$istat1chosen<a href=?" . $url . "&order=$istat1chosen%20desc>-</a>/<a href=?" . $url . "&order=$istat1chosen%20asc>+</a></th>
+				";
+			}
 		}
 		if (($istat2 != "") AND ($istat2value != "") AND ($istat2 != "ac") AND ($istat2 != "hp") AND ($istat2 != "mana") AND ($istat2 != "damage") AND ($istat2 != "delay")) {
 			if ($istat2 == "attack") { $istat2chosen = "ATK";}
@@ -319,9 +340,20 @@ if (isset($QueryResult)) {
 			if ($istat2 == "regen") { $istat2chosen = "Regen";}
 			if ($istat2 == "manaregen") { $istat2chosen = "Mana Regen";}
 			if ($istat2 == "enduranceregen") { $istat2chosen = "End Regen";}
-			$print_buffer .= "
-				<th class='menuh'>$istat2chosen</th>
-			";
+			if ($istat1 == "aagi" OR $istat1 == "acha" OR $istat1 == "adex" OR $istat1 == "aint" OR $istat1 == "asta" OR $istat1 == "astr" OR $istat1 == "awis") {
+				$print_buffer .= "
+					<th class='menuh'>$istat2chosen<a href=?" . $url . "&order=a$istat2chosen%20desc>-</a>/<a href=?" . $url . "&order=a$istat2chosen%20asc>+</a></th>
+				";
+			} 
+			else if ($istat1 == "ratio") {
+				$print_buffer .= "
+					<th class='menuh'>$istat2chosen<a href=?" . $url . "&order=damage/delay%20desc>-</a>/<a href=?" . $url . "&order=damage/delay%20asc>+</a></th>
+				";
+			} else {
+				$print_buffer .= "
+					<th class='menuh'>$istat2chosen<a href=?" . $url . "&order=$istat2chosen%20desc>-</a>/<a href=?" . $url . "&order=$istat2chosen%20asc>+</a></th>
+				";
+			}
 		}
 		if (($iresists != "") AND ($iresistsvalue != "")) {
 			if ($iresists == "mr") { $iresistschosen = "MR";}
@@ -330,28 +362,33 @@ if (isset($QueryResult)) {
             if ($iresists == "pr") { $iresistschosen = "PR";}
             if ($iresists == "dr") { $iresistschosen = "DR";}
 			$print_buffer .= "
-				<th class='menuh'>$iresistschosen</th>
+				<th class='menuh'>$iresistschosen<a href=?" . $url . "&order=$iresistschosen%20desc>-</a>/<a href=?" . $url . "&order=$iresistschosen%20asc>+</a></th>
 			";
 		}
 		if (($imod != "") AND ($imodvalue != "")) {
 			$imodchosen = 1;
 			$print_buffer .= "
-				<th class='menuh'>Mod</th>
+				<th class='menuh'>Mod<a href=?" . $url . "&order=$imod%20desc>-</a>/<a href=?" . $url . "&order=$imod%20asc>+</a></th>
 			";
 		}
 		if (($iskillmod != "") AND ($iskillmodvalue != "")) {
 			$print_buffer .= "
-				<th class='menuh'>SkillMod</th>
+				<th class='menuh'>SkillMod<a href=?" . $url . "&order=skillmodvalue%20desc>-</a>/<a href=?" . $url . "&order=skillmodvalue%20asc>+</a></th>
 			";
 		}
 		if (($ibardskillmod != "") AND ($ibardskillmodvalue != "")) {
 			$print_buffer .= "
-				<th class='menuh'>BardMod</th>
+				<th class='menuh'>BardMod<a href=?" . $url . "&order=bardvalue%20desc>-</a>/<a href=?" . $url . "&order=bardvalue%20asc>+</a></th>
 			";
 		}
 		if ($ireqlevel > 0 OR $iminlevel > 0) {
 			$print_buffer .= "
-				<th class='menuh'>LvlReq</th>
+				<th class='menuh'>LvlReq<a href=?" . $url . "&order=reqlevel%20desc>-</a>/<a href=?" . $url . "&order=reqlevel%20asc>+</a></th>
+			";
+		}
+		if ($imaxreclevel > 0 OR $iminreclevel > 0) {
+			$print_buffer .= "
+				<th class='menuh'>RecLvl<a href=?" . $url . "&order=reclevel%20desc>-</a>/<a href=?" . $url . "&order=reclevel%20asc>+</a></th>
 			";
 		}
 		if ($ibeingsold != -1) {
@@ -366,7 +403,7 @@ if (isset($QueryResult)) {
 		}
 		if ($ibeingsold != -1) {
 			$print_buffer .= "
-				<th class='menuh'>Price</th>
+				<th class='menuh'>Price<a href=?" . $url . "&order=alt_currency_cost%20desc>-</a>/<a href=?" . $url . "&order=alt_currency_cost%20asc>+</a></th>
 			";
 		}
 		$print_buffer .= "</thead>";
@@ -411,8 +448,13 @@ if (isset($QueryResult)) {
 			$TableData .= "</td><td>";
 			$TableData .= $dam2h[$row["delay"]];
 			if ($istat1chosen) {
-				$TableData .= "</td><td>";
-				$TableData .= $row["$istat1"];
+				if ($istat1chosen == "Ratio") {
+					$TableData .= "</td><td>";
+					$TableData .= $row["damage"] / $row["delay"];
+				} else {
+					$TableData .= "</td><td>";
+					$TableData .= $row["$istat1"];
+				}
 			}
 			if ($istat2chosen) {
 				$TableData .= "</td><td>";
@@ -437,6 +479,10 @@ if (isset($QueryResult)) {
 			if ($ireqlevel OR $iminlevel) {
 				$TableData .= "</td><td>";
 				$TableData .= $row["reqlevel"];
+			}
+			if ($imaxreclevel OR $iminreclevel) {
+				$TableData .= "</td><td>";
+				$TableData .= $row["reclevel"];
 			}
 			if ($ibeingsold != -1) {
 				$TableData .= "</td><td>";
