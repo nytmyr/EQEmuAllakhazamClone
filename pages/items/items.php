@@ -290,11 +290,11 @@ if (isset($QueryResult)) {
                 <th class='menuh'>Icon</th>
                 <th class='menuh'>Item Name</th>
                 <th class='menuh'>Item Type</th>
-                <th class='menuh'>AC<a href=?" . $url . "&order=ac%20desc>-</a>/<a href=?" . $url . "&order=ac%20asc>+</a></th>
-                <th class='menuh'>HP<a href=?" . $url . "&order=hp%20desc>-</a>/<a href=?" . $url . "&order=hp%20asc>+</a></th>
-				<th class='menuh'>Mana<a href=?" . $url . "&order=mana%20desc>-</a>/<a href=?" . $url . "&order=mana%20asc>+</a></th>
-                <th class='menuh'>Damage<a href=?" . $url . "&order=damage%20desc>-</a>/<a href=?" . $url . "&order=damage%20asc>+</a></th>
-                <th class='menuh'>Delay<a href=?" . $url . "&order=delay%20desc>-</a>/<a href=?" . $url . "&order=delay%20asc>+</a></th>
+                <th class='menuh'>AC<a href=?" . $url . "&order=$items_table.ac%20desc>-</a>/<a href=?" . $url . "&order=$items_table.ac%20asc>+</a></th>
+                <th class='menuh'>HP<a href=?" . $url . "&order=$items_table.hp%20desc>-</a>/<a href=?" . $url . "&order=$items_table.hp%20asc>+</a></th>
+				<th class='menuh'>Mana<a href=?" . $url . "&order=$items_table.mana%20desc>-</a>/<a href=?" . $url . "&order=$items_table.mana%20asc>+</a></th>
+                <th class='menuh'>Damage<a href=?" . $url . "&order=$items_table.damage%20desc>-</a>/<a href=?" . $url . "&order=$items_table.damage%20asc>+</a></th>
+                <th class='menuh'>Delay<a href=?" . $url . "&order=$items_table.delay%20desc>-</a>/<a href=?" . $url . "&order=$items_table.delay%20asc>+</a></th>
 				<th class='menuh'>Dmg Bonus</th>
         ";
 		if (($istat1 != "") AND ($istat1value != "") AND ($istat1 != "ac") AND ($istat1 != "hp") AND ($istat1 != "mana") AND ($istat1 != "damage") AND ($istat1 != "delay")) {
@@ -313,16 +313,16 @@ if (isset($QueryResult)) {
 			if ($istat1 == "enduranceregen") { $istat1chosen = "End Regen";}
 			if ($istat1 == "aagi" OR $istat1 == "acha" OR $istat1 == "adex" OR $istat1 == "aint" OR $istat1 == "asta" OR $istat1 == "astr" OR $istat1 == "awis") {
 				$print_buffer .= "
-					<th class='menuh'>$istat1chosen<a href=?" . $url . "&order=a$istat1chosen%20desc>-</a>/<a href=?" . $url . "&order=a$istat1chosen%20asc>+</a></th>
+					<th class='menuh'>$istat1chosen<a href=?" . $url . "&order=$items_table.$istat1%20desc>-</a>/<a href=?" . $url . "&order=$items_table.$istat1%20asc>+</a></th>
 				";
 			} 
 			else if ($istat1 == "ratio") {
 				$print_buffer .= "
-					<th class='menuh'>$istat1chosen<a href=?" . $url . "&order=damage/delay%20desc>-</a>/<a href=?" . $url . "&order=damage/delay%20asc>+</a></th>
+					<th class='menuh'>$istat1chosen<a href=?" . $url . "&order=$items_table.damage/delay%20desc>-</a>/<a href=?" . $url . "&order=$items_table.damage/delay%20asc>+</a></th>
 				";
 			} else {
 				$print_buffer .= "
-					<th class='menuh'>$istat1chosen<a href=?" . $url . "&order=$istat1chosen%20desc>-</a>/<a href=?" . $url . "&order=$istat1chosen%20asc>+</a></th>
+					<th class='menuh'>$istat1chosen<a href=?" . $url . "&order=$items_table.$istat1chosen%20desc>-</a>/<a href=?" . $url . "&order=$items_table.$istat1chosen%20asc>+</a></th>
 				";
 			}
 		}
@@ -340,18 +340,18 @@ if (isset($QueryResult)) {
 			if ($istat2 == "regen") { $istat2chosen = "Regen";}
 			if ($istat2 == "manaregen") { $istat2chosen = "Mana Regen";}
 			if ($istat2 == "enduranceregen") { $istat2chosen = "End Regen";}
-			if ($istat1 == "aagi" OR $istat1 == "acha" OR $istat1 == "adex" OR $istat1 == "aint" OR $istat1 == "asta" OR $istat1 == "astr" OR $istat1 == "awis") {
+			if ($istat2 == "aagi" OR $istat2 == "acha" OR $istat2 == "adex" OR $istat2 == "aint" OR $istat2 == "asta" OR $istat2 == "astr" OR $istat2 == "awis") {
 				$print_buffer .= "
-					<th class='menuh'>$istat2chosen<a href=?" . $url . "&order=a$istat2chosen%20desc>-</a>/<a href=?" . $url . "&order=a$istat2chosen%20asc>+</a></th>
+					<th class='menuh'>$istat2chosen<a href=?" . $url . "&order=$items_table.$istat2%20desc>-</a>/<a href=?" . $url . "&order=$items_table.$istat2%20asc>+</a></th>
 				";
 			} 
-			else if ($istat1 == "ratio") {
+			else if ($istat2 == "ratio") {
 				$print_buffer .= "
-					<th class='menuh'>$istat2chosen<a href=?" . $url . "&order=damage/delay%20desc>-</a>/<a href=?" . $url . "&order=damage/delay%20asc>+</a></th>
+					<th class='menuh'>$istat2chosen<a href=?" . $url . "&order=$items_table.damage/delay%20desc>-</a>/<a href=?" . $url . "&order=$items_table.damage/delay%20asc>+</a></th>
 				";
 			} else {
 				$print_buffer .= "
-					<th class='menuh'>$istat2chosen<a href=?" . $url . "&order=$istat2chosen%20desc>-</a>/<a href=?" . $url . "&order=$istat2chosen%20asc>+</a></th>
+					<th class='menuh'>$istat2chosen<a href=?" . $url . "&order=$items_table.$istat2chosen%20desc>-</a>/<a href=?" . $url . "&order=$items_table.$istat2chosen%20asc>+</a></th>
 				";
 			}
 		}
@@ -362,33 +362,33 @@ if (isset($QueryResult)) {
             if ($iresists == "pr") { $iresistschosen = "PR";}
             if ($iresists == "dr") { $iresistschosen = "DR";}
 			$print_buffer .= "
-				<th class='menuh'>$iresistschosen<a href=?" . $url . "&order=$iresistschosen%20desc>-</a>/<a href=?" . $url . "&order=$iresistschosen%20asc>+</a></th>
+				<th class='menuh'>$iresistschosen<a href=?" . $url . "&order=$items_table.$iresistschosen%20desc>-</a>/<a href=?" . $url . "&order=$items_table.$iresistschosen%20asc>+</a></th>
 			";
 		}
 		if (($imod != "") AND ($imodvalue != "")) {
 			$imodchosen = 1;
 			$print_buffer .= "
-				<th class='menuh'>Mod<a href=?" . $url . "&order=$imod%20desc>-</a>/<a href=?" . $url . "&order=$imod%20asc>+</a></th>
+				<th class='menuh'>Mod<a href=?" . $url . "&order=$items_table.$imod%20desc>-</a>/<a href=?" . $url . "&order=$items_table.$imod%20asc>+</a></th>
 			";
 		}
 		if (($iskillmod != "") AND ($iskillmodvalue != "")) {
 			$print_buffer .= "
-				<th class='menuh'>SkillMod<a href=?" . $url . "&order=skillmodvalue%20desc>-</a>/<a href=?" . $url . "&order=skillmodvalue%20asc>+</a></th>
+				<th class='menuh'>SkillMod<a href=?" . $url . "&order=$items_table.skillmodvalue%20desc>-</a>/<a href=?" . $url . "&order=$items_table.skillmodvalue%20asc>+</a></th>
 			";
 		}
 		if (($ibardskillmod != "") AND ($ibardskillmodvalue != "")) {
 			$print_buffer .= "
-				<th class='menuh'>BardMod<a href=?" . $url . "&order=bardvalue%20desc>-</a>/<a href=?" . $url . "&order=bardvalue%20asc>+</a></th>
+				<th class='menuh'>BardMod<a href=?" . $url . "&order=$items_table.bardvalue%20desc>-</a>/<a href=?" . $url . "&order=$items_table.bardvalue%20asc>+</a></th>
 			";
 		}
 		if ($ireqlevel > 0 OR $iminlevel > 0) {
 			$print_buffer .= "
-				<th class='menuh'>LvlReq<a href=?" . $url . "&order=reqlevel%20desc>-</a>/<a href=?" . $url . "&order=reqlevel%20asc>+</a></th>
+				<th class='menuh'>LvlReq<a href=?" . $url . "&order=$items_table.reqlevel%20desc>-</a>/<a href=?" . $url . "&order=$items_table.reqlevel%20asc>+</a></th>
 			";
 		}
 		if ($imaxreclevel > 0 OR $iminreclevel > 0) {
 			$print_buffer .= "
-				<th class='menuh'>RecLvl<a href=?" . $url . "&order=reclevel%20desc>-</a>/<a href=?" . $url . "&order=reclevel%20asc>+</a></th>
+				<th class='menuh'>RecLvl<a href=?" . $url . "&order=$items_table.reclevel%20desc>-</a>/<a href=?" . $url . "&order=$items_table.reclevel%20asc>+</a></th>
 			";
 		}
 		if ($ibeingsold != -1) {
@@ -457,8 +457,13 @@ if (isset($QueryResult)) {
 				}
 			}
 			if ($istat2chosen) {
-				$TableData .= "</td><td>";
-				$TableData .= $row["$istat2"];
+				if ($istat2chosen == "Ratio") {
+					$TableData .= "</td><td>";
+					$TableData .= $row["damage"] / $row["delay"];
+				} else {
+					$TableData .= "</td><td>";
+					$TableData .= $row["$istat2"];
+				}
 			}
 			if ($iresistschosen) {
 				$TableData .= "</td><td>";
