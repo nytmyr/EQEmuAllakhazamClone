@@ -94,7 +94,7 @@ $print_buffer .= "<table border='0' width='100%'>";
 
 $npc_attack_speed = "";
 if ($show_npcs_attack_speed == TRUE) {
-    $npc_attack_speed = "<tr><td style='text-align:right'><b>Attack speed</td><td>";
+    $npc_attack_speed = "<tr><td style='text-align:right'><b>Attack Speed</td><td>";
     if ($npc["attack_speed"] == 0) {
         $npc_attack_speed .= "Normal (100%)";
     } else {
@@ -109,7 +109,7 @@ $npc_data = '
     <table border="0" width="100%">
         <tbody>
             <tr>
-                <td style="width:250px !important; text-align:right"><b>Full name</b>
+                <td style="width:250px !important; text-align:right"><b>Full Name</b>
                 </td>
                 <td>' . get_npc_name_human_readable($npc["name"]) . " " . $npc["lastname"] . '</td>
             </tr>
@@ -129,12 +129,12 @@ $npc_data = '
                 <td>' . $dbclasses[$npc["class"]] . '</td>
             </tr>
             <tr>
-                <td style="text-align:right"><b>Main faction</b>
+                <td style="text-align:right"><b>Main Faction</b>
                 </td>
                 <td>' . return_npc_primary_faction($npc['npc_faction_id']) . '</td>
             </tr>
             <tr>
-                <td style="text-align:right"><b>Health points</b>
+                <td style="text-align:right"><b>Health Points</b>
                 </td>
                 <td>' . number_format($npc["hp"]) . '</td>
             </tr>
