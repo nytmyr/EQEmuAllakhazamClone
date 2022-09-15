@@ -14,6 +14,56 @@ if ($id != "" && is_numeric($id)) {
     }
     $npc = mysqli_fetch_array($QueryResult);
     $name = $npc["name"];
+	
+	$FirstKillQuery = "
+	SELECT n.`id` AS NPCID, n.`name` AS NPCName
+	, GROUP_CONCAT(DISTINCT
+		CASE 
+			WHEN g.`name` <> '' 
+				THEN g.`name`
+		END
+	SEPARATOR ', ') AS GuildKill
+	, GROUP_CONCAT(DISTINCT cd.`name`SEPARATOR ', ') AS PlayerKill
+	, k.`time` AS Time
+	FROM character_data cd
+	INNER JOIN qs_player_npc_kill_record_entries ke ON ke.`char_id` = cd.`id`
+	INNER JOIN 
+		(SELECT `fight_id`, `time`, `npc_id`
+			FROM qs_player_npc_kill_record 
+			WHERE `fight_id` 
+			IN (
+				SELECT MIN(`fight_id`)
+				FROM qs_player_npc_kill_record
+				WHERE `fight_id`
+				IN (
+					SELECT `event_id`
+					FROM qs_player_npc_kill_record_entries
+					WHERE `char_id`
+					IN (
+						SELECT `id`
+						FROM character_data
+						WHERE `account_id`
+						IN (
+							SELECT `id`
+							FROM account
+							WHERE `status` < 20
+							)
+							)
+							)
+				GROUP BY `npc_id`
+				)
+		) AS k
+	ON ke.`event_id` = k.`fight_id`
+	INNER JOIN npc_types n ON n.id = k.`npc_id`
+	LEFT JOIN guild_members gm ON gm.`char_id` = cd.`id`
+	LEFT JOIN guilds g ON g.`id` = gm.`guild_id`
+	WHERE n.`id` = " . $id . "
+	";
+	$FirstKillQueryResult = db_mysql_query($FirstKillQuery) or message_die('npc.php', 'MYSQL_QUERY', $FirstKillQuery, mysqli_error());
+    if (mysqli_num_rows($FirstKillQueryResult) == 0) {
+    }
+	$firstkill = mysqli_fetch_array($FirstKillQueryResult);
+	
 } elseif ($name != "") {
     $Query = "SELECT * FROM $npc_types_table WHERE name like '$name'";
     $QueryResult = db_mysql_query($Query) or message_die('npc.php', 'MYSQL_QUERY', $Query, mysqli_error());
@@ -25,6 +75,43 @@ if ($id != "" && is_numeric($id)) {
         $id = $npc["id"];
         $name = $npc["name"];
     }
+	$FirstKillQuery = "SELECT n.`id` AS NPCID, n.`name` AS NPCName
+		, GROUP_CONCAT(DISTINCT
+			CASE 
+				WHEN g.`name` <> '' 
+					THEN g.`name`
+			END
+		SEPARATOR ', ') AS GuildKill
+		, GROUP_CONCAT(DISTINCT cd.`name`SEPARATOR ', ') AS PlayerKill
+		, k.`time` AS Time
+		FROM character_data cd
+		INNER JOIN account a ON a.`id` = cd.`account_id`
+		INNER JOIN qs_player_npc_kill_record_entries ke ON ke.`char_id` = cd.`id`
+		INNER JOIN 
+			(SELECT `fight_id`, `zone_id`, `time`, `npc_id`
+				FROM qs_player_npc_kill_record 
+				WHERE `fight_id` 
+				IN (
+					select MIN(`fight_id`) 
+					FROM qs_player_npc_kill_record 
+					GROUP BY `npc_id`
+					)
+			) AS k
+		ON ke.`event_id` = k.`fight_id`
+		INNER JOIN npc_types n ON n.id = k.`npc_id`
+		LEFT JOIN guild_members gm ON gm.`char_id` = cd.`id`
+		LEFT JOIN guilds g ON g.`id` = gm.`guild_id`
+		-- WHERE n.`id` = 14118
+		WHERE n.`name` LIKE $name
+		AND a.`status` < 20
+		GROUP BY n.`id`
+	";
+	$FirstKillQueryResult = db_mysql_query($FirstKillQuery) or message_die('npc.php', 'MYSQL_QUERY', $FirstKillQuery, mysqli_error());
+    if (mysqli_num_rows($FirstKillQueryResult) == 0) {
+    } else {
+        $firstkill = mysqli_fetch_array($FirstKillQueryResult);
+    }
+	
 } else {
     header("Location: npcs.php");
     exit();
@@ -80,11 +167,37 @@ if ($npc["rare_spawn"] == 1) {
 	$npctype = "- <font color=green>[Named/Rare]<font color=black>";
 }
 
+if ($firstkill["GuildKill"] OR $firstkill["PlayerKill"]) {
+	$firstkill_data = '<br><span style="color: purple; font-size: 13px;"><b>First Killed By:</b>';
+	if ($firstkill["GuildKill"]) {
+		$firstkill_data .= '<br>Guild(s): <a href="/charbrowser/index.php?page=guild&guild=' . str_replace(' ', '%20', $firstkill["GuildKill"]) . '">' . $firstkill["GuildKill"] . '</a>';
+	}
+	if ($firstkill["PlayerKill"]) {
+		$playerarray = explode(',', $firstkill["PlayerKill"]);
+		$firstkill_data .= '<br>Players(s):';
+		$i;
+		$count = count($playerarray);
+		foreach ($playerarray as &$value) {
+			$i++;
+			$firstkill_data .= '<a href="/charbrowser/index.php?page=character&char=' . str_replace(' ', '', $value) . '">' . $value . '</a>';
+			if ($count > 0) {
+				if ($i < $count) {
+					$firstkill_data .= ', ';
+				}
+			}
+		}
+		
+	}
+	$firstkill_data .= '<br>@ '. $firstkill["Time"] . '';
+} else {
+	$firstkill_data = '<br><span style="color: purple; font-size: 13px;"><b>Not yet killed.</b>';
+}
+
 $print_buffer .= "
     <table class='display_table container_div'>
         <tr valign='top'>
             <td colspan='2'>
-                <h1>" . get_npc_name_human_readable($npc["name"]) . " " . $npctype . "</h1>
+                <h1>" . get_npc_name_human_readable($npc["name"]) . " " . $npctype . "" . $firstkill_data . "</h1>
             </td>
         </tr>
 ";
