@@ -16,12 +16,6 @@ if (isset($killtype) && $killtype != "null") {
 			SELECT 
 				n.id AS NPCID, 
 				REPLACE(REPLACE(n.`name`,'_',' '),'#','') AS NPCName, 
-				cd.id AS CharID, 
-				CASE
-					WHEN cd.`name` LIKE '%-deleted-%'
-						THEN SUBSTRING(cd.`name`, 1, INSTR(cd.`name`, '-deleted-')-1)
-					ELSE cd.`name` 
-				END AS CharName,
 				z.`short_name` AS ZoneSN,
 				z.`long_name` AS ZoneLN,
 				SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) AS 'Time',
@@ -51,7 +45,6 @@ if (isset($killtype) && $killtype != "null") {
 			FROM 
 				$data_buckets_table d
 			INNER JOIN $npc_types_table n ON n.id = SUBSTRING(d.`key`, INSTR(d.`key`,'-')+1)
-			INNER JOIN $character_table cd ON cd.id = SUBSTRING(d.`value`, INSTR(d.`value`,':')+1,INSTR(d.`value`,']')-INSTR(d.`value`,':')-1)
 			INNER JOIN $zones_table z ON z.short_name = SUBSTRING(d.`value`, INSTR(d.`value`,']')+1,INSTR(d.`value`,'|')-INSTR(d.`value`,']')-1)
 			WHERE d.`key` LIKE 'FirstRareKill%' 
 			ORDER BY $order
@@ -62,12 +55,6 @@ if (isset($killtype) && $killtype != "null") {
 			SELECT 
 				n.id AS NPCID, 
 				REPLACE(REPLACE(n.`name`,'_',' '),'#','') AS NPCName, 
-				cd.id AS CharID, 
-				CASE
-					WHEN cd.`name` LIKE '%-deleted-%'
-						THEN SUBSTRING(cd.`name`, 1, INSTR(cd.`name`, '-deleted-')-1)
-					ELSE cd.`name` 
-				END AS CharName, 
 				z.`short_name` AS ZoneSN,
 				z.`long_name` AS ZoneLN,
 				SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) AS 'Time',
@@ -97,7 +84,6 @@ if (isset($killtype) && $killtype != "null") {
 			FROM 
 				$data_buckets_table d
 			INNER JOIN $npc_types_table n ON n.id = SUBSTRING(d.`key`, INSTR(d.`key`,'-')+1)
-			INNER JOIN $character_table cd ON cd.id = SUBSTRING(d.`value`, INSTR(d.`value`,':')+1,INSTR(d.`value`,']')-INSTR(d.`value`,':')-1)
 			INNER JOIN $zones_table z ON z.short_name = SUBSTRING(d.`value`, INSTR(d.`value`,']')+1,INSTR(d.`value`,'|')-INSTR(d.`value`,']')-1)
 			WHERE d.`key` LIKE 'FirstRaidKill%' 
 			ORDER BY $order
@@ -114,7 +100,6 @@ if (isset($killtype) && $killtype != "null") {
 	$print_buffer .= "
 		<table class='display_table datatable container_div'><tr>
 		<td style='font-weight:bold' align=center><u><b><a href=?a=achiev_kills&killtype=" . $killtype . "&order=NPCName>NPC</a></b></u></td>
-		<td style='font-weight:bold' align=center><u><b><a href=?a=achiev_kills&killtype=" . $killtype . "&order=CharName>Player</a></b></u></td>
 		<td style='font-weight:bold' align=center><u><b><b><a href=?a=achiev_kills&killtype=" . $killtype . "&order=ZoneLN>Zone</a></b></u></td>
 		<td style='font-weight:bold' align=right><u><b><a href=?a=achiev_kills&killtype=" . $killtype . "&order=TimeScore>Time</a></b></u></td>
 	";
@@ -123,7 +108,6 @@ if (isset($killtype) && $killtype != "null") {
 		"
 			<tr>
 				<td align=center><a href='?a=npc&id=" . $row["NPCID"] . "'>" . $row["NPCName"] . "</a></td>
-				<td align=center><a href='/charbrowser/index.php?page=character&char=" . $row["CharID"] . "'>" . $row["CharName"] . "</a></td>
 				<td align=center><a href='?a=zone&name=" . $row["ZoneSN"] . "'>" . $row["ZoneLN"] . "</a></td>
 				<td align=right>" . $row["Time"] . "</td>
 			</tr>
