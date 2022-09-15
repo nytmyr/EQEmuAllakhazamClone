@@ -179,6 +179,7 @@ if ($firstkill["GuildKill"] OR $firstkill["PlayerKill"]) {
 		$count = count($playerarray);
 		foreach ($playerarray as &$value) {
 			$i++;
+			$value = $value = strtok($value, '-');
 			$firstkill_data .= '<a href="/charbrowser/index.php?page=character&char=' . str_replace(' ', '', $value) . '">' . $value . '</a>';
 			if ($count > 0) {
 				if ($i < $count) {
