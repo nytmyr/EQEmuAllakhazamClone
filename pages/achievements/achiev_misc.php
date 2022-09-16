@@ -35,32 +35,32 @@ if ($itemtype == "null") {
 	$bcopper = 0;
 	$CountValeen = 0;
 	
-	$query = "
-		SELECT COUNT(distinct kr.fight_id) AS Count, COUNT(distinct kr.npc_id) AS UniqueCount
-		FROM qs_player_npc_kill_record kr
-		INNER JOIN qs_player_npc_kill_record_entries kre ON kr.fight_id = kre.event_id
-		INNER JOIN character_data cd ON cd.id = kre.char_id
-		INNER JOIN account a ON a.id = cd.account_id
-		WHERE a.`status` < 20
-	";
-	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
-
-	$print_buffer .= 
-	"
-		<table class='container_div display_table'		style='width:500px'>
-		<td style='font-weight:bold' align=center>NPCs Killed</td>
-		<td style='font-weight:bold' align=center>Unique NPCs Killed</td>
-	";
-	while ($row = mysqli_fetch_array($result)) {
-		$print_buffer .=
-		"
-			<tr>
-				<td align=center>" . number_format($row["Count"]) . " <img src='$icons_url\item_1070.png' width='15px' height='15px'/></td>
-				<td align=center>" . number_format($row["UniqueCount"]) . " <img src='$icons_url\item_1070.png' width='15px' height='15px'/></td>
-			</tr>
-		";
-	}
-	$print_buffer .= "</table>";
+	#$query = "
+	#	SELECT COUNT(distinct kr.fight_id) AS Count, COUNT(distinct kr.npc_id) AS UniqueCount
+	#	FROM qs_player_npc_kill_record kr
+	#	INNER JOIN qs_player_npc_kill_record_entries kre ON kr.fight_id = kre.event_id
+	#	INNER JOIN character_data cd ON cd.id = kre.char_id
+	#	INNER JOIN account a ON a.id = cd.account_id
+	#	WHERE a.`status` < 20
+	#";
+	#$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
+	#
+	#$print_buffer .= 
+	#"
+	#	<table class='container_div display_table'		style='width:500px'>
+	#	<td style='font-weight:bold' align=center>NPCs Killed</td>
+	#	<td style='font-weight:bold' align=center>Unique NPCs Killed</td>
+	#";
+	#while ($row = mysqli_fetch_array($result)) {
+	#	$print_buffer .=
+	#	"
+	#		<tr>
+	#			<td align=center>" . number_format($row["Count"]) . " <img src='$icons_url\item_1070.png' width='15px' height='15px'/></td>
+	#			<td align=center>" . number_format($row["UniqueCount"]) . " <img src='$icons_url\item_1070.png' width='15px' height='15px'/></td>
+	#		</tr>
+	#	";
+	#}
+	#$print_buffer .= "</table>";
 	
 	$query = "
 		SELECT 
@@ -102,11 +102,11 @@ if ($itemtype == "null") {
 	}
 	
 	$query = "
-		SELECT SUM(r.shard_amount) AS Count
-		FROM rng_shards r
-		INNER JOIN character_data cd ON cd.id = r.charid
-		INNER JOIN account a ON a.id = cd.account_id
-		WHERE a.`status` < 20
+		SELECT 
+			CAST(d.`value` AS INT) AS Count
+		FROM 
+			$data_buckets_table d
+		WHERE d.`key` LIKE 'ShardsDropped'
 	";
 
 	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
@@ -144,12 +144,11 @@ if ($itemtype == "null") {
 	}
 	
 	$query = "
-		SELECT SUM((v.Plat * 1000) + (v.Gold * 100) + (v.Silver * 10) + v.Copper) AS Count
-		FROM vw_qs_merchant_transactions v
-		INNER JOIN character_data cd ON cd.name = v.`Character`
-		INNER JOIN account a ON a.id = cd.account_id
-		WHERE v.`Transaction` LIKE 'Bought'
-		AND a.`status` < 20
+		SELECT 
+			CAST(d.`value` AS INT) AS Count
+		FROM 
+			$data_buckets_table d
+		WHERE d.`key` LIKE 'CashSpent'
 	";
 	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 
@@ -172,12 +171,11 @@ if ($itemtype == "null") {
 	}
 	
 	$query = "
-		SELECT SUM((v.Plat * 1000) + (v.Gold * 100) + (v.Silver * 10) + v.Copper) AS Count
-		FROM vw_qs_merchant_transactions v
-		INNER JOIN character_data cd ON cd.name = v.`Character`
-		INNER JOIN account a ON a.id = cd.account_id
-		WHERE v.`Transaction` LIKE 'Sold'
-		AND a.`status` < 20
+		SELECT 
+			CAST(d.`value` AS INT) AS Count
+		FROM 
+			$data_buckets_table d
+		WHERE d.`key` LIKE 'CashReceived'
 	";
 	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 
@@ -200,11 +198,11 @@ if ($itemtype == "null") {
 	}
 	
 	$query = "
-		SELECT SUM(v.Cost) AS Count
-		FROM vw_shardvendorpurchases v
-		INNER JOIN character_data cd ON cd.name = v.`Char`
-		INNER JOIN account a ON a.id = cd.account_id
-		WHERE a.`status` < 20
+		SELECT 
+			CAST(d.`value` AS INT) AS Count
+		FROM 
+			$data_buckets_table d
+		WHERE d.`key` LIKE 'ShardsSpent'
 	";
 
 	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
@@ -1119,7 +1117,8 @@ if (isset($itemtype) && $itemtype != "null") {
 				END AS CharName,
 				SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) AS 'Time',
 				i.id AS ItemID,
-				i.`Name` AS ItemName
+				i.`Name` AS ItemName,
+				CAST(SUBSTRING(d.`key`, INSTR(d.`key`,'#')+1) AS INT) AS 'Count'
 			FROM 
 				$data_buckets_table d
 				INNER JOIN $character_table cd ON cd.id = SUBSTRING(d.`value`, INSTR(d.`value`,':')+1,INSTR(d.`value`,'|')-INSTR(d.`value`,':')-1)
@@ -1143,6 +1142,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			"
 				<tr>
 					<td align=left><a href='?a=item&id=" . $row["ItemID"] . "'>" . $row["ItemName"] . "</a></td>
+					<td align=center>#" . number_format($row["Count"]) . "</td>
 					<td align=center><a href='/charbrowser/index.php?page=character&char=" . $row["CharID"] . "'>" . $row["CharName"] . "</a></td>
 					<td align=center>" . $row["Time"] . "</td>
 				</tr>
