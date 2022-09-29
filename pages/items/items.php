@@ -49,6 +49,8 @@ $itier = (isset($_GET['itier']) ? addslashes($_GET['itier']) : '');
 $ilowprice = (isset($_GET['ilowprice']) ? addslashes($_GET['ilowprice']) : '');
 $ihighprice = (isset($_GET['ihighprice']) ? addslashes($_GET['ihighprice']) : '');
 $ivegas = (isset($_GET['ivegas']) ? addslashes($_GET['ivegas']) : '');
+$ishardvalue = (isset($_GET['ishardvalue']) ? addslashes($_GET['ishardvalue']) : '');
+
 if (count($_GET) > 2) {
     $query = "SELECT *, $items_table.icon AS ItemIcon ";
 	
@@ -288,8 +290,8 @@ if (isset($QueryResult)) {
         $print_buffer .= "
             <thead>
                 <th class='menuh'>Icon</th>
-                <th class='menuh'>Item Name</th>
-                <th class='menuh'>Item Type</th>
+                <th class='menuh'>Item Name<a href=?" . $url . "&order=$items_table.name%20desc>-</a>/<a href=?" . $url . "&order=$items_table.name%20asc>+</a></th>
+                <th class='menuh'>Item Type<a href=?" . $url . "&order=$items_table.itemtype%20desc>-</a>/<a href=?" . $url . "&order=$items_table.itemtype%20asc>+</a></th>
                 <th class='menuh'>AC<a href=?" . $url . "&order=$items_table.ac%20desc>-</a>/<a href=?" . $url . "&order=$items_table.ac%20asc>+</a></th>
                 <th class='menuh'>HP<a href=?" . $url . "&order=$items_table.hp%20desc>-</a>/<a href=?" . $url . "&order=$items_table.hp%20asc>+</a></th>
 				<th class='menuh'>Mana<a href=?" . $url . "&order=$items_table.mana%20desc>-</a>/<a href=?" . $url . "&order=$items_table.mana%20asc>+</a></th>
@@ -401,10 +403,16 @@ if (isset($QueryResult)) {
 				<th class='menuh'>Tier</th>
 			";
 		}
-		if ($ibeingsold != -1) {
-			$print_buffer .= "
-				<th class='menuh'>Price<a href=?" . $url . "&order=alt_currency_cost%20desc>-</a>/<a href=?" . $url . "&order=alt_currency_cost%20asc>+</a></th>
-			";
+		if ($ibeingsold != -1 OR $ishardvalue == 1) {
+			if ($ibeingsold != -1) {
+				$print_buffer .= "
+					<th class='menuh'>Price<a href=?" . $url . "&order=alt_currency_cost%20desc>-</a>/<a href=?" . $url . "&order=alt_currency_cost%20asc>+</a></th>
+				";
+			} else {
+				$print_buffer .= "
+					<th class='menuh'>Price<a href=?" . $url . "&order=GearScore%20desc>-</a>/<a href=?" . $url . "&order=GearScore%20asc>+</a></th>
+				";
+			}
 		}
 		$print_buffer .= "</thead>";
         $RowClass = "lr";
@@ -502,9 +510,25 @@ if (isset($QueryResult)) {
 				$TableData .= "</td><td>";
 				$TableData .= $row["LastName"];
 			}
-			if ($ibeingsold != -1) {
-				$TableData .= "</td><td>";
-				$TableData .= $row["alt_currency_cost"] . "<img src='$icons_url\item_2240.png' width='20px' height='10px'/>";
+			if ($ibeingsold != -1 OR $ishardvalue == 1) {
+				if ($ibeingsold != -1) {
+					$TableData .= "</td><td>";
+					$TableData .= $row["alt_currency_cost"] . "<img src='$icons_url\item_2240.png' width='20px' height='10px'/>";
+				} else {
+					$TableData .= "</td><td>";
+					if ($row["GearScore"] > 257) { $TableData .= intval($row["GearScore"] * 3.25); }
+					else if ($row["GearScore"] > 191) { $TableData .= intval($row["GearScore"] * 3); }
+					else if ($row["GearScore"] > 156) { $TableData .= intval($row["GearScore"] * 2.75); }
+					else if ($row["GearScore"] > 128) { $TableData .= intval($row["GearScore"] * 2.5); }
+					else if ($row["GearScore"] > 106) { $TableData .= intval($row["GearScore"] * 2.25); }
+					else if ($row["GearScore"] > 88) { $TableData .= intval($row["GearScore"] * 2); }
+					else if ($row["GearScore"] > 72) { $TableData .= intval($row["GearScore"] * 1.75); }
+					else if ($row["GearScore"] > 58) { $TableData .= intval($row["GearScore"] * 1.5); }
+					else if ($row["GearScore"] > 45) { $TableData .= intval($row["GearScore"] * 1.25); }
+					else if ($row["GearScore"] > 0) { $TableData .= intval($row["GearScore"]); }
+					else { $TableData .= 0; }
+					$TableData .= " <img src='$icons_url\item_2240.png' width='20px' height='10px'/>";
+				}
 			}
             $TableData .= "</td><td>";
 
