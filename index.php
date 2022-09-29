@@ -63,7 +63,7 @@
     <div id="skin-wrap"></div>
     <div id="header">
         <div id="logo" style="background: url(images/logos/eqemu.png) 0 10px no-repeat;">
-            <a href="#" style="background: url(images/logos/logo.png) right no-repeat;top:10px"></a>
+            <a href="/" style="background: url(images/logos/logo.png) right no-repeat;top:10px"></a>
             <?php
                 if($site_logo)
                     echo '<img src="' . $site_logo . '" style="width: 200px;height:auto;position: absolute;left: 340px;z-index: 900;bottom: 10px;">';
