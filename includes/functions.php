@@ -412,9 +412,9 @@ function SelectTradeSkills($name, $selected)
     $return_buffer .= WriteIt("65", "Brewing", $selected);
     $return_buffer .= WriteIt("55", "Fishing", $selected);
     $return_buffer .= WriteIt("64", "Fletching", $selected);
-    $return_buffer .= WriteIt("68", "Jewelery making", $selected);
-    $return_buffer .= WriteIt("56", "Poison making", $selected);
-    $return_buffer .= WriteIt("69", "Pottery making", $selected);
+    $return_buffer .= WriteIt("68", "Jewelery Making", $selected);
+    $return_buffer .= WriteIt("56", "Poison Making", $selected);
+    $return_buffer .= WriteIt("69", "Pottery Making", $selected);
     $return_buffer .= WriteIt("58", "Research", $selected);
     $return_buffer .= WriteIt("61", "Tailoring", $selected);
     $return_buffer .= WriteIt("57", "Tinkering", $selected);
@@ -1328,7 +1328,7 @@ function return_item_stat_box($item, $show_name_icon)
         if ($item["proclevel2"] > 0) {
             $html_string .= "<br><b>Level for effect: </b>" . $item["proclevel2"];
         }
-        $html_string .= "<br><b>Effect chance modifier: </b>" . (100 + $item["procrate"]) . "%";
+        $html_string .= "<br><b>Effect Chance Modifier: </b>" . (100 + $item["procrate"]) . "%";
         $html_string .= "</td></tr>";
     }
     // worn effect
@@ -1418,8 +1418,20 @@ function return_item_stat_box($item, $show_name_icon)
     }
     // bard item ?
     if (($item["bardtype"] > 22) && ($item["bardtype"] < 65535)) {
-        $html_string .= "<tr><td width='0%' nowrap='1' colspan='2'><b>Bard skill: </b> " . $dbbardskills[$item["bardtype"]];
-        if ($dbbardskills[$item["bardtype"]] == "") {
+		if ($item["bardtype"] == 23) {
+			$bardinstrument = "Wind Instruments";
+		}
+		if ($item["bardtype"] == 24) {
+			$bardinstrument = "String Instruments";
+		}
+		if ($item["bardtype"] == 25) {
+			$bardinstrument = "Brass Instruments";
+		}
+		if ($item["bardtype"] == 26) {
+			$bardinstrument = "Drum Instruments";
+		}
+        $html_string .= "<tr><td width='0%' nowrap='1' colspan='2'><b>Bard Skill: </b> " . $bardinstrument;
+        if ($bardinstrument == "") {
             $html_string .= "Unknown" . $item["bardtype"];
         }
         $val = ($item["bardvalue"] * 10) - 100;
