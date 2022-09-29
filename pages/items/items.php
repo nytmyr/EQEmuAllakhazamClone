@@ -59,7 +59,7 @@ if (count($_GET) > 2) {
 	}
 	
 	if ($ieffect != "") {
-		$query .= ", proc_s.icon AS ProcIcon, worn_s.icon AS WornIcon, focus_s.icon AS FocusIcon, click_s.icon AS ClickIcon";
+		$query .= ", $items_table.id AS ItemID, $items_table.Name AS ItemName, proc_s.icon AS ProcIcon, worn_s.icon AS WornIcon, focus_s.icon AS FocusIcon, click_s.icon AS ClickIcon";
 	}
 	$query .= " FROM ($items_table";
 
@@ -428,7 +428,7 @@ if (isset($QueryResult)) {
             $TableData .= "</td><td>";
 
             # CreateToolTip($row["id"], return_item_stat_box($row, 1));
-			if ($ibeingsold == -1) {
+			if ($ibeingsold == -1 AND $ieffect == "") {
 				$TableData .= "<a href='?a=item&id=" . $row["id"] . "' id='" . $row["id"] . "'>" . $row["Name"] . "</a>";
 			} else {
 				$TableData .= "<a href='?a=item&id=" . $row["ItemID"] . "' id='" . $row["ItemID"] . "'>" . $row["ItemName"] . "</a>";
