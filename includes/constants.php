@@ -616,6 +616,7 @@ $dbbardskills[23] = "Wind";
 $dbbardskills[24] = "Strings";
 $dbbardskills[25] = "Brass";
 $dbbardskills[26] = "Percussions";
+$dbbardskills[50] = "Singing";
 $dbbardskills[51] = "All Instruments";
 
 $NPCTypeArray = [

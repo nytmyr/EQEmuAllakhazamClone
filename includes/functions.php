@@ -1430,13 +1430,19 @@ function return_item_stat_box($item, $show_name_icon)
 		if ($item["bardtype"] == 26) {
 			$bardinstrument = "Drum Instruments";
 		}
+		if ($item["bardtype"] == 50) {
+			$bardinstrument = "Singing";
+		}
+		if ($item["bardtype"] == 51) {
+			$bardinstrument = "All Types";
+		}
         $html_string .= "<tr><td width='0%' nowrap='1' colspan='2'><b>Bard Skill: </b> " . $bardinstrument;
         if ($bardinstrument == "") {
             $html_string .= "Unknown" . $item["bardtype"];
         }
         $val = ($item["bardvalue"] * 10) - 100;
         if ($val > 0) {
-            $html_string .= " (" . sign($val) . "%)</td></tr>";
+            $html_string .= " (" . $val . "%)</td></tr>";
         }
     }
 
