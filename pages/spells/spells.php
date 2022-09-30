@@ -141,6 +141,7 @@ if (($type != 0 && $level != 0) || $namestring != '') {
             $print_buffer .= '<tr>
 					<td class="menuh" colspan=2>Name</td>
 					<td class="menuh">Class</td>
+					<td class="menuh">Level</td>
 					<td class="menuh">Effect(s)</td>
 					<td class="menuh">Mana</td>
 					<td class="menuh">Skill</td>
@@ -150,7 +151,8 @@ if (($type != 0 && $level != 0) || $namestring != '') {
         $print_buffer .= '<tr class="' . $RowClass . '">
 					<td valign="top"><a href="?a=spell&id=' . $row['id'] . '"><img src="' . $icons_url . $row['new_icon'] . '.gif" align="center" border="1"></a></td>
 					<td valign="top"><a href="?a=spell&id=' . $row['id'] . '">' . $row['name'] . '</a></td>
-					<td valign="top">' . $ClassName . " " . $LevelCheck . '</td>
+					<td valign="top">' . $ClassName . '</td>
+					<td valign="top">' . $LevelCheck . '</td>
 					<td valign="top"><small>';
 		for ($n = 1; $n <= 12; $n++) {
 			if ($row['effectid'.$n.''] != 10 || ($row['effectid'.$n.''] == 10 && ($row['effect_base_value'.$n.''] != 0 || $row['effect_limit_value'.$n.''] != 0 || $row['max'.$n.''] != 0))) {
