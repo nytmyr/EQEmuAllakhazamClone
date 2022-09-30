@@ -9,6 +9,8 @@
 $route = $_GET['a'];
 if ($route == "spells") {
     require_once('pages/spells/spells.php');
+} else if ($route == "botspells") {
+    require_once('pages/spells/botspells.php');
 } else if ($route == "spell") {
     require_once('pages/spells/spell.php');
 } else if ($route == "item") {

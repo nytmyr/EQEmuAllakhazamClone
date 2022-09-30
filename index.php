@@ -146,6 +146,7 @@
                                             <tr>
                                                 <td  class="menu_item">
                                                     <li><a href="?a=spells">Spell Search</a></li>
+													<li><a href="?a=botspells">Bot Spell Search</a></li>
                                                 </td>
                                             </tr>
                                             <tr>
