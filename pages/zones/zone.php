@@ -58,6 +58,7 @@ $query = "
 ";
 $result = db_mysql_query($query) or message_die('zones.php', 'MYSQL_QUERY', $query, mysqli_error());
 $zone = mysqli_fetch_array($result);
+
 $set_color = "black";
 $hotzone = "";
 if ($zone["Bonus"] < -20) {
@@ -85,7 +86,35 @@ if ($zone["hotzone"] == 1) {
 	//$setcolor = "green";
 	$hotzone = "<font color=red>[HOTZONE]";
 }
-$print_buffer .= "<br><br><br><p><b>Zone Experience Rate: <font color=" . $setcolor . ">" . $zone["Bonus"] . "% " . $hotzone . "</b><font color=black>";
+
+$print_buffer .= "<br><br><br><p><b>Connected Zones: </b>";
+$querytwo = "
+	SELECT DISTINCT z.zoneidnumber, z.short_name AS TargetZone, zp.zone AS ZoneFrom, zz.long_name
+	FROM $zones_table z
+	LEFT JOIN $zone_points_table zp ON zp.target_zone_id = z.zoneidnumber
+	INNER JOIN $zones_table zz ON zp.zone = zz.short_name
+	WHERE z.short_name = '$name'
+	AND z.min_level = 0
+	AND z.`version` = 0
+	AND zp.zone != z.short_name
+";
+$resulttwo = db_mysql_query($querytwo) or message_die('zones.php', 'MYSQL_QUERY', $querytwo, mysqli_error());
+$resultcount = 1;
+$num_rows = mysqli_num_rows($resulttwo);
+while ($zonelinks = mysqli_fetch_array($resulttwo)) {
+	if ($resultcount == 1) {
+		$print_buffer .= "<a href='?a=zone&name=" . $zonelinks["ZoneFrom"] . "''>" . $zonelinks["long_name"] . "</a>";
+	}
+	else if ($resultcount < $num_rows) {
+		$print_buffer .= ", <a href='?a=zone&name=" . $zonelinks["ZoneFrom"] . "''>" . $zonelinks["long_name"] . "</a>";
+	}
+	else if ($resultcount == $num_rows) {
+		$print_buffer .= " and <a href='?a=zone&name=" . $zonelinks["ZoneFrom"] . "''>" . $zonelinks["long_name"] . "</a>";
+	}
+	++$resultcount;
+}
+
+$print_buffer .= "<br><br><p><b>Zone Experience Rate: <font color=" . $setcolor . ">" . $zone["Bonus"] . "% " . $hotzone . "</b><font color=black>";
 $print_buffer .= "<table style='width:100%'><tr valign=top><td>";
 $print_buffer .= "<p><b>Succor point : X (</b>" . floor($zone["safe_x"]) . ")  Y (" . floor($zone["safe_y"]) . ") Z (" . floor($zone["safe_z"]) . ")";
 
@@ -131,18 +160,20 @@ $print_buffer .= "<p><u><b><font color=" . $setcolor . ">Requirements To Enter: 
 
 if ($mode == "npcs") {
     ////////////// NPCS
-    $query = "SELECT $npc_types_table.id,$npc_types_table.class,$npc_types_table.level,$npc_types_table.trackable,$npc_types_table.maxlevel,$npc_types_table.race,$npc_types_table.`name`,$npc_types_table.maxlevel,$npc_types_table.loottable_id
+    $query = "SELECT $npc_types_table.id,$npc_types_table.class,$npc_types_table.level,$npc_types_table.trackable,$npc_types_table.maxlevel,$npc_types_table.race,$npc_types_table.`name`,$npc_types_table.`lastname`,$npc_types_table.maxlevel,$npc_types_table.loottable_id,$npc_types_table.rare_spawn,$npc_types_table.raid_target
 		FROM $npc_types_table,$spawn2_table,$spawn_entry_table,$spawn_group_table";
     $query .= " WHERE $spawn2_table.zone='$name'
 		AND $spawn_entry_table.spawngroupID=$spawn2_table.spawngroupID
 		AND $spawn_entry_table.npcID=$npc_types_table.id
-		AND $spawn_group_table.id=$spawn_entry_table.spawngroupID";
+		AND $spawn_group_table.id=$spawn_entry_table.spawngroupID
+		AND $spawn2_table.enabled = 1
+		";
 
     if ($hide_invisible_men == TRUE) {
         $query .= " AND $npc_types_table.race!=127 AND $npc_types_table.race!=240";
     }
     if ($group_npcs_by_name == TRUE) {
-        $query .= " GROUP BY $npc_types_table.`name`";
+        $query .= " GROUP BY $npc_types_table.`name`, $npc_types_table.`lastname`";
     } else {
         $query .= " GROUP BY $npc_types_table.id";
     }
@@ -168,7 +199,11 @@ if ($mode == "npcs") {
                 if ($ZoneDebug == TRUE) {
                     $print_buffer .= "<td>" . $row["id"] . "</td>";
                 }
-                $print_buffer .= "<td><a href=?a=npc&id=" . $row["id"] . ">" . get_npc_name_human_readable($row["name"]) . "</a>";
+				if ($row["lastname"] != '') {
+					$print_buffer .= "<td><a href=?a=npc&id=" . $row["id"] . ">" . get_npc_name_human_readable($row["name"] . " (" . $row["lastname"] . ")") . "</a>";
+				} else {
+					$print_buffer .= "<td><a href=?a=npc&id=" . $row["id"] . ">" . get_npc_name_human_readable($row["name"]) . "</a>";
+				}
                 if ($ZoneDebug == TRUE) {
                     $print_buffer .= "</td><td>" . $row["loottable_id"];
                 }
@@ -181,8 +216,13 @@ if ($mode == "npcs") {
 
                 $print_buffer .= "</td><td align=left>" . $row["level"] . " - " . $MaxLevel . " </td>";
                 $print_buffer .= "<td align=left>" . $dbiracenames[$row["race"]] . "</td>";
-                $print_buffer .= "<td align=left>" . NpcTypeFromName($row["name"]) . "</td></tr>";
-
+				if ($row["rare_spawn"] == 1) {
+					$print_buffer .= "<td align=left>Named/Rare</td></tr>";
+				} else if ($row["raid_target"] == 1) {
+					$print_buffer .= "<td align=left>Raid Target</td></tr>";
+				} else {
+					$print_buffer .= "<td align=left>Normal</td></tr>";
+				}
                 if ($RowClass == "lr") {
                     $RowClass = "dr";
                 } else {

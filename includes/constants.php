@@ -29,10 +29,13 @@ $zones_table                = "zone";
 $discovered_items_table     = "discovered_items";
 $spell_globals_table        = "spell_globals";
 $spells_table               = "spells_new";
+$bot_spells_table           = "bot_spells_entries";
 $tasks_table                = "tasks";
 $activities_table           = "activities";
-$data_buckets_table = "data_buckets";
-$leaderboard_table = "char_leaderboard_data";
+$data_buckets_table 		= "data_buckets";
+$leaderboard_table 			= "char_leaderboard_data";
+$doors_table                = "doors";
+$zone_points_table          = "zone_points";
 
 // added tables, source the needed file from the includes/sql directory
 $tbspawnarea  = "spawnarea"; // Tool Specific Table
