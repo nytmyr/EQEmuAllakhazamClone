@@ -13,7 +13,8 @@ $page_title = "The Planes of Power";
 <li><a href=?a=zone&name=poknowledge>Plane of Knowledge</a>
 <li><a href=?a=zone&name=ponightmare>Plane of Nightmare</a>
 <li><a href=?a=zone&name=postorms>Plane of Storms</a>
-<li><a href=?a=zone&name=potimea>Plane of Time</a>
+<li><a href=?a=zone&name=potimea>Plane of Time A</a>
+<li><a href=?a=zone&name=potimeb>Plane of Time B</a>
 <li><a href=?a=zone&name=potorment>Plane of Torment</a>
 <li><a href=?a=zone&name=potranquility>Plane of Tranquility</a>
 <li><a href=?a=zone&name=povalor>Plane of Valor</a>
