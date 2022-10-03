@@ -97,6 +97,7 @@ $querytwo = "
 	AND z.min_level = 0
 	AND z.`version` = 0
 	AND zp.zone != z.short_name
+	AND zp.min_expansion != 127
 ";
 $resulttwo = db_mysql_query($querytwo) or message_die('zones.php', 'MYSQL_QUERY', $querytwo, mysqli_error());
 $resultcount = 1;
@@ -422,7 +423,7 @@ if ($mode == "forage") {
 			<td class=tab_title>Name</a></td>
 			</tr>";
         while ($row = mysqli_fetch_array($result)) {
-            $print_buffer .= "<tr><td><a href=?a=item&id=" . $row["id"] . ">" . $row["Name"] . "</a></td></tr>";
+            $print_buffer .= "<tr><td><a href=?a=item&id=" . $row["id"] . ">" . $row["name"] . "</a></td></tr>";
         }
         $print_buffer .= "</table>";
     } else {
