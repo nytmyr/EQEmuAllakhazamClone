@@ -19,6 +19,14 @@ function return_where_item_dropped_count($item_id){
         $item_add_chance_to_drop,
 		$item_add_chance_to_drop_as_rarity,
         $ignore_zones;
+	$original_item_id = $item_id;
+	
+	if ($item_id >= 800000) {
+		$item_id = $item_id - 800000;
+	}
+	else if ($item_id >= 600000) {
+		$item_id = $item_id - 600000;
+	}
 
     $is_item_dropped = get_field_result("item_id", 
 		"
@@ -34,7 +42,11 @@ function return_where_item_dropped_count($item_id){
     $return_buffer = "";
     if($is_item_dropped) {
         $return_buffer .= "<tr>";
-        $return_buffer .= "<td><h2 class='section_header'>This item is dropped in zones</h2>";
+		if ($original_item_id >= 600000) {
+			$return_buffer .= "<td><h2 class='section_header'>The non-Vegas version of this item is dropped in zones</h2>";
+		} else {
+			$return_buffer .= "<td><h2 class='section_header'>This item is dropped in zones</h2>";
+		}
         $return_buffer .= "</tr>";
         $return_buffer .= "<tr id='npc_dropped_view'>";
         $return_buffer .= "<td><ul><li><a onclick='npc_dropped_view(" . $item_id . ")'>Click to View</a></li></ul></td>";
@@ -61,7 +73,15 @@ function return_where_item_dropped($item_id, $via_ajax = 0)
 			$item_add_chance_to_drop_as_rarity,
             $ignore_zones,
 			$show_all_item_drops;
-
+	$original_item_id = $item_id;
+	
+	if ($item_id >= 800000) {
+		$item_id = $item_id - 800000;
+	}
+	else if ($item_id >= 600000) {
+		$item_id = $item_id - 600000;
+	}
+	
     $is_item_dropped = get_field_result("item_id", "SELECT item_id FROM $loot_drop_entries_table WHERE item_id=$item_id LIMIT 1");
 
     if($is_item_dropped) {
@@ -218,7 +238,12 @@ function return_where_item_dropped($item_id, $via_ajax = 0)
             $return_buffer = "";
             if($via_ajax == 0){
                 $return_buffer .= "<tr>";
-                $return_buffer .= "<td><h2 class='section_header'>This item is dropped in zones</h2>";
+				if ($original_item_id >= 600000) {
+					$return_buffer .= "<td><h2 class='section_header'>The non-Vegas version of this item is dropped in zones</h2>";
+				} else {
+					$return_buffer .= "<td><h2 class='section_header'>This item is dropped in zones</h2>";
+				}
+                #$return_buffer .= "<td><h2 class='section_header'>This item is dropped in zones</h2>";
             }
             $current_zone_iteration = "";
             while ($row = mysqli_fetch_array($result)) {
@@ -261,7 +286,15 @@ function return_where_item_sold($item_id){
             $zones_table,
             $spawn_entry_table,
             $item;
-
+	$original_item_id = $item_id;
+	
+	if ($item_id >= 800000) {
+		$item_id = $item_id - 800000;
+	}
+	else if ($item_id >= 600000) {
+		$item_id = $item_id - 600000;
+	}
+	
     $is_item_sold_anywhere = get_field_result(
         "item",
         "SELECT item FROM $merchant_list_table WHERE item=$item_id LIMIT 1");
@@ -295,7 +328,12 @@ function return_where_item_sold($item_id){
         if (mysqli_num_rows($result) > 0) {
             $return_buffer = "";
             $return_buffer .= "<tr>";
-            $return_buffer .= "<td><h2 class='section_header'>This item is sold:</h2>";
+			if ($original_item_id >= 600000) {
+				$return_buffer .= "<td><h2 class='section_header'>The non-Vegas version of this item is sold:</h2>";
+			} else {
+				$return_buffer .= "<td><h2 class='section_header'>This item is sold:</h2>";
+			}
+           #$return_buffer .= "<td><h2 class='section_header'>This item is sold:</h2>";
 
             $current_zone_iteration = "";
             while ($row = mysqli_fetch_array($result)) {
@@ -340,7 +378,15 @@ function return_where_item_ground_spawn($item_id){
     global
             $ground_spawns_table,
             $zones_table;
-
+	$original_item_id = $item_id;
+	
+	if ($item_id >= 800000) {
+		$item_id = $item_id - 800000;
+	}
+	else if ($item_id >= 600000) {
+		$item_id = $item_id - 600000;
+	}
+	
     $query = "
         SELECT
             $ground_spawns_table.*,
@@ -360,7 +406,13 @@ function return_where_item_ground_spawn($item_id){
     $result = db_mysql_query($query);
     if (mysqli_num_rows($result) > 0) {
         $return_buffer .= "<tr>";
-        $return_buffer .= "<td><h2 class='section_header'>This item spawns on the ground</h2><br>";
+		
+		if ($original_item_id >= 600000) {
+			$return_buffer .= "<td><h2 class='section_header'>The non-Vegas version of this item is sold:</h2>";
+		} else {
+			$return_buffer .= "<td><h2 class='section_header'>This item spawns on the ground</h2>";
+		}
+		#$return_buffer .= "<td><h2 class='section_header'>This item spawns on the ground</h2><br>";
 
         $current_zone_iteration = "";
 
@@ -387,7 +439,15 @@ function return_where_item_foraged($item_id){
     global
             $zones_table,
             $forage_table;
-
+	$original_item_id = $item_id;
+	
+	if ($item_id >= 800000) {
+		$item_id = $item_id - 800000;
+	}
+	else if ($item_id >= 600000) {
+		$item_id = $item_id - 600000;
+	}
+	
     $query = "
         SELECT
             $zones_table.short_name,
@@ -408,7 +468,17 @@ function return_where_item_foraged($item_id){
 
     $result = db_mysql_query($query);
     if (mysqli_num_rows($result) > 0) {
-        $print_buffer .= "
+		if ($original_item_id >= 600000) {
+			$print_buffer .= "
+            <tr>
+                <td colspan='2'></td>
+            <tr>
+            <tr>
+                <td>
+                <h2 class='section_header'>The non-Vegas version of this item can be foraged in:</h2>
+        ";
+		} else {
+			$print_buffer .= "
             <tr>
                 <td colspan='2'></td>
             <tr>
@@ -416,6 +486,15 @@ function return_where_item_foraged($item_id){
                 <td>
                 <h2 class='section_header'>This item can be foraged in:</h2>
         ";
+		}
+        #$print_buffer .= "
+        #    <tr>
+        #        <td colspan='2'></td>
+        #    <tr>
+        #    <tr>
+        #        <td>
+        #        <h2 class='section_header'>This item can be foraged in:</h2>
+        #";
         while ($row = mysqli_fetch_array($result)) {
             $print_buffer .= "
                 <li>
@@ -434,7 +513,15 @@ function return_where_item_used_trade_skills($item_id){
             $trade_skill_recipe_table,
             $trade_skill_recipe_entries,
             $dbskills;
-
+	$original_item_id = $item_id;
+	
+	if ($item_id >= 800000) {
+		$item_id = $item_id - 800000;
+	}
+	else if ($item_id >= 600000) {
+		$item_id = $item_id - 600000;
+	}
+	
     $query = "
         SELECT
             $trade_skill_recipe_table.`name`,
@@ -453,7 +540,12 @@ function return_where_item_used_trade_skills($item_id){
     $result = db_mysql_query($query);
     $return_buffer = "";
     if (mysqli_num_rows($result) > 0) {
-        $return_buffer .= '<tr><td colspan="2"><h2 class="section_header">This item is used in tradeskill recipes</h2></td></tr>';
+		if ($original_item_id >= 600000) {
+			$return_buffer .= "<td><h2 class='section_header'>The non-Vegas version of this item is used in tradeskill recipes</h2>";
+		} else {
+			$return_buffer .= "<td><h2 class='section_header'>This item is used in tradeskill recipes/h2>";
+		}
+        #$return_buffer .= '<tr><td colspan="2"><h2 class="section_header">This item is used in tradeskill recipes</h2></td></tr>';
         $return_buffer .= "<tr><td><ul>";
         while ($row = mysqli_fetch_array($result)) {
             $return_buffer .= "
@@ -475,7 +567,15 @@ function return_where_item_result_trade_skill($item_id){
         $trade_skill_recipe_table,
         $trade_skill_recipe_entries,
         $dbskills;
-
+	$original_item_id = $item_id;
+	
+	if ($item_id >= 800000) {
+		$item_id = $item_id - 800000;
+	}
+	else if ($item_id >= 600000) {
+		$item_id = $item_id - 600000;
+	}
+	
     $query = "
         SELECT
             $trade_skill_recipe_table.`name`,
@@ -494,7 +594,12 @@ function return_where_item_result_trade_skill($item_id){
     $result = db_mysql_query($query);
     $return_buffer = "";
     if (mysqli_num_rows($result) > 0) {
-        $return_buffer .= "<tr><td><h2 class='section_header'>This item is the result of tradeskill recipes</h2><ul>";
+		if ($original_item_id >= 600000) {
+			$return_buffer .= "<td><h2 class='section_header'>The non-Vegas version of this item is the result of tradeskill recipes</h2>";
+		} else {
+			$return_buffer .= "<td><h2 class='section_header'>This item is the result of tradeskill recipes/h2>";
+		}
+        #$return_buffer .= "<tr><td><h2 class='section_header'>This item is the result of tradeskill recipes</h2><ul>";
         while ($row = mysqli_fetch_array($result)) {
             $return_buffer .= "
                 <li style='list-style-type:none'>
