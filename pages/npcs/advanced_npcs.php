@@ -76,7 +76,10 @@ if (isset($isearch) && $isearch != '') {
         $query .= " AND $npc_types_table.`name` LIKE '%$iname%'";
     }
     if ($hide_invisible_men == TRUE) {
-        $query .= " AND $npc_types_table.race!=127";
+        $query .= "
+			AND (($npc_types_table.`race` = 127 AND $npc_types_table.`mindmg` != 1 AND $npc_types_table.`maxdmg` != 4 AND $npc_types_table.`show_name` = 1) OR ($npc_types_table.`race` != 127))
+			AND (($npc_types_table.`race` = 240 AND $npc_types_table.`mindmg` != 1 AND $npc_types_table.`maxdmg` != 4 AND $npc_types_table.`show_name` = 1) OR ($npc_types_table.`race` != 240))
+		";
     }
     $query .= " ORDER BY $npc_types_table.`name`";
     $result = db_mysql_query($query) or message_die('npcs.php', 'MYSQL_QUERY', $query, mysqli_error());

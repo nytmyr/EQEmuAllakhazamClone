@@ -29,7 +29,10 @@ if ($npc_name != "") {
         $post_query .= " AND $npc_types_table.Name like '%$name%'";
     }
     if ($hide_invisible_men) {
-        $post_query .= " AND $npc_types_table.race != 127 AND $npc_types_table.race != 240";
+        $post_query .= "
+			AND (($npc_types_table.`race` = 127 AND $npc_types_table.`mindmg` != 1 AND $npc_types_table.`maxdmg` != 4 AND $npc_types_table.`show_name` = 1) OR ($npc_types_table.`race` != 127))
+			AND (($npc_types_table.`race` = 240 AND $npc_types_table.`mindmg` != 1 AND $npc_types_table.`maxdmg` != 4 AND $npc_types_table.`show_name` = 1) OR ($npc_types_table.`race` != 240))
+		";
     }
     $post_query .= " ORDER BY $npc_types_table.Name, $npc_types_table.id LIMIT " . (get_max_query_results_count($max_npcs_returned) + 1);
 

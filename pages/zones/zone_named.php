@@ -232,7 +232,10 @@ if ($mode == "npcs") {
         AND $spawn_group_table.id = $spawn_entry_table.spawngroupID
     ";
     if ($hide_invisible_men == TRUE) {
-        $query .= " AND $npc_types_table.race!=127 AND $npc_types_table.race!=240";
+        $query .= "
+			AND (($npc_types_table.`race` = 127 AND $npc_types_table.`mindmg` != 1 AND $npc_types_table.`maxdmg` != 4 AND $npc_types_table.`show_name` = 1) OR ($npc_types_table.`race` != 127))
+			AND (($npc_types_table.`race` = 240 AND $npc_types_table.`mindmg` != 1 AND $npc_types_table.`maxdmg` != 4 AND $npc_types_table.`show_name` = 1) OR ($npc_types_table.`race` != 240))
+		";
     }
     if ($group_npcs_by_name == TRUE) {
         $query .= " GROUP BY $npc_types_table.`name`";
