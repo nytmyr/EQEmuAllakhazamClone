@@ -14,18 +14,33 @@ function SpellDescription($spell, $n, $csv = false)
                 $minlvl = $spell["classes" . $i];
             }
         }
-        $min        = CalcSpellEffectValue(
-            $spell["formula" . $n],
-            $spell["effect_base_value$n"],
-            $spell["max$n"],
-            $minlvl
-        );
-        $max        = CalcSpellEffectValue(
-            $spell["formula" . $n],
-            $spell["effect_base_value$n"],
-            $spell["max$n"],
-            $server_max_level
-        );
+		if ($spell["formula" . $n] == 123) {
+			$min        = CalcSpellEffectValue(
+				$spell["formula" . $n],
+				$spell["effect_base_value$n"],
+				$spell["max$n"],
+				1
+			);
+			$max        = CalcSpellEffectValue(
+				$spell["formula" . $n],
+				$spell["effect_base_value$n"],
+				$spell["max$n"],
+				$server_max_level
+			);
+		} else {
+			$min        = CalcSpellEffectValue(
+				$spell["formula" . $n],
+				$spell["effect_base_value$n"],
+				$spell["max$n"],
+				$minlvl
+			);
+			$max        = CalcSpellEffectValue(
+				$spell["formula" . $n],
+				$spell["effect_base_value$n"],
+				$spell["max$n"],
+				$server_max_level
+			);
+		}
 		$duration = $spell["buffduration"];
 		$durationmin = CalcBuffDuration($minlvl, $spell["buffdurationformula"], $spell["buffduration"]);
 		$durationmax = CalcBuffDuration($server_max_level, $spell["buffdurationformula"], $spell["buffduration"]);
@@ -148,7 +163,12 @@ function SpellDescription($spell, $n, $csv = false)
                     case 130: // Decrease Spell/Bash Hate
                         $min = $spell["effect_base_value$n"];
                         $max = $spell["effect_limit_value$n"];
-                        $name = str_replace("Decrease", "Increase", $name);
+                        //$name = str_replace("Decrease", "Increase", $name);
+						if ($spell["effect_base_value$n"] < 0) {
+							$name = str_replace("Increase", "Decrease", $name);
+						} else {
+							$name = str_replace("Decrease", "Increase", $name);
+						}
                         break;
                 }
                 $print_buffer .= $name;
@@ -160,6 +180,11 @@ function SpellDescription($spell, $n, $csv = false)
                 break;
             case 15: // Increase Mana per tick
             case 100: // Increase Hitpoints v2 per tick
+				if ($spell["effect_base_value$n"] < 0) {
+					$print_buffer .= "Decrease ";
+				} else {
+					$print_buffer .= "Increase ";
+				}
                 $print_buffer .= $dbspelleffects[$spell["effectid$n"]];
                 if ($min != $max) {
                     $print_buffer .= " by " . abs($min) . " to " . abs($max);

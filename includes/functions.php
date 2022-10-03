@@ -535,6 +535,13 @@ function CalcSpellEffectValue($form, $base, $max, $lvl)
         case 121:
             $result = floor($ubase + $lvl / 3);
             break;
+		case 123:
+			if ($lvl == 1) {
+				$result = $ubase;
+			} else {
+				$result = $ubase * $ubase;
+			}
+            break;
 
         default:
             if ($form < 100) {
