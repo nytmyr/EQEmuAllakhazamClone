@@ -34,8 +34,8 @@ if ($id != "" && is_numeric($id)) {
 	LEFT JOIN guilds g ON g.`id` = gm.`guild_id`
 	WHERE n.`id` = " . $id . "
 	AND a.`status` < 20
-	GROUP BY n.`id`
-	ORDER BY a.`status` ASC, k.time ASC
+	GROUP BY k.`fight_id`
+	ORDER BY k.`fight_id` ASC
 	LIMIT 1
 	";
 	$FirstKillQueryResult = db_mysql_query($FirstKillQuery) or message_die('npc.php', 'MYSQL_QUERY', $FirstKillQuery, mysqli_error());
@@ -467,13 +467,17 @@ $query = "
         $zones_table,
         $spawn_entry_table,
         $spawn2_table,
-        $spawn_group_table
+        $spawn_group_table,
+		$npc_types_table n
     WHERE
         $spawn_entry_table.npcID = $id
     AND $spawn_entry_table.spawngroupID = $spawn2_table.spawngroupID
     AND $spawn2_table.zone = $zones_table.short_name
     AND $spawn_entry_table.spawngroupID = $spawn_group_table.id
 	AND $spawn2_table.enabled = 1
+	AND n.id = $id
+	AND ((n.`race` = 127 AND n.`mindmg` != 1 AND n.`maxdmg` != 4 AND n.`show_name` = 1) OR (n.`race` != 127))
+	AND ((n.`race` = 240 AND n.`mindmg` != 1 AND n.`maxdmg` != 4 AND n.`show_name` = 1) OR (n.`race` != 240))
 ";
 foreach ($ignore_zones AS $zid) {
     $query .= " AND $zones_table.short_name!='$zid'";
@@ -511,6 +515,30 @@ if (mysqli_num_rows($result) > 0) {
 			$print_buffer .= "<br/>Spawns every " . translate_time($respawntimemin);
 		} else {
 			$print_buffer .= "<br/>Spawns every " . translate_time($respawntimemin) . " to " . translate_time($respawntimemax);
+		}
+	}
+} else {
+	$query = "
+    SELECT z.`short_name`, z.`long_name`
+	FROM $npc_types_table n
+	LEFT JOIN $zones_table z ON z.zoneidnumber = CAST(FLOOR(n.`id` / 1000) AS INT)
+	WHERE n.`id` = $id
+	AND (n.`race` != 127 AND n.`mindmg` != 1 AND n.`maxdmg` != 4 AND n.`loottable_id` != 0 AND n.`show_name` != 0)
+	ORDER BY z.`long_name`
+	";
+	$result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query, mysqli_error());
+	if (mysqli_num_rows($result) > 0) {
+		$print_buffer .= "<h2 class='section_header'>This NPC may spawn in</h2>";
+		while ($row = mysqli_fetch_array($result)) {
+			if ($z != $row["short_name"]) {
+				$print_buffer .= "<p><a href='?a=zone&name=" . $row["short_name"] . "'>" . $row["long_name"] . "</a>";
+				$z = $row["short_name"];
+				if ($allow_quests_npc == TRUE) {
+					if (file_exists("$quests_dir$z/" . str_replace("#", "", $npc["name"]) . ".pl")) {
+						$print_buffer .= "<br/><a href='" . $root_url . "quests/index.php?npc=" . str_replace("#", "", $npc["name"]) . "&zone=" . $z . "&amp;npcid=" . $id . "'>Quest(s) for that NPC</a>";
+					}
+				}
+			}
 		}
 	}
 }
