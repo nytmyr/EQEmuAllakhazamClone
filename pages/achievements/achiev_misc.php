@@ -34,6 +34,13 @@ if ($itemtype == "null") {
 	$bsilver = 0;
 	$bcopper = 0;
 	$CountValeen = 0;
+	$CountCharacters = 0;
+	$CountAccounts = 0;
+	$AverageLevel = 0;
+	$corpseplatinum  = 0;
+	$corpsegold = 0;
+	$corpsesilver = 0;
+	$corpsecopper = 0;
 	
 	#$query = "
 	#	SELECT COUNT(distinct kr.fight_id) AS Count, COUNT(distinct kr.npc_id) AS UniqueCount
@@ -68,6 +75,7 @@ if ($itemtype == "null") {
 		FROM 
 			$data_buckets_table d
 		WHERE d.`key` LIKE 'TotalRandomDrops'
+		-- WHERE d.`id` = 6
 	";
 	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 	
@@ -94,6 +102,7 @@ if ($itemtype == "null") {
 		FROM 
 			$data_buckets_table d
 		WHERE d.`key` LIKE 'EpicTokenCount'
+		-- WHERE d.`id` = 26029
 	";
 	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 
@@ -107,6 +116,7 @@ if ($itemtype == "null") {
 		FROM 
 			$data_buckets_table d
 		WHERE d.`key` LIKE 'ShardsDropped'
+		-- WHERE d.`id` = 118007
 	";
 
 	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
@@ -121,6 +131,7 @@ if ($itemtype == "null") {
 		FROM 
 			$data_buckets_table d
 		WHERE d.`key` LIKE 'TotalCashDropped'
+		-- WHERE d.`id` = 7
 	";
 	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 
@@ -149,6 +160,7 @@ if ($itemtype == "null") {
 		FROM 
 			$data_buckets_table d
 		WHERE d.`key` LIKE 'CashSpent'
+		-- WHERE d.`id` = 117943
 	";
 	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 
@@ -176,6 +188,7 @@ if ($itemtype == "null") {
 		FROM 
 			$data_buckets_table d
 		WHERE d.`key` LIKE 'CashReceived'
+		-- WHERE d.`id` = 117959
 	";
 	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 
@@ -203,12 +216,89 @@ if ($itemtype == "null") {
 		FROM 
 			$data_buckets_table d
 		WHERE d.`key` LIKE 'ShardsSpent'
+		-- WHERE d.`id` = 117947
 	";
 
 	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
 
 	while ($row = mysqli_fetch_array($result)) {
 		$CountValeen = number_format($row["Count"]);
+	}
+	
+	$query = "
+		SELECT COUNT(cd.id) AS Count
+		FROM $character_table cd
+		INNER JOIN account a ON a.id = cd.account_id
+		WHERE cd.name NOT LIKE '%-deleted-%'
+		AND a.`status` = 0
+	";
+
+	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
+
+	while ($row = mysqli_fetch_array($result)) {
+		$CountCharacters = number_format($row["Count"]);
+	}
+	
+	$query = "
+		SELECT COUNT(a.id) AS Count
+		FROM account a
+		WHERE a.`status` = 0
+		AND a.charname != ''
+	";
+
+	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
+
+	while ($row = mysqli_fetch_array($result)) {
+		$CountAccounts = number_format($row["Count"]);
+	}
+	
+	$query = "
+		SELECT AVG(cd.level) AS Count
+		FROM $character_table cd
+		INNER JOIN account a ON a.id = cd.account_id
+		WHERE cd.name NOT LIKE '%-deleted-%'
+		AND a.`status` = 0
+	";
+
+	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
+
+	while ($row = mysqli_fetch_array($result)) {
+		$AverageLevel = number_format($row["Count"]);
+	}
+	
+	$query = "
+		SELECT 
+			(
+				SUM(v.Plat) * 1000
+				+ 
+				SUM(v.Gold) * 100 
+				+ 
+				SUM(v.Silver) * 10 
+				+ 
+				SUM(v.Copper)
+			) AS Count
+		FROM vw_qs_merchant_transactions v
+		WHERE v.NPCID = 550007 OR v.NPCID = 550023
+	";
+
+	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
+
+	while ($row = mysqli_fetch_array($result)) {
+		$item_price = $row["Count"];
+		$item_value = "";
+		
+		
+		if ($item_price > 1000)
+			$corpseplatinum = ((int)($item_price / 1000));
+		
+		if (($item_price - ($corpseplatinum * 1000)) > 100)
+			$corpsegold = ((int)(($item_price - ($corpseplatinum * 1000)) / 100));
+		
+		if (($item_price - ($corpseplatinum * 1000) - ($corpsegold * 100)) > 10)
+			$corpsesilver = ((int)(($item_price - ($corpseplatinum * 1000) - ($corpsegold * 100)) / 10));
+		
+		if (($item_price - ($corpseplatinum * 1000) - ($corpsegold * 100) - ($corpsesilver * 10)) > 0)
+			$corpsecopper = ($item_price - ($corpseplatinum * 1000) - ($corpsegold * 100) - ($corpsesilver * 10));
 	}
 	
 	$print_buffer .= 
@@ -266,6 +356,44 @@ if ($itemtype == "null") {
 	"
 		<tr>
 			<td style='font-weight:bold' text-indent: 400px> " . $CountValeen . " <img src='$icons_url\item_2240.png' width='50px' height='10px'/></td>
+		</tr>
+	";
+	
+	$print_buffer .= "</table>";
+	
+	$print_buffer .= 
+	"
+		<table class='container_div display_table'		style='width:500px'>
+		<td style='font-weight:bold' align=left><u> Total Accounts </u></td>
+		<td style='font-weight:bold' align=center><u> Total Characters </u></td>
+		<td style='font-weight:bold' align=right><u> Average Level </u></td>
+	";
+	
+	$print_buffer .=
+	"
+		<tr>
+			<td style='font-weight:bold' align=left> " . $CountAccounts . " </td>
+			<td style='font-weight:bold' align=center> " . $CountCharacters . " </td>
+			<td style='font-weight:bold' align=right> " . $AverageLevel . "  </td>
+		</tr>
+	";
+	
+	$print_buffer .= "</table>";
+	
+	$print_buffer .= 
+	"
+		<table class='container_div display_table'		style='width:500px'>
+		<td style='font-weight:bold' align=left><u> Total Spent of Corpse Summons </u></td>
+	";
+	
+	$print_buffer .=
+	"
+		<tr>
+			<td style='font-weight:bold' align=left> " . number_format($corpseplatinum) . " <img src='$icons_url\item_644.png' width='10px' height='10px'/>
+			" . number_format($corpsegold) . " <img src='$icons_url\item_645.png' width='10px' height='10px'/>
+			" . number_format($corpsesilver) . " <img src='$icons_url\item_646.png' width='10px' height='10px'/>
+			" . number_format($corpsecopper) . " <img src='$icons_url\item_647.png' width='10px' height='10px'/>
+			</td>
 		</tr>
 	";
 	
