@@ -202,6 +202,7 @@ function SpellDescription($spell, $n, $csv = false)
                 break;
             case 33: // Summon Pet:
             case 68: // Summon Skeleton Pet:
+			case 71: // Create Undead Pet:
             case 106: // Summon Warder:
             case 108: // Summon Familiar:
             case 113: // Summon Horse:
