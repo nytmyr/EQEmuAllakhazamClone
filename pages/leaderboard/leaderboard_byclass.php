@@ -55,6 +55,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'Warrior'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -109,6 +110,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'Warrior'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -163,6 +165,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'Warrior'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -217,6 +220,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'Warrior'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -282,6 +286,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'Cleric'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -337,6 +342,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
 			AND c.`class` = 'Cleric'
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -392,6 +398,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'Cleric'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -447,6 +454,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'Cleric'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -502,6 +510,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'Cleric'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -567,6 +576,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'paladin'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -622,6 +632,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
 			AND c.`class` = 'paladin'
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -677,6 +688,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'paladin'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -732,6 +744,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'paladin'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -787,6 +800,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'paladin'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -852,6 +866,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'ranger'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -907,6 +922,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
 			AND c.`class` = 'ranger'
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -962,6 +978,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'ranger'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -1017,6 +1034,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'ranger'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -1072,6 +1090,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'ranger'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -1137,6 +1156,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'shadowknight'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -1192,6 +1212,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
 			AND c.`class` = 'shadowknight'
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -1247,6 +1268,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'shadowknight'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -1302,6 +1324,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'shadowknight'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -1357,6 +1380,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'shadowknight'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -1422,6 +1446,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'druid'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -1477,6 +1502,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
 			AND c.`class` = 'druid'
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -1532,6 +1558,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'druid'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -1587,6 +1614,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'druid'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -1642,6 +1670,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'druid'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -1705,6 +1734,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'monk'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -1759,6 +1789,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'monk'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -1813,6 +1844,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'monk'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -1867,6 +1899,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'monk'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -1932,6 +1965,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'bard'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -1987,6 +2021,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
 			AND c.`class` = 'bard'
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -2042,6 +2077,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'bard'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -2097,6 +2133,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'bard'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -2152,6 +2189,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'bard'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -2215,6 +2253,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'rogue'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -2269,6 +2308,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'rogue'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -2323,6 +2363,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'rogue'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -2377,6 +2418,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'rogue'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -2442,6 +2484,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'shaman'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -2497,6 +2540,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
 			AND c.`class` = 'shaman'
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -2552,6 +2596,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'shaman'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -2607,6 +2652,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'shaman'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -2662,6 +2708,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'shaman'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -2727,6 +2774,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'necromancer'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -2782,6 +2830,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
 			AND c.`class` = 'necromancer'
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -2837,6 +2886,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'necromancer'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -2892,6 +2942,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'necromancer'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -2947,6 +2998,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'necromancer'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -3012,6 +3064,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'wizard'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -3067,6 +3120,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
 			AND c.`class` = 'wizard'
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -3122,6 +3176,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'wizard'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -3177,6 +3232,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'wizard'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -3232,6 +3288,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'wizard'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -3297,6 +3354,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'magician'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -3352,6 +3410,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
 			AND c.`class` = 'magician'
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -3407,6 +3466,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'magician'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -3462,6 +3522,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'magician'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -3517,6 +3578,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'magician'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -3582,6 +3644,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'enchanter'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -3637,6 +3700,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
 			AND c.`class` = 'enchanter'
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -3692,6 +3756,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'enchanter'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -3747,6 +3812,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'enchanter'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -3802,6 +3868,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'enchanter'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
@@ -3867,6 +3934,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
 			AND c.`class` = 'beastlord'
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -3922,6 +3990,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
 			AND c.`class` = 'beastlord'
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -3977,6 +4046,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
 			AND c.`class` = 'beastlord'
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -4032,6 +4102,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
 			AND c.`class` = 'beastlord'
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -4087,6 +4158,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
 			AND c.`class` = 'beastlord'
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";

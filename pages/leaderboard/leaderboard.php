@@ -27,6 +27,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			INNER JOIN $character_table cd ON cd.`id` = c.`id`
 			WHERE c.`status` < 100
 			AND c.`hp` > 0
+			AND c.`anon` = 0
 			ORDER BY c.`hp` DESC
 			LIMIT 10
 		";
@@ -73,6 +74,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			INNER JOIN $character_table cd ON cd.`id` = c.`id`
 			WHERE c.`status` < 100
 			AND c.`mana` > 0
+			AND c.`anon` = 0
 			ORDER BY c.`mana` DESC
 			LIMIT 10
 		";
@@ -119,6 +121,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			INNER JOIN $character_table cd ON cd.`id` = c.`id`
 			WHERE c.`status` < 100
 			AND c.`ac` > 0
+			AND c.`anon` = 0
 			ORDER BY c.`ac` DESC
 			LIMIT 10
 		";
@@ -165,6 +168,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			INNER JOIN $character_table cd ON cd.`id` = c.`id`
 			WHERE c.`status` < 100
 			AND c.`aa` > 0
+			AND c.`anon` = 0
 			ORDER BY c.`aa` DESC
 			LIMIT 10
 		";
@@ -211,6 +215,7 @@ if (isset($itemtype) && $itemtype != "null") {
 			INNER JOIN $character_table cd ON cd.`id` = c.`id`
 			WHERE c.`status` < 100
 			AND c.`resists` > 0
+			AND c.`anon` = 0
 			ORDER BY c.`resists` DESC
 			LIMIT 10
 		";
