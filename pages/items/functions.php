@@ -597,7 +597,7 @@ function return_where_item_result_trade_skill($item_id){
 		if ($original_item_id >= 600000) {
 			$return_buffer .= "<td><h2 class='section_header'>The non-Vegas version of this item is the result of tradeskill recipes</h2>";
 		} else {
-			$return_buffer .= "<td><h2 class='section_header'>This item is the result of tradeskill recipes/h2>";
+			$return_buffer .= "<td><h2 class='section_header'>This item is the result of tradeskill recipes</h2>";
 		}
         #$return_buffer .= "<tr><td><h2 class='section_header'>This item is the result of tradeskill recipes</h2><ul>";
         while ($row = mysqli_fetch_array($result)) {
