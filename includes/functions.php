@@ -1079,7 +1079,14 @@ function return_item_stat_box($item, $show_name_icon)
 
     /* Item Tags */
     $item_tags = "";
-
+	
+	if ($item["id"] >= 800000) {
+		$html_string .= "<b>This is a Valeen item based off of <a href='?a=item&id=" . ($item["id"]-800000) . "'>" . str_replace("*","",$item["Name"]) . "</a></b><br><br>";
+	}
+	else if ($item["id"] >= 600000) {
+		$html_string .= "<b>This is a Vegas item based off of <a href='?a=item&id=" . ($item["id"]-600000) . "'>" . str_replace("*","",$item["Name"]) . "</a></b><br><br>";
+	}
+	
     $html_string .= "<tr>";
     $html_string .= "<td colspan='2' nowrap='1'>";
     if ($item["itemtype"] == 54) {
@@ -1567,7 +1574,7 @@ function return_item_stat_box($item, $show_name_icon)
 		$correctedtime = $item["discovered_date"] - 7 * 60 * 60;
 		$html_string .= "<td align=left>First Acquired By: <a href='/charbrowser/index.php?page=character&char=" . $item["char_name"] . "'>" . $item["char_name"] . "</a> - " . date('m-d-Y H:i:s', $correctedtime) . " </td>";
 	} else {
-		if ($item["id"] < 800000) {
+		if ($item["id"] <= 800000) {
 			$html_string .= "<td align=left>Not yet acquired. </td>";
 		}
 	}
@@ -1592,4 +1599,108 @@ function get_item_icon_from_id($id)
 
         return $icon_cache[$id];
     }
+}
+
+function return_scroll_id($item_id) {
+	global
+        $items_table;
+
+    $query = 
+		"
+		SELECT i.id 
+		FROM $items_table i
+		WHERE i.scrolleffect = $item_id
+		AND i.itemtype = 20
+		AND i.scrolltype = 7
+		LIMIT 1
+		";
+
+    $return_buffer = 0;
+	$result = db_mysql_query($query);
+    while ($row = mysqli_fetch_array($result)) {
+        $return_buffer = $row["id"];
+        return $return_buffer;
+    }
+
+    return;
+}
+
+function return_is_bought($item_id){
+
+    global
+        $merchant_list_table;
+
+    $query =
+		"
+		SELECT $merchant_list_table.merchantid 
+		FROM $merchant_list_table 
+		WHERE $merchant_list_table.item = $item_id
+			AND $merchant_list_table.probability > 0 
+		LIMIT 1
+		";
+
+    $return_buffer = 0;
+	$result = db_mysql_query($query);
+    while ($row = mysqli_fetch_array($result)) {
+        ++$return_buffer;
+        return $return_buffer;
+    }
+
+    return;
+}
+
+function return_is_crafted($item_id){
+
+    global
+        $trade_skill_recipe_entries;
+
+    $query =
+		"
+		SELECT id 
+		FROM $trade_skill_recipe_entries 
+		WHERE $trade_skill_recipe_entries.item_id = $item_id
+			AND $trade_skill_recipe_entries.successcount > 0
+		LIMIT 1
+		";
+
+    $return_buffer = 0;
+	$result = db_mysql_query($query);
+    while ($row = mysqli_fetch_array($result)) {
+        ++$return_buffer;
+        return $return_buffer;
+    }
+
+    return;
+}
+
+function return_is_dropped($item_id){
+
+    global
+        $npc_types_table,
+		$loot_table_entries,
+        $loot_drop_entries_table,
+        $spawn2_table,
+        $zones_table,
+        $ignore_zones;
+
+    $query =
+		"
+		SELECT item_id 
+		FROM $loot_drop_entries_table 
+			INNER JOIN $loot_table_entries on $loot_table_entries.lootdrop_id = $loot_drop_entries_table.lootdrop_id 
+			INNER JOIN $npc_types_table ON $npc_types_table.loottable_id = $loot_table_entries.loottable_id 
+		WHERE item_id = $item_id
+			AND $loot_drop_entries_table.chance > 0 
+			AND $loot_drop_entries_table.lootdrop_id NOT BETWEEN 310000 AND 310700
+		LIMIT 1
+		";
+
+    $return_buffer = 0;
+	$result = db_mysql_query($query);
+    while ($row = mysqli_fetch_array($result)) {
+        ++$return_buffer;
+        return $return_buffer;
+    }
+
+    return;
 }

@@ -146,6 +146,7 @@ if (($type != 0 && $level != 0) || $namestring != '') {
 					<td class="menuh">Mana</td>
 					<td class="menuh">Skill</td>
 					<td class="menuh">Target Type</td>
+					<td class="menuh">Acquired By</td>
 				  </tr>';
         }
         $print_buffer .= '<tr class="' . $RowClass . '">
@@ -166,7 +167,24 @@ if (($type != 0 && $level != 0) || $namestring != '') {
         if ($dbspelltargets[$row["targettype"]] != "") {
             $print_buffer .= $dbspelltargets[$row["targettype"]];
         }
-        $print_buffer .= '</td></tr>';
+		$print_buffer .= '</td>';
+		
+		$acquired_by = $row["acquired_by"];
+		if ($acquired_by == 1) {
+			$acquired_by = "Bought";
+		}
+		else if ($acquired_by == 2) {
+			$acquired_by = "Crafted/Vegas";
+		}
+		else if ($acquired_by == 3) {
+			$acquired_by = "Dropped";
+		}
+		else {
+			$acquired_by = "Quested";
+		}
+		$print_buffer .= "<td>$acquired_by</td>";
+		
+        $print_buffer .= '</tr>';
 
         if ($RowClass == "lr") {
             $RowClass = "dr";
