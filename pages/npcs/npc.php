@@ -182,7 +182,7 @@ $print_buffer .= "
 
 
 
-$print_buffer .= "<table border='0' width='100%'>";
+$print_buffer .= "<table border='0' width='90%'>";
 
 $npc_attack_speed = "";
 if ($show_npcs_attack_speed == TRUE) {
@@ -198,7 +198,7 @@ if ($show_npcs_attack_speed == TRUE) {
 $print_buffer .= "</td></tr></table>";
 
 $npc_data = '
-    <table border="0" width="100%">
+    <table border="0" width="90%">
         <tbody>
             <tr>
                 <td style="width:250px !important; text-align:right"><b>Full Name</b>
@@ -247,6 +247,163 @@ $npc_data = '
 ';
 
 $print_buffer .= $npc_data;
+
+$print_buffer .= "<td valign='right'><table class='display_table container_div'>"; // right column height='100%'
+$print_buffer .= "<tr><td>"; // image
+if ($UseWikiImages) {
+    $ImageFile = NpcImage($wiki_server_url, $wiki_root_name, $id);
+    if ($ImageFile == "") {
+        $print_buffer .= "<a href='" . $wiki_server_url . $wiki_root_name . "/index.php?title=Special:Upload&wpDestFile=Npc-" . $id . ".jpg'>Click to add an image for this NPC</a>";
+    } else {
+        $print_buffer .= "<img src='" . $ImageFile . "'/>";
+    }
+} else {
+    if (file_exists($npcs_dir . $id . ".jpg")) {
+        $print_buffer .= "<img src=" . $npcs_url . $id . ".jpg>";
+    }
+}
+
+$print_buffer .= "</td></tr><tr><td>";
+// zone list
+$query = "
+    SELECT
+        $zones_table.long_name,
+        $zones_table.short_name,
+        $spawn2_table.x,
+        $spawn2_table.y,
+        $spawn2_table.z,
+        $spawn_group_table.`name` AS spawngroup,
+        $spawn_group_table.id AS spawngroupID,
+        $spawn2_table.respawntime,
+		$spawn2_table.variance
+    FROM
+        $zones_table,
+        $spawn_entry_table,
+        $spawn2_table,
+        $spawn_group_table,
+		$npc_types_table n
+    WHERE
+        $spawn_entry_table.npcID = $id
+    AND $spawn_entry_table.spawngroupID = $spawn2_table.spawngroupID
+    AND $spawn2_table.zone = $zones_table.short_name
+    AND $spawn_entry_table.spawngroupID = $spawn_group_table.id
+	AND $spawn2_table.enabled = 1
+	AND n.id = $id
+	AND ((n.`race` = 127 AND n.`mindmg` != 1 AND n.`maxdmg` != 4 AND n.`show_name` = 1) OR (n.`race` != 127))
+	AND ((n.`race` = 240 AND n.`mindmg` != 1 AND n.`maxdmg` != 4 AND n.`show_name` = 1) OR (n.`race` != 240))
+";
+foreach ($ignore_zones AS $zid) {
+    $query .= " AND $zones_table.short_name!='$zid'";
+}
+$query .= " ORDER BY $zones_table.long_name,$spawn_group_table.`name`";
+$result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query, mysqli_error());
+if (mysqli_num_rows($result) > 0) {
+    $print_buffer .= "<h2 class='section_header' style='width:90%'>This NPC spawns in</h2>";
+    $z = "";
+	$respawntimemin = 0;
+	$respawntimemax = 0;
+    while ($row = mysqli_fetch_array($result)) {
+        if ($z != $row["short_name"]) {
+            $print_buffer .= "<p><a href='?a=zone&name=" . $row["short_name"] . "'>" . $row["long_name"] . "</a>";
+            $z = $row["short_name"];
+            if ($allow_quests_npc == TRUE) {
+                if (file_exists("$quests_dir$z/" . str_replace("#", "", $npc["name"]) . ".pl")) {
+                    $print_buffer .= "<br/><a href='" . $root_url . "quests/index.php?npc=" . str_replace("#", "", $npc["name"]) . "&zone=" . $z . "&amp;npcid=" . $id . "'>Quest(s) for that NPC</a>";
+                }
+            }
+        }
+        if ($display_spawn_group_info == TRUE) {
+            $print_buffer .= "<li><a href='spawngroup.php?id=" . $row["spawngroupID"] . "'>" . $row["spawngroup"] . "</a> : " . floor($row["y"]) . " / " . floor($row["x"]) . " / " . floor($row["z"]);
+            $print_buffer .= "<br/>Spawns every " . translate_time($row["respawntime"]);
+        }
+		
+		$respawntimemin = $row["respawntime"] - $row["variance"];
+		$respawntimemax = $row["respawntime"] + $row["variance"];
+    }
+	if (display_spawn_times == TRUE) {
+		if ($respawntimemin == $respawntimemax) {
+			$print_buffer .= "<br/>Spawns every " . translate_time($respawntimemin);
+		} else {
+			$print_buffer .= "<br/>Spawns every " . translate_time($respawntimemin) . " to " . translate_time($respawntimemax);
+		}
+	}
+} else {
+	$query = "
+    SELECT z.`short_name`, z.`long_name`
+	FROM $npc_types_table n
+	LEFT JOIN $zones_table z ON z.zoneidnumber = CAST(FLOOR(n.`id` / 1000) AS INT)
+	WHERE n.`id` = $id
+	AND (n.`race` != 127 AND n.`mindmg` != 1 AND n.`maxdmg` != 4 AND n.`loottable_id` != 0 AND n.`show_name` != 0)
+	ORDER BY z.`long_name`
+	";
+	$result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query, mysqli_error());
+	if (mysqli_num_rows($result) > 0) {
+		$print_buffer .= "<h2 class='section_header' style='width:90%'>This NPC may spawn in</h2>";
+		while ($row = mysqli_fetch_array($result)) {
+			if ($z != $row["short_name"]) {
+				$print_buffer .= "<p><a href='?a=zone&name=" . $row["short_name"] . "'>" . $row["long_name"] . "</a>";
+				$z = $row["short_name"];
+				if ($allow_quests_npc == TRUE) {
+					if (file_exists("$quests_dir$z/" . str_replace("#", "", $npc["name"]) . ".pl")) {
+						$print_buffer .= "<br/><a href='" . $root_url . "quests/index.php?npc=" . str_replace("#", "", $npc["name"]) . "&zone=" . $z . "&amp;npcid=" . $id . "'>Quest(s) for that NPC</a>";
+					}
+				}
+			}
+		}
+	}
+}
+// factions
+$query = "
+    SELECT
+        $faction_list_table.`name`,
+        $faction_list_table.id,
+        $faction_entries_table.
+    VALUE
+
+    FROM
+        $faction_list_table,
+        $faction_entries_table
+    WHERE
+        $faction_entries_table.npc_faction_id = " . $npc["npc_faction_id"] . "
+    AND $faction_entries_table.faction_id = $faction_list_table.id
+    AND $faction_entries_table.value < 0
+    GROUP BY
+        $faction_list_table.id
+";
+$result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query, mysqli_error());
+if (mysqli_num_rows($result) > 0) {
+    $print_buffer .= "<h2 class='section_header' style='width:90%'>Killing this NPC lowers factions with</h2><ul>";
+    while ($row = mysqli_fetch_array($result)) {
+        $print_buffer .= "<li><a href=?a=faction&id=" . $row["id"] . ">" . $row["name"] . "</a> (" . $row["value"] . ")";
+    }
+}
+$print_buffer .= "</ul>";
+$query = "
+    SELECT
+        $faction_list_table.`name`,
+        $faction_list_table.id,
+        $faction_entries_table.value
+    FROM
+        $faction_list_table,
+        $faction_entries_table
+    WHERE
+        $faction_entries_table.npc_faction_id = " . $npc["npc_faction_id"] . "
+    AND $faction_entries_table.faction_id = $faction_list_table.id
+    AND $faction_entries_table.value > 0
+    GROUP BY
+        $faction_list_table.id
+";
+$result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query, mysqli_error());
+if (mysqli_num_rows($result) > 0) {
+    $print_buffer .= "
+        <h2 class='section_header' style='width:90%'>Killing this NPC raises factions with</h2>
+        <ul>";
+    while ($row = mysqli_fetch_array($result)) {
+        $print_buffer .= "<li><a href=?a=faction&id=" . $row["id"] . ">" . $row["name"] . "</a> (" . $row["value"] . ")";
+    }
+}
+$print_buffer .= "</ul>";
+$print_buffer .= "</td></tr></table>";
 
 $print_buffer .= "<tr valign='top'>";
 
@@ -391,7 +548,7 @@ if (($npc["loottable_id"] > 0) AND ((!in_array($npc["class"], $dbmerchants)) OR 
         }
         $print_buffer .= "</td></tr></table></td>";
     } else {
-        $print_buffer .= "<td><table border='0'><tr><td colspan='2' nowrap='1'><b>No item drops found. </b><br/>";
+		$print_buffer .= "<td><table border='0'><tr><td colspan='2' nowrap='1'><h2 class='section_header'>No item drops found.</h2><p>";
         $print_buffer .= "</td></tr></table></td>";
     }
 }
@@ -415,7 +572,7 @@ if ($npc["merchant_id"] > 0) {
     ";
     $result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query, mysqli_error());
     if (mysqli_num_rows($result) > 0) {
-        $print_buffer .= "<td><table border='0'><tr><td colspan='2' nowrap='1'><b>This NPC sells</b><br/><br>";
+        $print_buffer .= "<td><table border='0'><tr><td colspan='2' nowrap='1'><h2 class='section_header'>This NPC sells</h2><p>";
         while ($row = mysqli_fetch_array($result)) {
             $print_buffer .= "<li style='list-style-type:none;margin-left:15px;'><a href='?a=item&id=" . $row["id"] . "'>" .
                 '<img src="' . $icons_url . $row['icon'] . '.gif" align="center" border="1" style="border-radius:5px;height:15px;width:auto"> ' .
@@ -436,162 +593,7 @@ if ($npc["merchant_id"] > 0) {
 $print_buffer .= "</tr></table>";
 
 
-$print_buffer .= "</td><td valign='top'><table class='display_table container_div'>"; // right column height='100%'
-$print_buffer .= "<tr><td>"; // image
-if ($UseWikiImages) {
-    $ImageFile = NpcImage($wiki_server_url, $wiki_root_name, $id);
-    if ($ImageFile == "") {
-        $print_buffer .= "<a href='" . $wiki_server_url . $wiki_root_name . "/index.php?title=Special:Upload&wpDestFile=Npc-" . $id . ".jpg'>Click to add an image for this NPC</a>";
-    } else {
-        $print_buffer .= "<img src='" . $ImageFile . "'/>";
-    }
-} else {
-    if (file_exists($npcs_dir . $id . ".jpg")) {
-        $print_buffer .= "<img src=" . $npcs_url . $id . ".jpg>";
-    }
-}
-
-$print_buffer .= "</td></tr><tr><td>";
-// zone list
-$query = "
-    SELECT
-        $zones_table.long_name,
-        $zones_table.short_name,
-        $spawn2_table.x,
-        $spawn2_table.y,
-        $spawn2_table.z,
-        $spawn_group_table.`name` AS spawngroup,
-        $spawn_group_table.id AS spawngroupID,
-        $spawn2_table.respawntime,
-		$spawn2_table.variance
-    FROM
-        $zones_table,
-        $spawn_entry_table,
-        $spawn2_table,
-        $spawn_group_table,
-		$npc_types_table n
-    WHERE
-        $spawn_entry_table.npcID = $id
-    AND $spawn_entry_table.spawngroupID = $spawn2_table.spawngroupID
-    AND $spawn2_table.zone = $zones_table.short_name
-    AND $spawn_entry_table.spawngroupID = $spawn_group_table.id
-	AND $spawn2_table.enabled = 1
-	AND n.id = $id
-	AND ((n.`race` = 127 AND n.`mindmg` != 1 AND n.`maxdmg` != 4 AND n.`show_name` = 1) OR (n.`race` != 127))
-	AND ((n.`race` = 240 AND n.`mindmg` != 1 AND n.`maxdmg` != 4 AND n.`show_name` = 1) OR (n.`race` != 240))
-";
-foreach ($ignore_zones AS $zid) {
-    $query .= " AND $zones_table.short_name!='$zid'";
-}
-$query .= " ORDER BY $zones_table.long_name,$spawn_group_table.`name`";
-$result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query, mysqli_error());
-if (mysqli_num_rows($result) > 0) {
-    $print_buffer .= "<h2 class='section_header'>This NPC spawns in</h2>";
-    $z = "";
-	$respawntimemin = 0;
-	$respawntimemax = 0;
-    while ($row = mysqli_fetch_array($result)) {
-        if ($z != $row["short_name"]) {
-            $print_buffer .= "<p><a href='?a=zone&name=" . $row["short_name"] . "'>" . $row["long_name"] . "</a>";
-            $z = $row["short_name"];
-            if ($allow_quests_npc == TRUE) {
-                if (file_exists("$quests_dir$z/" . str_replace("#", "", $npc["name"]) . ".pl")) {
-                    $print_buffer .= "<br/><a href='" . $root_url . "quests/index.php?npc=" . str_replace("#", "", $npc["name"]) . "&zone=" . $z . "&amp;npcid=" . $id . "'>Quest(s) for that NPC</a>";
-                }
-            }
-        }
-        if ($display_spawn_group_info == TRUE) {
-            $print_buffer .= "<li><a href='spawngroup.php?id=" . $row["spawngroupID"] . "'>" . $row["spawngroup"] . "</a> : " . floor($row["y"]) . " / " . floor($row["x"]) . " / " . floor($row["z"]);
-            $print_buffer .= "<br/>Spawns every " . translate_time($row["respawntime"]);
-        }
-		
-		$respawntimemin = $row["respawntime"] - $row["variance"];
-		$respawntimemax = $row["respawntime"] + $row["variance"];
-    }
-	if (display_spawn_times == TRUE) {
-		if ($respawntimemin == $respawntimemax) {
-			$print_buffer .= "<br/>Spawns every " . translate_time($respawntimemin);
-		} else {
-			$print_buffer .= "<br/>Spawns every " . translate_time($respawntimemin) . " to " . translate_time($respawntimemax);
-		}
-	}
-} else {
-	$query = "
-    SELECT z.`short_name`, z.`long_name`
-	FROM $npc_types_table n
-	LEFT JOIN $zones_table z ON z.zoneidnumber = CAST(FLOOR(n.`id` / 1000) AS INT)
-	WHERE n.`id` = $id
-	AND (n.`race` != 127 AND n.`mindmg` != 1 AND n.`maxdmg` != 4 AND n.`loottable_id` != 0 AND n.`show_name` != 0)
-	ORDER BY z.`long_name`
-	";
-	$result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query, mysqli_error());
-	if (mysqli_num_rows($result) > 0) {
-		$print_buffer .= "<h2 class='section_header'>This NPC may spawn in</h2>";
-		while ($row = mysqli_fetch_array($result)) {
-			if ($z != $row["short_name"]) {
-				$print_buffer .= "<p><a href='?a=zone&name=" . $row["short_name"] . "'>" . $row["long_name"] . "</a>";
-				$z = $row["short_name"];
-				if ($allow_quests_npc == TRUE) {
-					if (file_exists("$quests_dir$z/" . str_replace("#", "", $npc["name"]) . ".pl")) {
-						$print_buffer .= "<br/><a href='" . $root_url . "quests/index.php?npc=" . str_replace("#", "", $npc["name"]) . "&zone=" . $z . "&amp;npcid=" . $id . "'>Quest(s) for that NPC</a>";
-					}
-				}
-			}
-		}
-	}
-}
-// factions
-$query = "
-    SELECT
-        $faction_list_table.`name`,
-        $faction_list_table.id,
-        $faction_entries_table.
-    VALUE
-
-    FROM
-        $faction_list_table,
-        $faction_entries_table
-    WHERE
-        $faction_entries_table.npc_faction_id = " . $npc["npc_faction_id"] . "
-    AND $faction_entries_table.faction_id = $faction_list_table.id
-    AND $faction_entries_table.value < 0
-    GROUP BY
-        $faction_list_table.id
-";
-$result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query, mysqli_error());
-if (mysqli_num_rows($result) > 0) {
-    $print_buffer .= "<h2 class='section_header'>Killing this NPC lowers factions with</h2><ul>";
-    while ($row = mysqli_fetch_array($result)) {
-        $print_buffer .= "<li><a href=?a=faction&id=" . $row["id"] . ">" . $row["name"] . "</a> (" . $row["value"] . ")";
-    }
-}
-$print_buffer .= "</ul>";
-$query = "
-    SELECT
-        $faction_list_table.`name`,
-        $faction_list_table.id,
-        $faction_entries_table.value
-    FROM
-        $faction_list_table,
-        $faction_entries_table
-    WHERE
-        $faction_entries_table.npc_faction_id = " . $npc["npc_faction_id"] . "
-    AND $faction_entries_table.faction_id = $faction_list_table.id
-    AND $faction_entries_table.value > 0
-    GROUP BY
-        $faction_list_table.id
-";
-$result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query, mysqli_error());
-if (mysqli_num_rows($result) > 0) {
-    $print_buffer .= "
-        <h2 class='section_header'>Killing this NPC raises factions with</h2>
-        <ul>";
-    while ($row = mysqli_fetch_array($result)) {
-        $print_buffer .= "<li><a href=?a=faction&id=" . $row["id"] . ">" . $row["name"] . "</a> (" . $row["value"] . ")";
-    }
-}
-$print_buffer .= "</ul>";
-$print_buffer .= "</td></tr></table>";
+$print_buffer .= "</td>";
 
 $print_buffer .= "</td></tr></table>";
 $print_buffer .= "</td></tr></table>";
