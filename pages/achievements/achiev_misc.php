@@ -278,7 +278,7 @@ if ($itemtype == "null") {
 				SUM(v.Copper)
 			) AS Count
 		FROM vw_qs_merchant_transactions v
-		WHERE v.NPCID = 550007 OR v.NPCID = 550023
+		WHERE v.ItemID BETWEEN 550102 AND 550118
 	";
 
 	$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
@@ -383,7 +383,7 @@ if ($itemtype == "null") {
 	$print_buffer .= 
 	"
 		<table class='container_div display_table'		style='width:500px'>
-		<td style='font-weight:bold' align=left><u> Total Spent of Corpse Summons </u></td>
+		<td style='font-weight:bold' align=left><u> Given to Corpse Summoners </u></td>
 	";
 	
 	$print_buffer .=
