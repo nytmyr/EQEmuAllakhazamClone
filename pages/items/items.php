@@ -279,7 +279,7 @@ if (isset($QueryResult)) {
         # $print_buffer .= "<b>" . $num_rows . " " . ($num_rows == 1 ? "item" : "items") . " displayed</b>" . $OutOf . "<br>";
         $print_buffer .= "<br>";
 
-        $print_buffer .= "<table class='display_table container_div datatable' id='item_search_results' style='width:100%'overflow--x:auto;>";
+        $print_buffer .= "<table class='display_table container_div datatable' id='item_search_results' style='width:90%'>";
 		$url = $_SERVER['QUERY_STRING'];
 		$url = str_replace("&v_ajax","",$url);
 		#$url = $_SERVER['REQUEST_URI'];
@@ -419,13 +419,13 @@ if (isset($QueryResult)) {
         for ($count = 1; $count <= $num_rows; $count++) {
             $TableData = "";
             $row = mysqli_fetch_array($QueryResult);
-            $TableData .= "<tr valign='top' class='" . $RowClass . "'><td>";
+            $TableData .= "<tr valign='center' class='" . $RowClass . "'><td>";
             if (file_exists($icons_dir . "item_" . $row["ItemIcon"] . ".png")) {
                 $TableData .= "<img src='" . $icons_url . "item_" . $row["ItemIcon"] . ".png' align='left'/>";
             } else {
                 $TableData .= "<img src='" . $icons_url . "item_.gif' align='left'/>";
             }
-            $TableData .= "</td><td>";
+            $TableData .= "</td><td align=center>";
 
             # CreateToolTip($row["id"], return_item_stat_box($row, 1));
 			if ($ibeingsold == -1 AND $ieffect == "") {
@@ -433,40 +433,40 @@ if (isset($QueryResult)) {
 			} else {
 				$TableData .= "<a href='?a=item&id=" . $row["ItemID"] . "' id='" . $row["ItemID"] . "'>" . $row["ItemName"] . "</a>";
 			}
-            $TableData .= "</td><td>";
+            $TableData .= "</td><td align=center>";
             $TableData .= $dbitypes[$row["itemtype"]];
-            $TableData .= "</td><td>";
+            $TableData .= "</td><td align=center>";
             $TableData .= $row["ac"];
-            $TableData .= "</td><td>";
+            $TableData .= "</td><td align=center>";
 			if ($ibeingsold == -1) {
 				$TableData .= $row["hp"];
 			} else {
 				$TableData .= $row["ItemHP"];
 			}
-            $TableData .= "</td><td>";
+            $TableData .= "</td><td align=center>";
             if ($ibeingsold == -1) {
 				$TableData .= $row["mana"];
 			} else {
 				$TableData .= $row["ItemMana"];
 			}
-            $TableData .= "</td><td>";
+            $TableData .= "</td><td align=center>";
             $TableData .= $row["damage"];
-            $TableData .= "</td><td>";
+            $TableData .= "</td><td align=center>";
             $TableData .= $row["delay"];
-			$TableData .= "</td><td>";
+			$TableData .= "</td><td align=center>";
 			$TableData .= $dam2h[$row["delay"]];
 			if ($istat1chosen) {
 				if ($istat1chosen == "Ratio") {
-					$TableData .= "</td><td>";
+					$TableData .= "</td><td align=center>";
 					$TableData .= $row["damage"] / $row["delay"];
 				} else {
-					$TableData .= "</td><td>";
+					$TableData .= "</td><td align=center>";
 					$TableData .= $row["$istat1"];
 				}
 			}
 			if ($istat2chosen) {
 				if ($istat2chosen == "Ratio") {
-					$TableData .= "</td><td>";
+					$TableData .= "</td><td align=center>";
 					$TableData .= $row["damage"] / $row["delay"];
 				} else {
 					$TableData .= "</td><td>";
@@ -474,31 +474,31 @@ if (isset($QueryResult)) {
 				}
 			}
 			if ($iresistschosen) {
-				$TableData .= "</td><td>";
+				$TableData .= "</td><td align=center>";
 				$TableData .= $row["$iresists"];
 			}
 			if (($iskillmod != "") AND ($iskillmodvalue != "")) {
-				$TableData .= "</td><td>";
+				$TableData .= "</td><td align=center>";
 				$TableData .= $row["skillmodvalue"];
 			}
 			if (($ibardskillmod != "") AND ($ibardskillmodvalue != "")) {
-				$TableData .= "</td><td>";
+				$TableData .= "</td><td align=center>";
 				$TableData .= $row["bardvalue"];
 			}
 			if ($imodchosen) {
-				$TableData .= "</td><td>";
+				$TableData .= "</td><td align=center>";
 				$TableData .= $row["$imod"];
 			}
 			if ($ireqlevel OR $iminlevel) {
-				$TableData .= "</td><td>";
+				$TableData .= "</td><td align=center>";
 				$TableData .= $row["reqlevel"];
 			}
 			if ($imaxreclevel OR $iminreclevel) {
-				$TableData .= "</td><td>";
+				$TableData .= "</td><td align=center>";
 				$TableData .= $row["reclevel"];
 			}
 			if ($ibeingsold != -1) {
-				$TableData .= "</td><td>";
+				$TableData .= "</td><td align=center>";
 				if ($row["ValeenStatus"] == 1) {
 					$valeenstatus = "<font color=green>Yes";
 				} else {
@@ -507,15 +507,15 @@ if (isset($QueryResult)) {
 				$TableData .= $valeenstatus;
 			}
 			if ($ibeingsold != -1) {
-				$TableData .= "</td><td>";
+				$TableData .= "</td><td align=center>";
 				$TableData .= $row["LastName"];
 			}
 			if ($ibeingsold != -1 OR $ishardvalue == 1) {
 				if ($ibeingsold != -1) {
-					$TableData .= "</td><td>";
+					$TableData .= "</td><td align=center>";
 					$TableData .= $row["alt_currency_cost"] . "<img src='$icons_url\item_2240.png' width='20px' height='10px'/>";
 				} else {
-					$TableData .= "</td><td>";
+					$TableData .= "</td><td align=center>";
 					if ($row["GearScore"] > 257) { $TableData .= intval($row["GearScore"] * 3.25); }
 					else if ($row["GearScore"] > 191) { $TableData .= intval($row["GearScore"] * 3); }
 					else if ($row["GearScore"] > 156) { $TableData .= intval($row["GearScore"] * 2.75); }
@@ -530,7 +530,7 @@ if (isset($QueryResult)) {
 					$TableData .= " <img src='$icons_url\item_2240.png' width='20px' height='10px'/>";
 				}
 			}
-            $TableData .= "</td><td>";
+            $TableData .= "</td><td align=center>";
 
             if ($RowClass == "lr") {
                 $RowClass = "dr";

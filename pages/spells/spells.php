@@ -34,7 +34,7 @@ if ($opt == 1) {
 }
 
 /* Display Spell Form */
-$print_buffer .= '<table border="0" class="display_table container_div" style="width:800px"><tr align="left"><td>';
+$print_buffer .= '<table border="0" class="display_table container_div" style="width:90%"><tr align="left"><td>';
 $print_buffer .= '
 			<form name="f" action="">
 			<input type="hidden" name="a" value="spells">
@@ -118,7 +118,7 @@ if (($type != 0 && $level != 0) || $namestring != '') {
         die('Invalid query: ' . mysqli_error());
     }
 
-    $print_buffer .= ' <table border="0" cellpadding="5" cellspacing="0">';
+    $print_buffer .= ' <table border="0" cellpadding="1" cellspacing="1" style="width:90%">';
     $LevelCheck = $level + $OpDiff;
     $Class = 'classes' . $type;
 	if ($type == 0) {
@@ -139,31 +139,31 @@ if (($type != 0 && $level != 0) || $namestring != '') {
             $LevelCheck = $row[$Class];
             $print_buffer .= '<tr><td colspan="4"><b>Level: ' . $row['classes' . $type] . '</b></td></tr>';
             $print_buffer .= '<tr>
-					<td class="menuh" colspan=2>Name</td>
-					<td class="menuh">Class</td>
-					<td class="menuh">Level</td>
-					<td class="menuh">Effect(s)</td>
-					<td class="menuh">Mana</td>
-					<td class="menuh">Skill</td>
-					<td class="menuh">Target Type</td>
-					<td class="menuh">Acquired By</td>
+					<td class="menuh" align=center colspan=2>Name</td>
+					<td class="menuh" align=center>Class</td>
+					<td class="menuh" align=center>Level</td>
+					<td class="menuh" align=center>Effect(s)</td>
+					<td class="menuh" align=center>Mana</td>
+					<td class="menuh" align=center>Skill</td>
+					<td class="menuh" align=center>Target Type</td>
+					<td class="menuh" align=center>Acquired By</td>
 				  </tr>';
         }
         $print_buffer .= '<tr class="' . $RowClass . '">
-					<td valign="top"><a href="?a=spell&id=' . $row['id'] . '"><img src="' . $icons_url . $row['new_icon'] . '.gif" align="center" border="1"></a></td>
-					<td valign="top"><a href="?a=spell&id=' . $row['id'] . '">' . $row['name'] . '</a></td>
-					<td valign="top">' . $ClassName . '</td>
-					<td valign="top">' . $LevelCheck . '</td>
-					<td valign="top"><small>';
+					<td align=center><a href="?a=spell&id=' . $row['id'] . '"><img src="' . $icons_url . $row['new_icon'] . '.gif" align="center" border="1" width="25px" height="25px"></a></td>
+					<td align=center><a href="?a=spell&id=' . $row['id'] . '">' . $row['name'] . '</a></td>
+					<td align=center>' . $ClassName . '</td>
+					<td align=center>' . $LevelCheck . '</td>
+					<td align=center><small>';
 		for ($n = 1; $n <= 12; $n++) {
 			if ($row['effectid'.$n.''] != 10 || ($row['effectid'.$n.''] == 10 && ($row['effect_base_value'.$n.''] != 0 || $row['effect_limit_value'.$n.''] != 0 || $row['max'.$n.''] != 0))) {
 				$print_buffer .= SpellDescription(getspell($row['id']), $n);
 			}
 		}
 		$print_buffer .= '</small></td>
-					<td>' . $row['mana'] . '</td>
-					<td>' . ucwords(strtolower($DBSkill)) . '</td>
-					<td>';
+					<td align=center>' . $row['mana'] . '</td>
+					<td align=center>' . ucwords(strtolower($DBSkill)) . '</td>
+					<td align=center>';
         if ($dbspelltargets[$row["targettype"]] != "") {
             $print_buffer .= $dbspelltargets[$row["targettype"]];
         }
@@ -182,7 +182,7 @@ if (($type != 0 && $level != 0) || $namestring != '') {
 		else {
 			$acquired_by = "Quested";
 		}
-		$print_buffer .= "<td>$acquired_by</td>";
+		$print_buffer .= "<td align=center>$acquired_by</td>";
 		
         $print_buffer .= '</tr>';
 

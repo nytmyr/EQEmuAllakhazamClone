@@ -34,7 +34,7 @@ if ($opt == 1) {
 }
 
 /* Display Spell Form */
-$print_buffer .= '<table border="0" class="display_table container_div" style="width:800px"><tr align="left"><td>';
+$print_buffer .= '<table border="0" class="display_table container_div" style="width:90%"><tr align="left"><td>';
 $print_buffer .= '
 			<form name="f" action="">
 			<input type="hidden" name="a" value="botspells">
@@ -42,22 +42,22 @@ $print_buffer .= '
 			<tr><td>Search For:</td><td><input type="text" name="name" size="40" value="' . $namestring . '" /> <small><i>Searches name, description and casting messages</i></small></td></tr>
 			<tr><td>Class:</td><td><select name="type">
 			<option value="0"' . ($type == 0 ? ' selected="1"' : '') . '>------</option>
-			<option value="3008"' . ($type == 8 ? ' selected="1"' : '') . '>Bard</option>
-			<option value="3015"' . ($type == 15 ? ' selected="1"' : '') . '>Beastlord</option>
-			<option value="3016"' . ($type == 16 ? ' selected="1"' : '') . '>Berserker</option>
-			<option value="3002"' . ($type == 2 ? ' selected="1"' : '') . '>Cleric</option>
-			<option value="3006"' . ($type == 6 ? ' selected="1"' : '') . '>Druid</option>
-			<option value="3014"' . ($type == 14 ? ' selected="1"' : '') . '>Enchanter</option>
-			<option value="3013"' . ($type == 13 ? ' selected="1"' : '') . '>Magician</option>
-			<option value="3007"' . ($type == 7 ? ' selected="1"' : '') . '>Monk</option>
-			<option value="3011"' . ($type == 11 ? ' selected="1"' : '') . '>Necromancer</option>
-			<option value="3003"' . ($type == 3 ? ' selected="1"' : '') . '>Paladin</option>
-			<option value="3004"' . ($type == 4 ? ' selected="1"' : '') . '>Ranger</option>
-			<option value="3009"' . ($type == 9 ? ' selected="1"' : '') . '>Rogue</option>
-			<option value="3005"' . ($type == 5 ? ' selected="1"' : '') . '>Shadowknight</option>
-			<option value="3010"' . ($type == 10 ? ' selected="1"' : '') . '>Shaman</option>
-			<option value="3001"' . ($type == 1 ? ' selected="1"' : '') . '>Warrior</option>
-			<option value="3012"' . ($type == 12 ? ' selected="1"' : '') . '>Wizard</option>
+			<option value="3008"' . ($type == 3008 ? ' selected="1"' : '') . '>Bard</option>
+			<option value="3015"' . ($type == 3015 ? ' selected="1"' : '') . '>Beastlord</option>
+			<option value="3016"' . ($type == 3016 ? ' selected="1"' : '') . '>Berserker</option>
+			<option value="3002"' . ($type == 3002 ? ' selected="1"' : '') . '>Cleric</option>
+			<option value="3006"' . ($type == 3006 ? ' selected="1"' : '') . '>Druid</option>
+			<option value="3014"' . ($type == 3014 ? ' selected="1"' : '') . '>Enchanter</option>
+			<option value="3013"' . ($type == 3013 ? ' selected="1"' : '') . '>Magician</option>
+			<option value="3007"' . ($type == 3007 ? ' selected="1"' : '') . '>Monk</option>
+			<option value="3011"' . ($type == 3011 ? ' selected="1"' : '') . '>Necromancer</option>
+			<option value="3003"' . ($type == 3003 ? ' selected="1"' : '') . '>Paladin</option>
+			<option value="3004"' . ($type == 3004 ? ' selected="1"' : '') . '>Ranger</option>
+			<option value="3009"' . ($type == 3009 ? ' selected="1"' : '') . '>Rogue</option>
+			<option value="3005"' . ($type == 3005 ? ' selected="1"' : '') . '>Shadowknight</option>
+			<option value="3010"' . ($type == 3010 ? ' selected="1"' : '') . '>Shaman</option>
+			<option value="3001"' . ($type == 3001 ? ' selected="1"' : '') . '>Warrior</option>
+			<option value="3012"' . ($type == 3012 ? ' selected="1"' : '') . '>Wizard</option>
 			</select></td></tr>
 
 			<tr><td>Level:</td><td><select name="level">
@@ -116,7 +116,7 @@ if (($type != 0 && $level != 0) || $namestring != '') {
         die('Invalid query: ' . mysqli_error());
     }
 
-    $print_buffer .= ' <table border="0" cellpadding="5" cellspacing="0">';
+    $print_buffer .= ' <table border="0" cellpadding="1" cellspacing="1" style="width:90%">';
     $LevelCheck = $level + $OpDiff;
 	#$ClassName = $dbclasses[$type-3000];
 
@@ -128,14 +128,14 @@ if (($type != 0 && $level != 0) || $namestring != '') {
             $LevelCheck = $row["minlevel"];
             $print_buffer .= '<tr><td colspan="4"><b>Level: ' . $row['minlevel'] . '</b></td></tr>';
             $print_buffer .= '<tr>
-					<td class="menuh" colspan=2>Name</td>
-					<td class="menuh">Class</td>
-					<td class="menuh">Level Range</td>
-					<td class="menuh">Category</td>
-					<td class="menuh">Effect(s)</td>
-					<td class="menuh">Mana</td>
-					<td class="menuh">Skill</td>
-					<td class="menuh">Target Type</td>
+					<td class="menuh" align=center colspan=2>Name</td>
+					<td class="menuh" align=center>Class</td>
+					<td class="menuh" align=center>Level Range</td>
+					<td class="menuh" align=center>Category</td>
+					<td class="menuh" align=center>Effect(s)</td>
+					<td class="menuh" align=center>Mana</td>
+					<td class="menuh" align=center>Skill</td>
+					<td class="menuh" align=center>Target Type</td>
 				  </tr>';
         }
 		$SpellCat = "Unknown.";
@@ -150,21 +150,21 @@ if (($type != 0 && $level != 0) || $namestring != '') {
 		if ($row["bs_type"] == 65536) { $SpellCat = "Rez"; } if ($row["bs_type"] == 131072) { $SpellCat = "Hate Redux"; } if ($row["bs_type"] == 262144) { $SpellCat = "In-Combat Buff Song"; }  if ($row["bs_type"] == 524288) { $SpellCat = "Out-of-Combat Buff"; } 
 		if ($row["bs_type"] == 1048576) { $SpellCat = "Pre-Combat Buff"; } if ($row["bs_type"] == 2097152) { $SpellCat = "Pre-Combat Buff Song"; } 
         $print_buffer .= '<tr class="' . $RowClass . '">
-					<td valign="top"><a href="?a=spell&id=' . $row['id'] . '"><img src="' . $icons_url . $row['new_icon'] . '.gif" align="center" border="1"></a></td>
-					<td valign="top"><a href="?a=spell&id=' . $row['id'] . '">' . $row['name'] . '</a></td>
-					<td valign="top">' . $ClassName . '</td>
-					<td valign="top"><b>' . $LevelCheck . '</b><font color=grey>-><font color=black><b>' . $MaxLevel . '</b></td>
-					<td valign="top">' . $SpellCat . '</td>
-					<td valign="top"><small>';
+					<td align=center><a href="?a=spell&id=' . $row['id'] . '"><img src="' . $icons_url . $row['new_icon'] . '.gif" align="center" border="1" width="25px" height="25px"></a></td>
+					<td align=center><a href="?a=spell&id=' . $row['id'] . '">' . $row['name'] . '</a></td>
+					<td align=center>' . $ClassName . '</td>
+					<td align=center><b>' . $LevelCheck . '</b><font color=grey>-><font color=black><b>' . $MaxLevel . '</b></td>
+					<td align=center>' . $SpellCat . '</td>
+					<td align=center><small>';
 		for ($n = 1; $n <= 12; $n++) {
 			if ($row['effectid'.$n.''] != 10 || ($row['effectid'.$n.''] == 10 && ($row['effect_base_value'.$n.''] != 0 || $row['effect_limit_value'.$n.''] != 0 || $row['max'.$n.''] != 0))) {
 				$print_buffer .= SpellDescription(getspell($row['id']), $n);
 			}
 		}
 		$print_buffer .= '</small></td>
-					<td>' . $row['mana'] . '</td>
-					<td>' . ucwords(strtolower($DBSkill)) . '</td>
-					<td>';
+					<td align=center>' . $row['mana'] . '</td>
+					<td align=center>' . ucwords(strtolower($DBSkill)) . '</td>
+					<td align=center>';
         if ($dbspelltargets[$row["targettype"]] != "") {
             $print_buffer .= $dbspelltargets[$row["targettype"]];
         }
