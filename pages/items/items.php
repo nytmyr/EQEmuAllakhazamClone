@@ -320,7 +320,7 @@ if (isset($QueryResult)) {
 			} 
 			else if ($istat1 == "ratio") {
 				$print_buffer .= "
-					<th class='menuh'>$istat1chosen<a href=?" . $url . "&order=$items_table.damage/delay%20desc>-</a>/<a href=?" . $url . "&order=$items_table.damage/delay%20asc>+</a></th>
+					<th class='menuh'>$istat1chosen<a href=?" . $url . "&order=$items_table.damage/$items_table.delay%20desc>-</a>/<a href=?" . $url . "&order=$items_table.damage/$items_table.delay%20asc>+</a></th>
 				";
 			} else {
 				$print_buffer .= "
@@ -349,7 +349,7 @@ if (isset($QueryResult)) {
 			} 
 			else if ($istat2 == "ratio") {
 				$print_buffer .= "
-					<th class='menuh'>$istat2chosen<a href=?" . $url . "&order=$items_table.damage/delay%20desc>-</a>/<a href=?" . $url . "&order=$items_table.damage/delay%20asc>+</a></th>
+					<th class='menuh'>$istat2chosen<a href=?" . $url . "&order=$items_table.damage/$items_table.delay%20desc>-</a>/<a href=?" . $url . "&order=$items_table.damage/$items_table.delay%20asc>+</a></th>
 				";
 			} else {
 				$print_buffer .= "
