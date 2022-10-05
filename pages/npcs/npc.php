@@ -462,7 +462,8 @@ $query = "
         $spawn2_table.z,
         $spawn_group_table.`name` AS spawngroup,
         $spawn_group_table.id AS spawngroupID,
-        $spawn2_table.respawntime
+        $spawn2_table.respawntime,
+		$spawn2_table.variance
     FROM
         $zones_table,
         $spawn_entry_table,
@@ -487,7 +488,7 @@ $result = db_mysql_query($query) or message_die('npc.php', 'MYSQL_QUERY', $query
 if (mysqli_num_rows($result) > 0) {
     $print_buffer .= "<h2 class='section_header'>This NPC spawns in</h2>";
     $z = "";
-	$respawntimemin = 9999999999999;
+	$respawntimemin = 0;
 	$respawntimemax = 0;
     while ($row = mysqli_fetch_array($result)) {
         if ($z != $row["short_name"]) {
@@ -503,12 +504,9 @@ if (mysqli_num_rows($result) > 0) {
             $print_buffer .= "<li><a href='spawngroup.php?id=" . $row["spawngroupID"] . "'>" . $row["spawngroup"] . "</a> : " . floor($row["y"]) . " / " . floor($row["x"]) . " / " . floor($row["z"]);
             $print_buffer .= "<br/>Spawns every " . translate_time($row["respawntime"]);
         }
-		if ($row["respawntime"] < $respawntimemin) {
-			$respawntimemin = $row["respawntime"];
-		}
-		if ($row["respawntime"] > $respawntimemax) {
-			$respawntimemax = $row["respawntime"];
-		}
+		
+		$respawntimemin = $row["respawntime"] - $row["variance"];
+		$respawntimemax = $row["respawntime"] + $row["variance"];
     }
 	if (display_spawn_times == TRUE) {
 		if ($respawntimemin == $respawntimemax) {
