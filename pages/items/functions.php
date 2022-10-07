@@ -543,7 +543,7 @@ function return_where_item_used_trade_skills($item_id){
 		if ($original_item_id >= 600000) {
 			$return_buffer .= "<td><h2 class='section_header'>The non-Vegas version of this item is used in tradeskill recipes</h2>";
 		} else {
-			$return_buffer .= "<td><h2 class='section_header'>This item is used in tradeskill recipes/h2>";
+			$return_buffer .= "<td><h2 class='section_header'>This item is used in tradeskill recipes</h2>";
 		}
         #$return_buffer .= '<tr><td colspan="2"><h2 class="section_header">This item is used in tradeskill recipes</h2></td></tr>';
         $return_buffer .= "<tr><td><ul>";
