@@ -150,14 +150,6 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="menuh" nowrap="1">Factions...</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="menu_item" nowrap="1">
-                                                    <li><a href="?a=factions">Faction Search</a> </li>
-                                                </td>
-                                            </tr>
-                                            <tr>
                                                 <td class="menuh" nowrap="1">Bestiary...</td>
                                             </tr>
                                             <tr>
@@ -187,6 +179,14 @@
                                                     <li><a href="?a=recipes&">Recipe
                                                             Search</a>
                                                     </li>
+                                                </td>
+                                            </tr>
+											<tr>
+                                                <td class="menuh" nowrap="1">Factions...</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="menu_item" nowrap="1">
+                                                    <li><a href="?a=factions">Faction Search</a> </li>
                                                 </td>
                                             </tr>
 											<tr>
