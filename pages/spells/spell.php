@@ -98,7 +98,7 @@ if ($spell["AEDuration"] >= 1000) {
 }
 $print_buffer .= "<tr><td style='text-align:right; padding-right: 5px;'><b>Resist</b></td><td>" . $dbspellresists[$spell["resisttype"]];
 if ($spell["ResistDiff"] != 0) {
-    $print_buffer .= " (adjust: " . $spell["ResistDiff"] . ")";
+    $print_buffer .= " (Adjust: " . $spell["ResistDiff"] . ")";
 }
 $print_buffer .= "</td></tr>";
 $print_buffer .= "<tr><td style='text-align:right; padding-right: 5px;'><b>Interruptable</b></td><td>" . (($spell["uninterruptable"] == 0) ? "Yes" : "No") . "</td></tr>";

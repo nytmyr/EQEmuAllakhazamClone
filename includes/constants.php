@@ -916,7 +916,7 @@ $dbspelltypes = [
 ];
 
 $dbspellresists = [
-    0 => "None",
+    0 => "Unresistable",
     1 => "Magic",
     2 => "Fire",
     3 => "Cold",
