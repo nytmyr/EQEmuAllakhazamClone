@@ -132,6 +132,14 @@
 													<li><a href="?a=zones_exp">Zone EXP by Level</a> </li>
                                                 </td>
                                             </tr>
+											<tr>
+                                                <td class="menuh" nowrap="1">Classes...</td>
+                                            </tr>
+                                            <tr>
+                                                <td  class="menu_item">
+                                                    <li><a href="?a=skills">Skills</a> </li>
+                                                </td>
+                                            </tr>
                                             <tr>
                                                 <td class="menuh" nowrap="1">Items...</td>
                                             </tr>

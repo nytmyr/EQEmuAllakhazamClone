@@ -36,6 +36,7 @@ $data_buckets_table 		= "data_buckets";
 $leaderboard_table 			= "char_leaderboard_data";
 $doors_table                = "doors";
 $zone_points_table          = "zone_points";
+$skill_table         	    = "skill_caps";
 
 // added tables, source the needed file from the includes/sql directory
 $tbspawnarea  = "spawnarea"; // Tool Specific Table
@@ -331,6 +332,10 @@ $dbskills[70] = 'PERCUSSION INSTRUMENTS';
 $dbskills[71] = 'INTIMIDATION';
 $dbskills[72] = 'BERSERKING';
 $dbskills[73] = 'TAUNT';
+$dbskills[74] = 'Frenzy';
+$dbskills[75] = 'Remove Trap';
+$dbskills[76] = 'Triple Attack';
+$dbskills[77] = '2H Piercing';
 
 // spell effects
 $dbspelleffects      = [];

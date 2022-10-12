@@ -53,6 +53,8 @@ if ($route == "spells") {
     require_once('pages/npcs/npcs.php');
 } else if ($route == "advanced_npcs") {
     require_once('pages/npcs/advanced_npcs.php');
+} else if ($route == "skills") {
+    require_once('pages/classes/skills.php');
 } else if ($route == "global_search") {
     require_once('pages/global_search.php');
 } else if ($route == "zone_era") {
