@@ -1095,7 +1095,7 @@ function return_item_stat_box($item, $show_name_icon)
     if ($item["magic"] == 1) {
         $item_tags .= " Magic,";
     }
-    if ($item["loreflag"] == 1) {
+    if ($item["loregroup"] != 0) {
         $item_tags .= " Lore,";
     }
     if ($item["nodrop"] == 0) {
