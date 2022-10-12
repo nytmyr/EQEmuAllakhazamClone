@@ -50,6 +50,9 @@ $ilowprice = (isset($_GET['ilowprice']) ? addslashes($_GET['ilowprice']) : '');
 $ihighprice = (isset($_GET['ihighprice']) ? addslashes($_GET['ihighprice']) : '');
 $ivegas = (isset($_GET['ivegas']) ? addslashes($_GET['ivegas']) : '');
 $ishardvalue = (isset($_GET['ishardvalue']) ? addslashes($_GET['ishardvalue']) : '');
+$ieffectlevel = (isset($_GET['ieffectlevel']) ? addslashes($_GET['ieffectlevel']) : '');
+$ieffectlevelcomp = (isset($_GET['ieffectlevelcomp']) ? addslashes($_GET['ieffectlevelcomp']) : '');
+$ieffecttype = (isset($_GET['ieffecttype']) ? addslashes($_GET['ieffecttype']) : '');
 
 if (count($_GET) > 2) {
     $query = "SELECT *, $items_table.icon AS ItemIcon ";
@@ -230,6 +233,14 @@ if (count($_GET) > 2) {
         $query .= " $s ($items_table.nodrop=1)";
         $s = "AND";
     }
+	if ($ieffecttype != "") {
+		$query .= " $s ($items_table." . $ieffecttype . "effect > 0)";
+        $s = "AND";
+		if ($ieffectlevel != "") {
+		$query .= " $s ($items_table." . $ieffecttype . "level " . $ieffectlevelcomp . " " . $ieffectlevel . ")";
+        $s = "AND";
+		}
+	}
     $query .= " GROUP BY $items_table.id ORDER BY $order LIMIT " . (get_max_query_results_count($max_items_returned) + 1);
     $QueryResult = db_mysql_query($query);
 
