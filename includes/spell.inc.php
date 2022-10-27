@@ -14,6 +14,27 @@ function SpellDescription($spell, $n, $csv = false)
                 $minlvl = $spell["classes" . $i];
             }
         }
+		$maxpotencylevel = 1;
+		$maxpotencyvalue;
+		for ($i = $minlvl; $i <= $server_max_level; $i++) {
+			$min        = CalcSpellEffectValue(
+				$spell["formula" . $n],
+				$spell["effect_base_value$n"],
+				$spell["max$n"],
+				$i
+			);
+			if ($max < 0) {
+				if ($min < $maxpotencyvalue) {
+					$maxpotencyvalue = $min;
+					$maxpotencylevel = $i;
+				}
+			} else {
+				if ($min > $maxpotencyvalue) {
+					$maxpotencyvalue = $min;
+					$maxpotencylevel = $i;
+				}
+			}
+        }
 		if ($spell["formula" . $n] == 123) {
 			$min        = CalcSpellEffectValue(
 				$spell["formula" . $n],
@@ -60,14 +81,20 @@ function SpellDescription($spell, $n, $csv = false)
                 if ($max < 0) { // Decrease
                     $print_buffer .= "Decrease Movement";
                     if ($min != $max) {
-                        $print_buffer .= " by " . abs($min) . "% to " . abs($max) . "%";
+						if ($spell["formula" . $n] == 102) {
+							$maxlvlplus = $maxlvl - 1;
+							$print_buffer .= " by " . -$maxlvlplus . "% (L$minlvl) to " . -$spell["max$n"] . "% (L$maxpotencylevel)";
+						} else {
+							$print_buffer .= " by " . abs($min) . "% (L$minlvl) to " . abs($max) . "% (L$maxpotencylevel)";
+						}
                     } else {
-                        $print_buffer .= " by " . abs(100) . "%";
+                        // $print_buffer .= " by " . abs(100) . "%";
+						$print_buffer .= " by " . -($max) . "%";
                     }
                 } else {
                     $print_buffer .= "Increase Movement";
                     if ($min != $max) {
-                        $print_buffer .= " by " . $min . "% to " . ($max) . "%";
+                        $print_buffer .= " by " . $min . "% (L$minlvl) to " . ($max) . "% (L$maxpotencylevel)";
                     } else {
                         $print_buffer .= " by " . ($max) . "%";
                     }
@@ -77,14 +104,14 @@ function SpellDescription($spell, $n, $csv = false)
                 if ($max < 100) { // Decrease
                     $print_buffer .= "Decrease Attack Speed";
                     if ($min != $max) {
-                        $print_buffer .= " by " . (100 - $min) . "% to " . (100 - $max) . "%";
+                        $print_buffer .= " by " . (100 - $min) . "% (L$minlvl) to " . (100 - $max) . "% (L$maxpotencylevel)";
                     } else {
                         $print_buffer .= " by " . (100 - $max) . "%";
                     }
                 } else {
                     $print_buffer .= "Increase Attack Speed";
                     if ($min != $max) {
-                        $print_buffer .= " by " . ($min - 100) . "% to " . ($max - 100) . "%";
+                        $print_buffer .= " by " . ($min - 100) . "% (L$minlvl) to " . ($max - 100) . "% (L$maxpotencylevel)";
                     } else {
                         $print_buffer .= " by " . ($max - 100) . "%";
                     }
@@ -173,7 +200,7 @@ function SpellDescription($spell, $n, $csv = false)
                 }
                 $print_buffer .= $name;
                 if ($min != $max) {
-                    $print_buffer .= " by $min% to $max%";
+                    $print_buffer .= " by $min% (L$minlvl) to $max% (L$maxpotencylevel)";
                 } else {
                     $print_buffer .= " by $max%";
                 }
@@ -187,15 +214,15 @@ function SpellDescription($spell, $n, $csv = false)
 				}
                 $print_buffer .= $dbspelleffects[$spell["effectid$n"]];
                 if ($min != $max) {
-                    $print_buffer .= " by " . abs($min) . " to " . abs($max);
+                    $print_buffer .= " by " . abs($min) . " (L$minlvl) to " . abs($max) . " (L$maxpotencylevel)";
 					if ($duration >= 30) {
 						$print_buffer .= " per tick";
 					}
 					if ($duration > 0 && $duration < 30) {
 						if ($durationmin == $durationmax) {
-							$print_buffer .= " per tick for " . $duration . " ticks (total " . abs($min * $duration) . " to " . abs($max * $duration) . ")";
+							$print_buffer .= " per tick for " . $duration . " ticks (total " . abs($min * $duration) . " (L$minlvl) to " . abs($max * $duration) . ") (L$maxpotencylevel)";
 						} else {
-							$print_buffer .= " per tick for " . $durationmin . " to " . $durationmax . " ticks (total " . abs($min * $durationmin) . " to " . abs($max * $durationmax) . ")";
+							$print_buffer .= " per tick for " . $durationmin . " (L$minlvl) to " . $durationmax . " (L$maxpotencylevel) ticks (total " . abs($min * $durationmin) . " (L$minlvl) to " . abs($max * $durationmax) . " (L$maxpotencylevel))";
 						}
 					}
                 } else {
@@ -316,7 +343,7 @@ function SpellDescription($spell, $n, $csv = false)
 					if ($max < 0) {
                         $max = -$max;
                     }
-                    $print_buffer .= " by $min to $max";
+                    $print_buffer .= " by $min (L$minlvl) to $max (L$maxpotencylevel)";
                 } else {
                     if ($max < 0) {
                         $max = -$max;
@@ -368,7 +395,7 @@ function SpellDescription($spell, $n, $csv = false)
                 }
                 $print_buffer .= $name;
                 if ($min != $max) {
-                    $print_buffer .= " by $min% to $max%";
+                    $print_buffer .= " by $min% (L$minlvl) to $max% (L$maxpotencylevel)";
                 } else {
                     $print_buffer .= " by $max%";
                 }
@@ -416,7 +443,7 @@ function SpellDescription($spell, $n, $csv = false)
                 $min          *= 6;
                 $max          *= 6;
                 if ($min != $max) {
-                    $print_buffer .= " ($min sec (L$minlvl) to $max sec (L$maxlvl))";
+                    $print_buffer .= " ($min sec (L$minlvl) to $max sec (L$maxlvl) (L$maxpotencylevel))";
                 } else {
                     $print_buffer .= " ($max sec)";
                 }
@@ -488,7 +515,7 @@ function SpellDescription($spell, $n, $csv = false)
                 }
                 $print_buffer .= $name;
                 if ($min != $max) {
-					$print_buffer .= " by " . abs($min) . " to " . abs($max);
+					$print_buffer .= " by " . abs($min) . " (L$minlvl) to " . abs($max) . " (L$maxpotencylevel)";
 					if ($min < 0) {
                         $min = -$min;
                     }
@@ -500,9 +527,9 @@ function SpellDescription($spell, $n, $csv = false)
 					}
 					if ($duration > 0 && $duration < 30 && $spell["max$n"] == 0 && ($spell["effectid$n"] == 0 || $spell["effectid$n"] == 15)) {
 						if ($durationmin == $durationmax) {
-							$print_buffer .= " per tick for " . $duration . " ticks (total " . abs($min * $duration) . " to " . abs($max * $duration) . ")";
+							$print_buffer .= " per tick for " . $duration . " ticks (total " . abs($min * $duration) . " (L$minlvl) to " . abs($max * $duration) . " (L$maxpotencylevel))";
 						} else {
-							$print_buffer .= " per tick for " . $durationmin . " to " . $durationmax . " ticks (total " . abs($min * $durationmin) . " to " . abs($max * $durationmax) . ")";
+							$print_buffer .= " per tick for " . $durationmin . " (L$minlvl) to " . $durationmax . " (L$maxpotencylevel) ticks (total " . abs($min * $durationmin) . " (L$minlvl) to " . abs($max * $durationmax) . " (L$maxpotencylevel))";
 						}
 					}
                 } else {
