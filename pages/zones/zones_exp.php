@@ -20,6 +20,7 @@ if (isset($zonetype) && $zonetype != "null") {
 	$query = "
 				SELECT z.short_name, z.long_name, z.zoneidnumber, z.flag_needed, z.min_level, z.hotzone, z.hotzone_range
 				, CAST((((z.zone_exp_multiplier/1) + (CASE WHEN z.hotzone = 1 THEN .5 ELSE 0 END)) - 1)*100 AS INT) AS Bonus
+				, CAST((((z.new_zem/1) + (CASE WHEN z.hotzone = 1 THEN .5 ELSE 0 END)) - 1)*100 AS INT) AS NewBonus
 				, (CASE
 						WHEN hotzone_range LIKE '%City%' THEN 0
 						WHEN hotzone_range LIKE '%Newbie%' THEN 1
@@ -48,8 +49,8 @@ if (isset($zonetype) && $zonetype != "null") {
 		<table class='display_table datatable container_div'><tr>
 		<td style='font-weight:bold' align=left><u><b><a href=?a=zones_exp&zonetype=" . rawurlencode($zonetype) . "&order=long_name>Zone Name</a></b></u></td>
 		<td style='font-weight:bold' align=center><u><b>Level Range</u></b></td>
-		<td style='font-weight:bold' align=right><a href=?a=zones_exp&zonetype=" . rawurlencode($zonetype) . "&order=Bonus%20DESC>Bonus</a></b></u></td>
-		<td style='font-weight:bold' align=right><u><b>Pre-Reqs</u></b></td>
+		<td style='font-weight:bold' align=center><a href=?a=zones_exp&zonetype=" . rawurlencode($zonetype) . "&order=Bonus%20DESC>Bonus</a></b></u></td>
+		<td style='font-weight:bold' align=center><u><b>Pre-Reqs</u></b></td>
 	";
 	
 	while ($row = mysqli_fetch_array($result)) {
@@ -69,23 +70,44 @@ if (isset($zonetype) && $zonetype != "null") {
 		if ($row["Bonus"] < -20) {
 			$setcolor = "firebrick";
 		}
-		if ($row["Bonus"] < 0) {
+		else if ($row["Bonus"] < 0) {
 			$setcolor = "red";
 		}
-		if ($row["Bonus"] == 0) {
+		else if ($row["Bonus"] == 0) {
 			$setcolor = "grey";
 		}
-		if ($row["Bonus"] > 0) {
-			$setcolor = "CornflowerBlue";
+		else if ($row["Bonus"] >= 100) {
+			$setcolor = "limegreen";
 		}
-		if ($row["Bonus"] >= 36) {
-			$setcolor = "blue";
-		}
-		if ($row["Bonus"] >= 70) {
+		else if ($row["Bonus"] >= 70) {
 			$setcolor = "green";
 		}
-		if ($row["Bonus"] >= 100) {
-			$setcolor = "limegreen";
+		else if ($row["Bonus"] >= 36) {
+			$setcolor = "blue";
+		}
+		else if ($row["Bonus"] > 0) {
+			$setcolor = "CornflowerBlue";
+		}
+		if ($row["NewBonus"] <= -50) {
+			$newcolor = "firebrick";
+		}
+		else if ($row["NewBonus"] <= -20) {
+			$newcolor = "red";
+		}
+		else if ($row["NewBonus"] < 0) {
+			$newcolor = "coral";
+		}
+		else if ($row["NewBonus"] >= 75) {
+			$newcolor = "limegreen";
+		}
+		else if ($row["NewBonus"] >= 45) {
+			$newcolor = "green";
+		}
+		else if ($row["NewBonus"] >= 25) {
+			$newcolor = "blue";
+		}
+		else if ($row["NewBonus"] >= 0) {
+			$newcolor = "CornflowerBlue";
 		}
 		if ($row["hotzone"] == 1) {
 			//$setcolor = "green";
@@ -97,8 +119,8 @@ if (isset($zonetype) && $zonetype != "null") {
 			<tr>
 				<td><a href='?a=zone&name=" . $row["short_name"] . "''>" . $row["long_name"] . " " . $hotzone . "</a></td>
 				<td align=center>" . $zonetype . "</td>
-				<td align=right><font color=" . $setcolor . ">" . $row["Bonus"] . "%</td>
-				<td align=right><font color=" . $setcolor . ">$req</td>
+				<td align=center><font color=" . $setcolor . ">" . $row["Bonus"] . "%</td>
+				<td align=center><font color=" . $setcolor . ">$req</td>
 			</tr>
 		";
 	}
