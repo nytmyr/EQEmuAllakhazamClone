@@ -493,17 +493,19 @@ function CalcSpellEffectValue($form, $base, $max, $lvl)
             $result = $ubase + $sign * $lvl * 3;
             break;
         case 105:
+			$result = $ubase + $sign + $lvl * 4;
+            break;
         case 107:
-            $result = $ubase + $sign * $lvl * 4;
+            $result = floor($ubase + $sign + $lvl / 2);
             break;
         case 108:
-            $result = floor($ubase + $sign * $lvl / 3);
+            $result = floor($ubase + $sign + $lvl / 3);
             break;
         case 109:
-            $result = floor($ubase + $sign * $lvl / 4);
+            $result = floor($ubase + $sign + $lvl / 4);
             break;
         case 110:
-            $result = floor($ubase + $lvl / 5);
+			$result = floor($ubase + $sign + $lvl / 5);
             break;
         case 111:
             $result = $ubase + 5 * ($lvl - 16);
