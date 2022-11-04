@@ -321,6 +321,7 @@ function return_where_item_sold($item_id){
             AND $merchant_list_table.merchantid = $npc_types_table.merchant_id
             AND $zones_table.short_name = $spawn2_table.zone
 			AND $zones_table.min_status = 0
+			AND $merchant_list_table.probability != 0
         ";
 
         $result = db_mysql_query($query);
