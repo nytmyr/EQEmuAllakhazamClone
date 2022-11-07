@@ -81,12 +81,13 @@ $max_items_returned          = 50; // max number of items returned by search eng
 /**
  * This can increase page load times up to 3-6 seconds without caching
  */
-$item_found_info = true; // If TRUE, it displays where items can drop or be purchased (longer item page load times)
-$item_custom_loot = false; // IF TRUE, custom loot displays on drops
-$item_first_discovered = true; // If TRUE, shows when and who first discovered the item
-$item_show_shard_value = true; // If TRUE, shows the value of the item in Shards
+$item_found_info 			= true; // If TRUE, it displays where items can drop or be purchased (longer item page load times)
+$item_custom_loot 			= false; // IF TRUE, custom loot displays on drops
+$item_first_discovered 		= true; // If TRUE, shows when and who first discovered the item
+$item_show_shard_value 		= true; // If TRUE, shows the value of the item in Shards
+$item_gear_score 			= true; // If TRUE, shwos the Gear Score of items
 $item_shard_cost_multiplier = 2; //Shard cost Multiplier
-$show_all_item_drops = true; // If TRUE, this will shows items dropped by mobs that are triggered spawns.
+$show_all_item_drops 		= true; // If TRUE, this will shows items dropped by mobs that are triggered spawns.
 
 /**
  * Tasks

@@ -1068,7 +1068,7 @@ function Pagination($targetpage, $page, $total_pages, $limit, $adjacents)
 function return_item_stat_box($item, $show_name_icon)
 {
 
-    global $dbitypes, $dam2h, $dbbagtypes, $dbskills, $icons_url, $spells_table, $dbiaugrestrict, $dbiracenames, $item_first_discovered, $item_show_shard_value;
+    global $dbitypes, $dam2h, $dbbagtypes, $dbskills, $icons_url, $spells_table, $dbiaugrestrict, $dbiracenames, $item_first_discovered, $item_show_shard_value, $item_gear_score;
 
     $html_string = "";
     $html_string .= "<table width='100%'><tr><td valign='top'>";
@@ -1517,6 +1517,12 @@ function return_item_stat_box($item, $show_name_icon)
                     $Copper . " <img src='" . $icons_url . "item_647.png' width='14' height='14'/>";
     $ItemValue   .= "</td></tr>";
     $html_string .= $ItemValue;
+	
+	if ($item_gear_score == true && $item["GearScore"] != 0 && $item["GearScore"] != -99999) {
+		$html_string .= "<tr><td>";
+		$html_string .= "<br><b>Gear Score: </b>" . number_format($item["GearScore"], 2, '.', ',') . "<br>";
+		$html_string .= "</tr></td>";
+	}
 	
 	if ($item_show_shard_value == true) {
 		$itemid = 0;
