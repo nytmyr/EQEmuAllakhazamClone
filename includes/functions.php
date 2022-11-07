@@ -1559,9 +1559,9 @@ function return_item_stat_box($item, $show_name_icon)
 					";
 		$result = db_mysql_query($query);
 		while ($row = mysqli_fetch_array($result)) {
-			if ($row["alt_currency_cost"]) {
+			if ($row["alt_currency_cost"] && $row["alt_currency_cost"] != 0) {
 				$html_string .= "<tr><td>";
-				$html_string .= "<br><b>Shard Value: </b>" . $row["alt_currency_cost"] . "<img src='$icons_url\item_2240.png' width='50px' height='10px'/><br>";
+				$html_string .= "<br><b>Shard Value: </b>" . number_format($row["alt_currency_cost"]) . "<img src='$icons_url\item_2240.png' width='50px' height='10px'/><br>";
 				if ($row["SpawnStatus"] == 1) {
 					$html_string .= "<br><b><font color=green>This item is <u>CURRENTLY</u> for sale on Valeen.<font color=black</b><br>";
 					$html_string .= "</tr></td>";
@@ -1570,10 +1570,12 @@ function return_item_stat_box($item, $show_name_icon)
 					$html_string .= "</tr></td>";
 				}
 			} else {
-				$html_string .= "<tr><td>";
-				$html_string .= "<br><b>Shard Value: </b>" . $row["Score"] . "<img src='$icons_url\item_2240.png' width='50px' height='10px'/><br>";
-				$html_string .= "<br><b><font color=red>This is not sold by Valeen.<font color=black></b><br>";
-				$html_string .= "</tr></td>";
+				if ($row["alt_currency_cost"] != 0) {
+					$html_string .= "<tr><td>";
+					$html_string .= "<br><b>Shard Value: </b>" . number_format($row["Score"]) . "<img src='$icons_url\item_2240.png' width='50px' height='10px'/><br>";
+					$html_string .= "<br><b><font color=red>This is not sold by Valeen.<font color=black></b><br>";
+					$html_string .= "</tr></td>";
+				}
 			}
 		}
 	}
