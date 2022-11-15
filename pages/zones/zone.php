@@ -4,6 +4,10 @@ $name = (isset($_GET['name']) ? addslashes($_GET['name']) : '');
 $order = (isset($_GET['order']) ? addslashes($_GET["order"]) : 'name');
 $mode = (isset($_GET['mode']) ? addslashes($_GET["mode"]) : 'npcs');
 
+if ($order == "ordertype") {
+	$order = "raid_target DESC,rare_spawn DESC";
+}
+
 if ($use_custom_zone_list == TRUE && $name != '') {
     $ZoneNote = get_field_result("note", "SELECT note FROM $zones_table WHERE short_name='$name'");
     if (substr_count(strtolower($ZoneNote), "disabled") >= 1) {
@@ -161,13 +165,18 @@ $print_buffer .= "<p><u><b><font color=" . $setcolor . ">Requirements To Enter: 
 
 if ($mode == "npcs") {
     ////////////// NPCS
-    $query = "SELECT $npc_types_table.id,$npc_types_table.class,$npc_types_table.level,$npc_types_table.trackable,$npc_types_table.maxlevel,$npc_types_table.race,$npc_types_table.`name`,$npc_types_table.`lastname`,$npc_types_table.maxlevel,$npc_types_table.loottable_id,$npc_types_table.rare_spawn,$npc_types_table.raid_target
-		FROM $npc_types_table,$spawn2_table,$spawn_entry_table,$spawn_group_table";
-    $query .= " WHERE $spawn2_table.zone='$name'
-		AND $spawn_entry_table.spawngroupID=$spawn2_table.spawngroupID
-		AND $spawn_entry_table.npcID=$npc_types_table.id
-		AND $spawn_group_table.id=$spawn_entry_table.spawngroupID
-		AND $spawn2_table.enabled = 1
+    //$query = "SELECT $npc_types_table.id,$npc_types_table.class,$npc_types_table.level,$npc_types_table.trackable,$npc_types_table.maxlevel,$npc_types_table.race,$npc_types_table.`name`,$npc_types_table.`lastname`,$npc_types_table.maxlevel,$npc_types_table.loottable_id,$npc_types_table.rare_spawn,$npc_types_table.raid_target
+	//	FROM $npc_types_table,$spawn2_table,$spawn_entry_table,$spawn_group_table";
+    //$query .= " WHERE $spawn2_table.zone='$name'
+	//	AND $spawn_entry_table.spawngroupID=$spawn2_table.spawngroupID
+	//	AND $spawn_entry_table.npcID=$npc_types_table.id
+	//	AND $spawn_group_table.id=$spawn_entry_table.spawngroupID
+	//	AND $spawn2_table.enabled = 1
+	//	";
+	$query = "SELECT $npc_types_table.id,$npc_types_table.class,$npc_types_table.level,$npc_types_table.trackable,$npc_types_table.maxlevel,$npc_types_table.race,$npc_types_table.`name`,$npc_types_table.`lastname`,$npc_types_table.maxlevel,$npc_types_table.loottable_id,$npc_types_table.rare_spawn,$npc_types_table.raid_target
+		FROM $npc_types_table,$zones_table";
+    $query .= " WHERE $zones_table.short_name = '$name'
+				AND CAST(FLOOR($npc_types_table.`id` / 1000) AS INT) = $zones_table.zoneidnumber
 		";
 
     if ($hide_invisible_men == TRUE) {
@@ -175,6 +184,8 @@ if ($mode == "npcs") {
 		$query .= "
 			AND (($npc_types_table.`race` = 127 AND $npc_types_table.`mindmg` != 1 AND $npc_types_table.`maxdmg` != 4 AND $npc_types_table.`show_name` = 1) OR ($npc_types_table.`race` != 127))
 			AND (($npc_types_table.`race` = 240 AND $npc_types_table.`mindmg` != 1 AND $npc_types_table.`maxdmg` != 4 AND $npc_types_table.`show_name` = 1) OR ($npc_types_table.`race` != 240))
+			AND ($npc_types_table.`mindmg` != 0 AND $npc_types_table.`maxdmg` != 4)
+			AND $npc_types_table.`level` < 81
 		";
     }
     if ($group_npcs_by_name == TRUE) {
@@ -195,7 +206,8 @@ if ($mode == "npcs") {
         }
         $print_buffer .= "<td align='left'  class='menuh'><b><a href=?a=zone&name=$name&order=level>Level Range</a></b></td>";
         $print_buffer .= "<td align='left' class='menuh'><b><a href=?a=zone&name=$name&order=race>Race</a></b></td>";
-        $print_buffer .= "<td align='left' class='menuh'><b>Type</b></td>";
+         $print_buffer .= "<td align='left' class='menuh'><b><a href=?a=zone&name=$name&order=ordertype>Type</a></b></td>";
+		//$print_buffer .= "<td align='left' class='menuh'><b>Type</b></td>";
 
         $RowClass = "lr";
         while ($row = mysqli_fetch_array($result)) {
