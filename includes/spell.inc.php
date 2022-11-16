@@ -477,6 +477,9 @@ function SpellDescription($spell, $n, $csv = false)
                 $print_buffer .= $dbspelleffects[$spell["effectid$n"]];
                 $print_buffer .= " ($max% penalty)";
                 break;
+			case 301:
+				$print_buffer .= "Increase Archery Damage by " . $spell["effect_base_value$n"] . "%";
+				break;
             case 0: // In/Decrease hitpoints
             case 1: // Increase AC
             case 2: // Increase ATK
