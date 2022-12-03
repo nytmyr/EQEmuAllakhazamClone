@@ -1233,7 +1233,7 @@ function return_item_stat_box($item, $show_name_icon)
     $html_string .= get_item_stat_string("HP", $item["hp"]);
     $html_string .= get_item_stat_string("Mana", $item["mana"]);
     $html_string .= get_item_stat_string("End", $item["endur"]);
-    $html_string .= get_item_stat_string("Haste", $item["haste" . "%"]);
+    $html_string .= get_item_stat_string("Haste", $item["haste"] . "%");
     $html_string .= "</table>";
 
     $html_string .= "</td><td>";
