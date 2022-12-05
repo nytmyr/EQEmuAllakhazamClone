@@ -194,6 +194,20 @@ if ($show_npcs_attack_speed == TRUE) {
     }
     $print_buffer .= "</td></tr>";
 }
+if ($show_npcs_difficulty == TRUE) {
+	if ($npc["difficulty"] > 0) {
+		$npc_difficulty = "<tr><td style='text-align:right'><b>Difficulty</td><td>";
+		if ($npc["raid_target"]) {
+			$npc_difficulty .= number_format($npc["difficulty"]) . "<br>Vegas Range:<br>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.5);
+		}
+		elseif ($npc["rare_spawn"]) {
+			$npc_difficulty .= number_format($npc["difficulty"]) . "<br>Vegas Range:<br>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.35);
+		} else {
+			$npc_difficulty .= number_format($npc["difficulty"]) . "<br>Vegas Range:<br>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.2);
+		}
+		$print_buffer .= "</td></tr>";
+	}
+}
 
 $print_buffer .= "</td></tr></table>";
 
@@ -236,6 +250,7 @@ $npc_data = '
                 <td>' . $npc["mindmg"] . " to " . $npc["maxdmg"] . '</td>
             </tr>
             ' . $npc_attack_speed . '
+			' . $npc_difficulty . '
             <tr>
                 <td style="text-align:right"><b>Special Attacks</b>
                 </td>

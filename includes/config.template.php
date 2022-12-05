@@ -68,6 +68,7 @@ $spawngroup_around_range            = 100; // range of surrounding spawngroups, 
 $trackable_npcs_only                = true; // If TRUE, will only display NPCs that are set to be trackable in search results
 $hide_invisible_men                 = true; // hide the invisible mens in bestiaries
 $display_spawn_times          		= true; // If TRUE, will display the spawn times on zone pages
+$show_npcs_difficulty				= false; // If TRUE, will show the difficulty of an NPNPC.$v
 
 /**
  * Items
