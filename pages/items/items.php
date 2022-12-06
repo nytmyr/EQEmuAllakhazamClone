@@ -105,7 +105,7 @@ if (count($_GET) > 2) {
 	$s = "AND";	
 	
 	if ($ivegas == 1) {
-		$query .= " $s $items_table.name NOT LIKE '%*'";
+		$query .= " $s $items_table.id NOT BETWEEN 600000 AND 899999";
 		$s = "AND";
 	}
 	if ($ibeingsold != -1) {
