@@ -55,6 +55,7 @@ $ieffectlevelcomp = (isset($_GET['ieffectlevelcomp']) ? addslashes($_GET['ieffec
 $ieffecttype = (isset($_GET['ieffecttype']) ? addslashes($_GET['ieffecttype']) : '');
 $imindiff = (isset($_GET['imindiff']) ? addslashes($_GET['imindiff']) : '');
 $imaxdiff = (isset($_GET['imaxdiff']) ? addslashes($_GET['imaxdiff']) : '');
+$iraiditemsonly = (isset($_GET['iraiditemsonly']) ? addslashes($_GET['iraiditemsonly']) : '');
 
 if (count($_GET) > 2) {
     $query = "SELECT *, $items_table.icon AS ItemIcon ";
@@ -241,6 +242,10 @@ if (count($_GET) > 2) {
 		}
 			$query .= " $s ($items_table.difficulty BETWEEN $imindiff AND $imaxdiff)";
 			$s = "AND";
+	}
+	if ($iraiditemsonly != "") {
+		$query .= " $s ($items_table.raidonly = " . $iraiditemsonly . ")";
+        $s = "AND";
 	}
 	if ($ieffecttype != "") {
 		$query .= " $s ($items_table." . $ieffecttype . "effect > 0)";

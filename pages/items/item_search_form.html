@@ -433,7 +433,7 @@
 				<tr>
                     <td style="text-align:right"><b>Currently On Valeen</b></td>
                     <td>
-                        <select id="ibeingsold" style="width:50%">
+                        <select id="ibeingsold">
                             <option value="-1">-</option>
                             <option value="1">Yes</option>
                             <option value="2">No</option>
@@ -444,7 +444,7 @@
 				<tr>
                     <td style="text-align:right"><b>Tier</b></td>
                     <td>
-                        <select id="itier" style="width:60%">
+                        <select id="itier">
                             <option value="-1">-</option>
                             <option value="1">Tier 1</option>
                             <option value="2">Tier 2</option>
@@ -474,7 +474,7 @@
 				<tr>
                     <td style="text-align:right"><b>Display Vegas Items</b></td>
                     <td>
-                        <select id="ivegas" style="width:40%">
+                        <select id="ivegas">
                             <option value="0">Yes</option>
                             <option value="1">No</option>
                         </select>
@@ -483,7 +483,7 @@
 				<tr>
                     <td style="text-align:right"><b>Display Shard Value</b></td>
                     <td>
-                        <select id="ishardvalue" style="width:40%">
+                        <select id="ishardvalue">
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
@@ -787,7 +787,7 @@
                 <tr>
                     <td style="text-align:right"><b>Tradeable Items Only</b></td>
 					<td>
-						<select id="inodrop" style="width:40%">
+						<select id="inodrop">
 							<option value="0">-</option>
                             <option value="1">Yes</option>
                             <option value="0">No</option>
@@ -797,11 +797,21 @@
 				<tr>
                     <td style="text-align:right"><b>Difficulty to Acquire</b></td>
                     <td>
-                            <input type="text" size="6" id="imindiff" value="">
-							<br><center><b> to </b></center>
-							<input type="text" size="6" id="imaxdiff" value="">
+                        <input type="text" size="6" id="imindiff" value="">
+						<br><center><b> to </b></center>
+						<input type="text" size="6" id="imaxdiff" value="">
                     </td>
                 </tr>
+				<tr>
+					<td style="text-align:right"><b> Drop Type : </b></td>
+					<td>
+						<select id="iraiditemsonly">
+							<option value="">All</option>
+                            <option value="1">Raid Only</option>
+                            <option value="0">Non-Raid Only</option>
+                        </select>
+					</td>
+				</tr>
                 </tbody>
             </table>
         </td>
