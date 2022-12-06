@@ -187,10 +187,10 @@ $print_buffer .= "<table border='0' width='90%'>";
 $npc_attack_speed = "";
 if ($show_npcs_attack_speed == TRUE) {
     $npc_attack_speed = "<tr><td style='text-align:right'><b>Attack Speed</td><td>";
-    if ($npc["attack_speed"] == 0) {
+    if ($npc["attack_delay"] == 33) {
         $npc_attack_speed .= "Normal (100%)";
     } else {
-        $npc_attack_speed .= (100 + $npc["attack_speed"]) . "%";
+        $npc_attack_speed .= number_format(((33 / $npc["attack_delay"]) * 100)) . "%";
     }
     $print_buffer .= "</td></tr>";
 }
