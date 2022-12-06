@@ -53,6 +53,8 @@ $ishardvalue = (isset($_GET['ishardvalue']) ? addslashes($_GET['ishardvalue']) :
 $ieffectlevel = (isset($_GET['ieffectlevel']) ? addslashes($_GET['ieffectlevel']) : '');
 $ieffectlevelcomp = (isset($_GET['ieffectlevelcomp']) ? addslashes($_GET['ieffectlevelcomp']) : '');
 $ieffecttype = (isset($_GET['ieffecttype']) ? addslashes($_GET['ieffecttype']) : '');
+$imindiff = (isset($_GET['imindiff']) ? addslashes($_GET['imindiff']) : '');
+$imaxdiff = (isset($_GET['imaxdiff']) ? addslashes($_GET['imaxdiff']) : '');
 
 if (count($_GET) > 2) {
     $query = "SELECT *, $items_table.icon AS ItemIcon ";
@@ -233,6 +235,13 @@ if (count($_GET) > 2) {
         $query .= " $s ($items_table.nodrop=1)";
         $s = "AND";
     }
+	if ($imaxdiff > 0) { // && is_numeric($imaxdiff)) {
+		if ($imindiff == "" OR !is_numeric($imindiff) OR $imindiff <= 0) {
+				$imindiff = 0;
+		}
+			$query .= " $s ($items_table.difficulty BETWEEN $imindiff AND $imaxdiff)";
+			$s = "AND";
+	}
 	if ($ieffecttype != "") {
 		$query .= " $s ($items_table." . $ieffecttype . "effect > 0)";
         $s = "AND";
@@ -242,8 +251,16 @@ if (count($_GET) > 2) {
 		}
 	}
     $query .= " GROUP BY $items_table.id ORDER BY $order LIMIT " . (get_max_query_results_count($max_items_returned) + 1);
+	
+	if ($showquerydebug == true) {
+		$userip = getIPAddress(); 
+		if ($userip == $defaultedlocalhost || $userip == $localipaddress || $userip == $defaultgateway) {
+			echo $query;
+		}
+	}
+	
     $QueryResult = db_mysql_query($query);
-
+	
     $field_values = '';
     foreach ($_GET as $key => $val){
         $field_values .= '$("#'. $key . '").val("'. $val . '");';
@@ -425,6 +442,11 @@ if (isset($QueryResult)) {
 				";
 			}
 		}
+		if ($imaxdiff > 0) {
+			$print_buffer .= "
+				<th class='menuh'>Difficulty<a href=?" . $url . "&order=$items_table.difficulty%20desc>-</a>/<a href=?" . $url . "&order=$items_table.difficulty%20asc>+</a></th>
+			";
+		}
 		$print_buffer .= "</thead>";
         $RowClass = "lr";
         for ($count = 1; $count <= $num_rows; $count++) {
@@ -540,6 +562,10 @@ if (isset($QueryResult)) {
 					else { $TableData .= 0; }
 					$TableData .= " <img src='$icons_url\item_2240.png' width='20px' height='10px'/>";
 				}
+			}
+			if ($imaxdiff > 0) {
+				$TableData .= "</td><td align=center>";
+				$TableData .= number_format($row["difficulty"], 2);
 			}
             $TableData .= "</td><td align=center>";
 
