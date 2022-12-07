@@ -1260,13 +1260,13 @@ function return_item_stat_box($item, $show_name_icon)
             case 3: // 1HB
             case 42: // H2H
                 $dmgbonus    = 13; // floor((65-25)/3)  main hand
-                $html_string .= "<tr><td><b>Damage bonus: </b></td><td>$dmgbonus</td></tr>";
+                $html_string .= "<tr><td><b>Damage Bonus: </b></td><td>$dmgbonus</td></tr>";
                 break;
             case 1: // 2hs
             case 4: // 2hb
             case 35: // 2hp
                 $dmgbonus    = $dam2h[$item["delay"]];
-                $html_string .= "<tr><td><b>Damage bonus: </b></td><td>$dmgbonus</td></tr>";
+                $html_string .= "<tr><td><b>Damage Bonus: </b></td><td>$dmgbonus</td></tr>";
                 break;
         }
     }
@@ -1714,3 +1714,13 @@ function return_is_dropped($item_id){
 
     return;
 }
+
+function getIPAddress() {  
+	$ip = getenv('HTTP_CLIENT_IP')?:
+		getenv('HTTP_X_FORWARDED_FOR')?:
+		getenv('HTTP_X_FORWARDED')?:
+		getenv('HTTP_FORWARDED_FOR')?:
+		getenv('HTTP_FORWARDED')?:
+		getenv('REMOTE_ADDR');
+	return $ip;  
+} 
