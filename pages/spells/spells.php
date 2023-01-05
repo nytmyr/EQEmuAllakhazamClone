@@ -50,7 +50,6 @@ $print_buffer .= '
 			<option value="0"' . ($type == 0 ? ' selected="1"' : '') . '>------</option>
 			<option value="8"' . ($type == 8 ? ' selected="1"' : '') . '>Bard</option>
 			<option value="15"' . ($type == 15 ? ' selected="1"' : '') . '>Beastlord</option>
-			<option value="16"' . ($type == 16 ? ' selected="1"' : '') . '>Berserker</option>
 			<option value="2"' . ($type == 2 ? ' selected="1"' : '') . '>Cleric</option>
 			<option value="6"' . ($type == 6 ? ' selected="1"' : '') . '>Druid</option>
 			<option value="14"' . ($type == 14 ? ' selected="1"' : '') . '>Enchanter</option>

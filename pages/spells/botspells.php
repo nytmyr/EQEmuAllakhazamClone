@@ -51,7 +51,6 @@ $print_buffer .= '
 			<option value="0"' . ($type == 0 ? ' selected="1"' : '') . '>------</option>
 			<option value="3008"' . ($type == 3008 ? ' selected="1"' : '') . '>Bard</option>
 			<option value="3015"' . ($type == 3015 ? ' selected="1"' : '') . '>Beastlord</option>
-			<option value="3016"' . ($type == 3016 ? ' selected="1"' : '') . '>Berserker</option>
 			<option value="3002"' . ($type == 3002 ? ' selected="1"' : '') . '>Cleric</option>
 			<option value="3006"' . ($type == 3006 ? ' selected="1"' : '') . '>Druid</option>
 			<option value="3014"' . ($type == 3014 ? ' selected="1"' : '') . '>Enchanter</option>
@@ -140,7 +139,10 @@ if (($type != 0 && $level != 0) || $namestring != '') {
 
     if ($type) {
 		if ($opt == 4) {
-			$sql .= ' b.npc_spells_id = ' . $type . ' AND b.minlevel ' . $ClassOper . ' ' . $level . ' AND ' . $leveltwo . ' AND';
+			$sql .= ' b.npc_spells_id = ' . $type . ' 
+				AND (b.minlevel ' . $ClassOper . ' ' . $level . ' AND ' . $leveltwo . '
+				OR b.maxlevel ' . $ClassOper . ' ' . $level . ' AND ' . $leveltwo . ')
+				 AND';
 		} else {
 			$sql .= ' b.npc_spells_id = ' . $type . ' AND b.minlevel ' . $ClassOper . ' ' . $level . ' AND';
 		}
