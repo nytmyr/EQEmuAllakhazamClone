@@ -10,10 +10,13 @@ $opt = (isset($_GET['opt']) ? $_GET['opt'] : '');
 $namestring = (isset($_GET['name']) ? $_GET['name'] : '');
 $level = (isset($_GET['level']) ? $_GET['level'] : 0);
 $type = (isset($_GET['type']) ? $_GET['type'] : 0);
+$spelltype = (isset($_GET['spelltype']) ? $_GET['spelltype'] : 0);
+$leveltwo = (isset($_GET['leveltwo']) ? $_GET['leveltwo'] : '');
 
 $check1 = "";
 $check2 = "";
 $check3 = "";
+$check4 = "";
 
 if ($opt == 1) {
     $check1 = "checked";
@@ -27,6 +30,10 @@ if ($opt == 1) {
     $check3 = "checked";
     $OpDiff = 1;
     $ClassOper = "<=";
+} elseif ($opt == 4) {
+	$check4 = "checked";
+	$OpDiff = -1; #checkme
+	$ClassOper = " BETWEEN "; #checkme
 } else {
     $check2 = "checked";
     $OpDiff = 0;
@@ -59,7 +66,30 @@ $print_buffer .= '
 			<option value="3001"' . ($type == 3001 ? ' selected="1"' : '') . '>Warrior</option>
 			<option value="3012"' . ($type == 3012 ? ' selected="1"' : '') . '>Wizard</option>
 			</select></td></tr>
-
+			<tr><td>Spell Type:</td><td><select name="spelltype">
+			<option value="0"' . ($spelltype == 0 ? ' selected="1"' : '') . '>------</option>
+			<option value="1"' . ($spelltype == 1 ? ' selected="1"' : '') . '>Nuke</option>
+			<option value="2"' . ($spelltype == 2 ? ' selected="1"' : '') . '>Heal</option>
+			<option value="4"' . ($spelltype == 4 ? ' selected="1"' : '') . '>Root</option>
+			<option value="8"' . ($spelltype == 8 ? ' selected="1"' : '') . '>Buff</option>
+			<option value="16"' . ($spelltype == 16 ? ' selected="1"' : '') . '>Escape</option>
+			<option value="32"' . ($spelltype == 32 ? ' selected="1"' : '') . '>Pet</option>
+			<option value="64"' . ($spelltype == 64 ? ' selected="1"' : '') . '>Lifetap</option>
+			<option value="128"' . ($spelltype == 128 ? ' selected="1"' : '') . '>Snare</option>
+			<option value="256"' . ($spelltype == 256 ? ' selected="1"' : '') . '>DoT</option>
+			<option value="512"' . ($spelltype == 512 ? ' selected="1"' : '') . '>Dispel</option>
+			<option value="1024"' . ($spelltype == 1024 ? ' selected="1"' : '') . '>In-Combat Buff</option>
+			<option value="2048"' . ($spelltype == 2048 ? ' selected="1"' : '') . '>Mesmerize</option>
+			<option value="4096"' . ($spelltype == 4096 ? ' selected="1"' : '') . '>Charm</option>
+			<option value="8192"' . ($spelltype == 8192 ? ' selected="1"' : '') . '>Slow</option>
+			<option value="16384"' . ($spelltype == 16384 ? ' selected="1"' : '') . '>Debuff</option>
+			<option value="32768"' . ($spelltype == 32768 ? ' selected="1"' : '') . '>Cure</option>
+			<option value="65536"' . ($spelltype == 65536 ? ' selected="1"' : '') . '>Resurrect</option>
+			<option value="131072"' . ($spelltype == 131072 ? ' selected="1"' : '') . '>Hate Redux</option>
+			<option value="262144"' . ($spelltype == 262144 ? ' selected="1"' : '') . '>In-Combat Buff Song</option>
+			<option value="524288"' . ($spelltype == 524288 ? ' selected="1"' : '') . '>Out-of-Combat Buff</option>
+			<option value="1048576"' . ($spelltype == 1048576 ? ' selected="1"' : '') . '>Pre-Combat Buff</option>
+			<option value="2097152"' . ($spelltype == 2097152 ? ' selected="1"' : '') . '>Pre-Combat Buff Song</option>
 			<tr><td>Level:</td><td><select name="level">
 			<option value="">-----</option>';
 
@@ -68,9 +98,21 @@ for ($i = 1; $i <= $server_max_level; $i++) {
 }
 
 $print_buffer .= '</select>
-			<label><input type="radio" name="opt" value="1" ' . $check1 . ' />Only</label>
-			<label><input type="radio" name="opt" value="2" ' . $check2 . ' />And Higher</label>
-			<label><input type="radio" name="opt" value="3" ' . $check3 . ' />And Lower</label></td></tr>
+				<label><input type="radio" name="opt" value="1" ' . $check1 . ' />Only</label>
+				<label><input type="radio" name="opt" value="2" ' . $check2 . ' />And Higher</label>
+				<label><input type="radio" name="opt" value="3" ' . $check3 . ' />And Lower</label></td></tr>
+			';
+$print_buffer .= '
+				<tr><td><label><input type="radio" name="opt" value="4" ' . $check4 . ' />Between</label></td></tr>
+				<tr><td>Max Level: </td><td>
+				<select name="leveltwo">
+				<option value="">-----</option>
+			';
+for ($i = 1; $i <= $server_max_level; $i++) {
+	$print_buffer .= '<option value="' . $i . '"' . ($leveltwo == $i ? ' selected="1"' : '') . '>' . $i . '</option>';
+}
+
+$print_buffer .= '</select></td></tr>
 			<tr>
 			<td colspan="2">
 			<br>
@@ -90,21 +132,27 @@ if (($type != 0 && $level != 0) || $namestring != '') {
         $ClassOper = ">";
     }
     $sql = 'SELECT 
-			b.id AS bs_id, b.npc_spells_id as bs_class, b.type as bs_type, b.spell_name, b.minlevel, b.maxlevel, s.*
+			b.id AS bs_id, b.npc_spells_id as bs_class, b.type as bs_type, b.spell_name, b.minlevel, b.maxlevel, b.priority, s.*
 			FROM ' . $bot_spells_table . ' b
 			INNER JOIN
 			' . $spells_table . ' s ON s.id = b.spellid
 			WHERE';
 
     if ($type) {
-        $sql .= ' b.npc_spells_id = ' . $type . ' AND b.minlevel ' . $ClassOper . ' ' . $level . ' AND';
+		if ($opt == 4) {
+			$sql .= ' b.npc_spells_id = ' . $type . ' AND b.minlevel ' . $ClassOper . ' ' . $level . ' AND ' . $leveltwo . ' AND';
+		} else {
+			$sql .= ' b.npc_spells_id = ' . $type . ' AND b.minlevel ' . $ClassOper . ' ' . $level . ' AND';
+		}
     }
     $sql .= ' b.minlevel <= ' . $server_max_level . ' AND b.spell_name LIKE \'%' . addslashes($namestring) . '%\'';
     if ($use_spell_globals == TRUE) {
         $sql .= ' AND ISNULL((SELECT ' . $spell_globals_table . '.spellid FROM ' . $spell_globals_table . '
 				WHERE ' . $spell_globals_table . '.spellid = b.id))';
     }
-
+	if ($spelltype AND $spelltype > 0) {
+		$sql .= ' AND b.`type` = ' . $spelltype . '';
+	}
     if ($type != 0) {
         $sql .= ' ORDER BY b.minlevel, b.spell_name';
     } else {
@@ -132,6 +180,7 @@ if (($type != 0 && $level != 0) || $namestring != '') {
 					<td class="menuh" align=center>Class</td>
 					<td class="menuh" align=center>Level Range</td>
 					<td class="menuh" align=center>Category</td>
+					<td class="menuh" align=center>Priority</td>
 					<td class="menuh" align=center>Effect(s)</td>
 					<td class="menuh" align=center>Mana</td>
 					<td class="menuh" align=center>Skill</td>
@@ -139,6 +188,7 @@ if (($type != 0 && $level != 0) || $namestring != '') {
 				  </tr>';
         }
 		$SpellCat = "Unknown.";
+		$Priority = $row["priority"];
 		$MaxLevel = $row["maxlevel"];
 		$ClassName = $row['bs_class'] - 3000;
 		$ClassName = $dbclasses[$ClassName];
@@ -155,6 +205,7 @@ if (($type != 0 && $level != 0) || $namestring != '') {
 					<td align=center>' . $ClassName . '</td>
 					<td align=center><b>' . $LevelCheck . '</b><font color=grey>-><font color=black><b>' . $MaxLevel . '</b></td>
 					<td align=center>' . $SpellCat . '</td>
+					<td align=center>' . $Priority . '</td>
 					<td align=center><small>';
 		for ($n = 1; $n <= 12; $n++) {
 			if ($row['effectid'.$n.''] != 10 || ($row['effectid'.$n.''] == 10 && ($row['effect_base_value'.$n.''] != 0 || $row['effect_limit_value'.$n.''] != 0 || $row['max'.$n.''] != 0))) {

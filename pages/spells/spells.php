@@ -10,10 +10,12 @@ $opt = (isset($_GET['opt']) ? $_GET['opt'] : '');
 $namestring = (isset($_GET['name']) ? $_GET['name'] : '');
 $level = (isset($_GET['level']) ? $_GET['level'] : 0);
 $type = (isset($_GET['type']) ? $_GET['type'] : 0);
+$leveltwo = (isset($_GET['leveltwo']) ? $_GET['leveltwo'] : '');
 
 $check1 = "";
 $check2 = "";
 $check3 = "";
+$check4 = "";
 
 if ($opt == 1) {
     $check1 = "checked";
@@ -27,6 +29,10 @@ if ($opt == 1) {
     $check3 = "checked";
     $OpDiff = 1;
     $ClassOper = "<=";
+} elseif ($opt == 4) {
+	$check4 = "checked";
+	$OpDiff = -1; #checkme
+	$ClassOper = " BETWEEN "; #checkme
 } else {
     $check2 = "checked";
     $OpDiff = 0;
@@ -71,6 +77,18 @@ $print_buffer .= '</select>
 			<label><input type="radio" name="opt" value="1" ' . $check1 . ' />Only</label>
 			<label><input type="radio" name="opt" value="2" ' . $check2 . ' />And Higher</label>
 			<label><input type="radio" name="opt" value="3" ' . $check3 . ' />And Lower</label></td></tr>
+			';
+$print_buffer .= '
+				<tr><td><label><input type="radio" name="opt" value="4" ' . $check4 . ' />Between</label></td></tr>
+				<tr><td>Max Level: </td><td>
+				<select name="leveltwo">
+				<option value="">-----</option>
+			';
+for ($i = 1; $i <= $server_max_level; $i++) {
+	$print_buffer .= '<option value="' . $i . '"' . ($leveltwo == $i ? ' selected="1"' : '') . '>' . $i . '</option>';
+}
+
+$print_buffer .= '</select></td></tr>
 			<tr>
 			<td colspan="2">
 			<br>
@@ -97,9 +115,15 @@ if (($type != 0 && $level != 0) || $namestring != '') {
     $sv = '';
 
     if ($type) {
-        $sql .= ' ' . $spells_table . '.classes' . $type . " " . $ClassOper . " " . $level . '
-					AND ' . $spells_table . '.classes' . $type . ' <= ' . $server_max_level;
-        $sv = 'AND';
+		if ($opt == 4) {
+			$sql .= ' ' . $spells_table . '.classes' . $type . " " . $ClassOper . " " . $level . ' AND ' . $leveltwo . '
+						AND ' . $spells_table . '.classes' . $type . ' <= ' . $server_max_level;
+			$sv = 'AND';
+		} else {
+			$sql .= ' ' . $spells_table . '.classes' . $type . " " . $ClassOper . " " . $level . '
+						AND ' . $spells_table . '.classes' . $type . ' <= ' . $server_max_level;
+			$sv = 'AND';
+		}
     }
     $sql .= ' ' . $sv . ' ' . $spells_table . '.`name` LIKE \'%' . addslashes($namestring) . '%\'';
     if ($use_spell_globals == TRUE) {
