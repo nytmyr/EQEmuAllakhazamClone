@@ -201,17 +201,20 @@ if ($show_npcs_difficulty == TRUE) {
 			$npc_difficulty .= number_format($npc["difficulty"]) . "<br>";
 			if ($npc["loottable_id"] > 0) {
 				$npc_difficulty .= "<tr><td style='text-align:right'><b>Vegas Range</td><td>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.5);
+				#$npc_difficulty .= "<a href='http://vegaseq.com/Allaclone/?a=items_search&&a=items&iname=&iclass=0&irace=0&islot=0&istat1=&istat1comp=%3E%3D&istat1value=&istat2=&istat2comp=%3E%3D&istat2value=&iresists=&iresistscomp=%3E%3D&iresistsvalue=&imod=&imodcomp=%3E%3D&imodvalue=&iskillmod=&iskillmodcomp=%3E%3D&iskillmodvalue=&ibardskillmod=&ibardskillmodcomp=%3E%3D&ibardskillmodvalue=&itype=-1&ideity=0&ieffect=&ieffectlevelcomp=%3E%3D&ieffectlevel=&ieffecttype=&iminlevel=0&ireqlevel=0&iminreclevel=0&imaxreclevel=0&ibeingsold=-1&itier=-1&ilowprice=&ihighprice=&ivegas=2&ishardvalue=0&inodrop=0&iraiditemsonly=0&ieramin=4&ieramax=5&imindiff=" . ($npc["difficulty"] * .5) . "&imaxdiff=" . ($npc["difficulty"] * 1.35) . "&isearch=1'>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.5) . "</a>";
 			}
 		}
 		elseif ($npc["rare_spawn"]) {
 			$npc_difficulty .= number_format($npc["difficulty"]) . "<br>";
 			if ($npc["loottable_id"] > 0) {
 				$npc_difficulty .= "<tr><td style='text-align:right'><b>Vegas Range</td><td>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.35);
+				#$npc_difficulty .= "<a href='http://vegaseq.com/Allaclone/?a=items_search&&a=items&iname=&iclass=0&irace=0&islot=0&istat1=&istat1comp=%3E%3D&istat1value=&istat2=&istat2comp=%3E%3D&istat2value=&iresists=&iresistscomp=%3E%3D&iresistsvalue=&imod=&imodcomp=%3E%3D&imodvalue=&iskillmod=&iskillmodcomp=%3E%3D&iskillmodvalue=&ibardskillmod=&ibardskillmodcomp=%3E%3D&ibardskillmodvalue=&itype=-1&ideity=0&ieffect=&ieffectlevelcomp=%3E%3D&ieffectlevel=&ieffecttype=&iminlevel=0&ireqlevel=0&iminreclevel=0&imaxreclevel=0&ibeingsold=-1&itier=-1&ilowprice=&ihighprice=&ivegas=2&ishardvalue=0&inodrop=0&iraiditemsonly=0&ieramin=4&ieramax=5&imindiff=" . ($npc["difficulty"] * .5) . "&imaxdiff=" . ($npc["difficulty"] * 1.35) . "&isearch=1'>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.35) . "</a>";
 			}
 		} else {
 			$npc_difficulty .= number_format($npc["difficulty"]) . "<br>";
 			if ($npc["loottable_id"] > 0) {
 				$npc_difficulty .= "<tr><td style='text-align:right'><b>Vegas Range</td><td>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.2);
+				#$npc_difficulty .= "<a href='http://vegaseq.com/Allaclone/?a=items_search&&a=items&iname=&iclass=0&irace=0&islot=0&istat1=&istat1comp=%3E%3D&istat1value=&istat2=&istat2comp=%3E%3D&istat2value=&iresists=&iresistscomp=%3E%3D&iresistsvalue=&imod=&imodcomp=%3E%3D&imodvalue=&iskillmod=&iskillmodcomp=%3E%3D&iskillmodvalue=&ibardskillmod=&ibardskillmodcomp=%3E%3D&ibardskillmodvalue=&itype=-1&ideity=0&ieffect=&ieffectlevelcomp=%3E%3D&ieffectlevel=&ieffecttype=&iminlevel=0&ireqlevel=0&iminreclevel=0&imaxreclevel=0&ibeingsold=-1&itier=-1&ilowprice=&ihighprice=&ivegas=2&ishardvalue=0&inodrop=0&iraiditemsonly=0&ieramin=4&ieramax=5&imindiff=" . ($npc["difficulty"] * .5) . "&imaxdiff=" . ($npc["difficulty"] * 1.35) . "&isearch=1'>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.2) . "</a>";
 			}
 		}
 		$print_buffer .= "</td></tr>";
@@ -543,6 +546,37 @@ if (($npc["loottable_id"] > 0) AND ((!in_array($npc["class"], $dbmerchants)) OR 
         } else {
             $print_buffer .= " <td><table border='0'><tr><td colspan='2' nowrap='1'><h2 class='section_header'>When killed, this NPC can drop</h2><br/>";
         }
+		if ($show_vegas_drops == TRUE) {
+			$vegaserarangemin = 1;
+			$vegaserarangemax = 4;
+			$vegasraidonly = 0;
+			if ($id >= 110000 && $id < 130000) { #Velious
+				$vegaserarangemin = 2;
+				$vegaserarangemax = 5;
+			}
+			elseif ($id >= 150000 && $id < 182000) { #Luclin
+				$vegaserarangemin = 3;
+				$vegaserarangemax = 5;
+			}
+			elseif ($id >= 200000 && $id < 224000) { #PoP
+				$vegaserarangemin = 4;
+				$vegaserarangemax = 5;
+			}
+			if ($npc["raid_target"]) {
+				if ($npc["difficulty"] > 1131570) {
+					$vegasraidonly = 1;
+				} else {
+					$vegasraidonly = "";
+				}
+				$print_buffer .= "<a href='http://vegaseq.com/Allaclone/?a=items_search&&a=items&iname=&iclass=0&irace=0&islot=0&istat1=&istat1comp=%3E%3D&istat1value=&istat2=&istat2comp=%3E%3D&istat2value=&iresists=&iresistscomp=%3E%3D&iresistsvalue=&imod=&imodcomp=%3E%3D&imodvalue=&iskillmod=&iskillmodcomp=%3E%3D&iskillmodvalue=&ibardskillmod=&ibardskillmodcomp=%3E%3D&ibardskillmodvalue=&itype=-1&ideity=0&ieffect=&ieffectlevelcomp=%3E%3D&ieffectlevel=&ieffecttype=&iminlevel=0&ireqlevel=0&iminreclevel=0&imaxreclevel=0&ibeingsold=-1&itier=-1&ilowprice=&ihighprice=&ivegas=2&ishardvalue=0&inodrop=0&iraiditemsonly=" . $vegasraidonly . "&ieramin=" . $vegaserarangemin . "&ieramax=" . $vegaserarangemax . "&imindiff=" . ($npc["difficulty"] * .5) . "&imaxdiff=" . ($npc["difficulty"] * 1.5) . "&isearch=1'>Click here for Vegas drops</a>";
+			}
+			elseif ($npc["rare_spawn"]) {
+				$print_buffer .= "<a href='http://vegaseq.com/Allaclone/?a=items_search&&a=items&iname=&iclass=0&irace=0&islot=0&istat1=&istat1comp=%3E%3D&istat1value=&istat2=&istat2comp=%3E%3D&istat2value=&iresists=&iresistscomp=%3E%3D&iresistsvalue=&imod=&imodcomp=%3E%3D&imodvalue=&iskillmod=&iskillmodcomp=%3E%3D&iskillmodvalue=&ibardskillmod=&ibardskillmodcomp=%3E%3D&ibardskillmodvalue=&itype=-1&ideity=0&ieffect=&ieffectlevelcomp=%3E%3D&ieffectlevel=&ieffecttype=&iminlevel=0&ireqlevel=0&iminreclevel=0&imaxreclevel=0&ibeingsold=-1&itier=-1&ilowprice=&ihighprice=&ivegas=2&ishardvalue=0&inodrop=0&iraiditemsonly=" . $vegasraidonly . "&ieramin=" . $vegaserarangemin . "&ieramax=" . $vegaserarangemax . "&imindiff=" . ($npc["difficulty"] * .5) . "&imaxdiff=" . ($npc["difficulty"] * 1.35) . "&isearch=1'>Click here for Vegas drops</a>";
+			} else {
+				$print_buffer .= "<a href='http://vegaseq.com/Allaclone/?a=items_search&&a=items&iname=&iclass=0&irace=0&islot=0&istat1=&istat1comp=%3E%3D&istat1value=&istat2=&istat2comp=%3E%3D&istat2value=&iresists=&iresistscomp=%3E%3D&iresistsvalue=&imod=&imodcomp=%3E%3D&imodvalue=&iskillmod=&iskillmodcomp=%3E%3D&iskillmodvalue=&ibardskillmod=&ibardskillmodcomp=%3E%3D&ibardskillmodvalue=&itype=-1&ideity=0&ieffect=&ieffectlevelcomp=%3E%3D&ieffectlevel=&ieffecttype=&iminlevel=0&ireqlevel=0&iminreclevel=0&imaxreclevel=0&ibeingsold=-1&itier=-1&ilowprice=&ihighprice=&ivegas=2&ishardvalue=0&inodrop=0&iraiditemsonly=" . $vegasraidonly . "&ieramin=" . $vegaserarangemin . "&ieramax=" . $vegaserarangemax . "&imindiff=" . ($npc["difficulty"] * .5) . "&imaxdiff=" . ($npc["difficulty"] * 1.2) . "&isearch=1'>Click here for Vegas drops</a>";
+			}
+			$print_buffer .= "<br>";
+		}
         $ldid = 0;
         while ($row = mysqli_fetch_array($result)) {
             if ($show_npc_drop_chances == TRUE) {

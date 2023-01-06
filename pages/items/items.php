@@ -107,15 +107,15 @@ if (count($_GET) > 2) {
 	$s = "AND";	
 	
 	if ($ivegas == 1) {
-		$query .= " $s $items_table.id NOT BETWEEN 600000 AND 999999 AND $items_table.difficulty > 0 AND $items_table.MinDropLevel > 0";
+		$query .= " $s ($items_table.id NOT BETWEEN 600000 AND 999999) AND $items_table.difficulty > 0 AND $items_table.MinDropLevel > 0";
 		$s = "AND";
 	}
 	if ($ivegas == 2) {
-		$query .= " $s $items_table.id BETWEEN 600000 AND 799999 AND $items_table.difficulty > 0 AND $items_table.MinDropLevel > 0";
+		$query .= " $s ($items_table.id BETWEEN 600000 AND 799999) AND $items_table.difficulty > 0 AND $items_table.MinDropLevel > 0";
 		$s = "AND";
 	}
 	if ($ivegas == 3) {
-		$query .= " $s $items_table.id BETWEEN 800000 AND 999999 AND $items_table.difficulty > 0 AND $items_table.MinDropLevel > 0";
+		$query .= " $s ($items_table.id BETWEEN 800000 AND 999999) AND $items_table.difficulty > 0 AND $items_table.MinDropLevel > 0";
 		$s = "AND";
 	}
 	if ($ibeingsold != -1) {
