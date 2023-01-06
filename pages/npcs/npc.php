@@ -198,12 +198,21 @@ if ($show_npcs_difficulty == TRUE) {
 	if ($npc["difficulty"] > 0) {
 		$npc_difficulty = "<tr><td style='text-align:right'><b>Difficulty</td><td>";
 		if ($npc["raid_target"]) {
-			$npc_difficulty .= number_format($npc["difficulty"]) . "<br>Vegas Range:<br>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.5);
+			$npc_difficulty .= number_format($npc["difficulty"]) . "<br>";
+			if ($npc["loottable_id"] > 0) {
+				$npc_difficulty .= "<tr><td style='text-align:right'><b>Vegas Range</td><td>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.5);
+			}
 		}
 		elseif ($npc["rare_spawn"]) {
-			$npc_difficulty .= number_format($npc["difficulty"]) . "<br>Vegas Range:<br>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.35);
+			$npc_difficulty .= number_format($npc["difficulty"]) . "<br>";
+			if ($npc["loottable_id"] > 0) {
+				$npc_difficulty .= "<tr><td style='text-align:right'><b>Vegas Range</td><td>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.35);
+			}
 		} else {
-			$npc_difficulty .= number_format($npc["difficulty"]) . "<br>Vegas Range:<br>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.2);
+			$npc_difficulty .= number_format($npc["difficulty"]) . "<br>";
+			if ($npc["loottable_id"] > 0) {
+				$npc_difficulty .= "<tr><td style='text-align:right'><b>Vegas Range</td><td>" . number_format($npc["difficulty"] * .5) . " to " . number_format($npc["difficulty"] * 1.2);
+			}
 		}
 		$print_buffer .= "</td></tr>";
 	}
