@@ -42,11 +42,13 @@ if ($show_npcs_difficulty_search == TRUE) {
 	$print_buffer .= "<tr><td><b>Difficulty : </b></td><td><input type=text value=\"$imindiff\" size=6 name=imindiff > to <input type=text value=\"$imaxdiff\" size=6 name=imaxdiff ></td></tr>";
 }
 if ($show_npcs_expansion_search == TRUE) {
+	$print_buffer .= "<td><b>------------------</b></td>";
 	$print_buffer .= "<tr><td><b>Expansion Range </b></td><td>";
 	$print_buffer .= SelectExpansion("iminexpansion", $iminexpansion);
-	$print_buffer .= " <b>between</b> ";
+	$print_buffer .= " <b>to</b> ";
 	$print_buffer .= SelectExpansion("imaxexpansion", $imaxexpansion);
 	$print_buffer .= "</td></tr>";
+	$print_buffer .= "<td><b>------------------</b></td>";
 }
 $print_buffer .= "<tr><td><b>Race : </b></td><td>";
 $print_buffer .= SelectMobRace("irace", $irace);
@@ -57,14 +59,14 @@ $print_buffer .= "</td></tr>";
 //$print_buffer .= "<tr><td><b>Named mob : </b></td><td><input type=checkbox name=inamed " . ($inamed ? " checked" : "") . "></td></tr>";
 $print_buffer .= "<tr><td><b>Named/Rare : </b></td><td><input type=checkbox name=irare " . ($irare ? " checked" : "") . "></td></tr>";
 $print_buffer .= "<tr><td><b>Raid : </b></td><td><input type=checkbox name=iraid " . ($iraid ? " checked" : "") . "></td></tr>";
-$print_buffer .= "</table></td>";
+#$print_buffer .= "</table></td>";
 // LEFT SIDE END
 // RIGHT SIDE START
-$print_buffer .= "<tr><td><b>Show level : </b></td><td><input type=checkbox name=ishowlevel " . ($ishowlevel ? " checked" : "") . "></td></tr>";
-$print_buffer .= "<br>";
-$print_buffer .= "<tr><td><b> Show difficulty : </b></td><td><input type=checkbox name=ishowdifficulty " . ($ishowdifficulty ? " checked" : "") . "></td></tr>";
-$print_buffer .= "<br>";
-$print_buffer .= "<tr><td><b> Must drop items/cash : </b></td><td><input type=checkbox name=imustdropitems " . ($imustdropitems ? " checked" : "") . "></td></tr>";
+$print_buffer .= "<tr><td><b>Show level </td><td><input type=checkbox name=ishowlevel " . ($ishowlevel ? " checked" : "") . "></b></td></tr>";
+#$print_buffer .= "<br>";
+$print_buffer .= "<tr><td><b> Show difficulty </td><td><input type=checkbox name=ishowdifficulty " . ($ishowdifficulty ? " checked" : "") . "></b></td></tr>";
+#$print_buffer .= "<br>";
+$print_buffer .= "<tr><td><b> Must drop items/cash </td><td><input type=checkbox name=imustdropitems " . ($imustdropitems ? " checked" : "") . "</b></td></tr>";
 // RIGHT SIDE END
 $print_buffer .= "<br><br><tr align=center colspan=2><td colspan=2><input type=submit value=Search name=isearch class=form></td></tr>";
 $print_buffer .= "</td></tr>";
