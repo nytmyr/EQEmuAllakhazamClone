@@ -255,7 +255,7 @@ if (count($_GET) > 2) {
 		if ($ieramax == 1) { $erarangemax = 77999; }
 		if ($ieramax == 2) { $erarangemax = 109999; }
 		if ($ieramax == 3) { $erarangemax = 129999; }
-		if ($ieramax == 4) { $erarangemax = 179999; }
+		if ($ieramax == 4) { $erarangemax = 181999; }
 		if ($ieramax == 5) { $erarangemax = 223999; }
 		$query .= " $s ($items_table.lowest_drop_npc_id BETWEEN $erarangemin AND $erarangemax)";
 		$s = "AND";
