@@ -11,10 +11,13 @@ $ishowlevel = (isset($_GET['ishowlevel']) ? $_GET['ishowlevel'] : '');
 $irace = (isset($_GET['irace']) ? $_GET['irace'] : '');
 $imindiff = (isset($_GET['imindiff']) ? $_GET['imindiff'] : '');
 $imaxdiff = (isset($_GET['imaxdiff']) ? $_GET['imaxdiff'] : '');
+$iminexpansion = (isset($_GET['iminexpansion']) ? $_GET['iminexpansion'] : 0);
+$imaxexpansion = (isset($_GET['imaxexpansion']) ? $_GET['imaxexpansion'] : 0);
 $irare = (isset($_GET['irare']) ? $_GET['irare'] : '');
 $iraid = (isset($_GET['iraid']) ? $_GET['iraid'] : '');
 $imustdropitems  = (isset($_GET['imustdropitems']) ? $_GET['imustdropitems'] : '');
 $ishowdifficulty  = (isset($_GET['ishowdifficulty']) ? $_GET['ishowdifficulty'] : '');
+$ishowexpansion  = (isset($_GET['ishowexpansion']) ? $_GET['ishowexpansion'] : '');
 
 if ($irace == 0) {
     $irace = '';
@@ -24,10 +27,11 @@ if ($ibodytype == 0) {
     $ibodytype = '';
 }
 
-$print_buffer .= "<table border=0 width=0%><tr valign=top><td>";
+
 $print_buffer .= "<table border=0 width=0%>";
 $print_buffer .= "<form method=GET action=$PHP_SELF>";
 $print_buffer .= '<input type="hidden" name="a" value="advanced_npcs">';
+// LEFT SIDE START
 $print_buffer .= "<tr><td><b>Name : </b></td><td><input type=text value=\"$iname\" size=30 name=iname ></td></tr>";
 $print_buffer .= "<tr><td><b>Level : </b></td><td>Between ";
 $print_buffer .= SelectLevel("iminlevel", $server_max_npc_level, $iminlevel);
@@ -36,6 +40,13 @@ $print_buffer .= SelectLevel("imaxlevel", $server_max_npc_level, $imaxlevel);
 $print_buffer .= "</tr>";
 if ($show_npcs_difficulty_search == TRUE) {
 	$print_buffer .= "<tr><td><b>Difficulty : </b></td><td><input type=text value=\"$imindiff\" size=6 name=imindiff > to <input type=text value=\"$imaxdiff\" size=6 name=imaxdiff ></td></tr>";
+}
+if ($show_npcs_expansion_search == TRUE) {
+	$print_buffer .= "<tr><td><b>Expansion Range </b></td><td>";
+	$print_buffer .= SelectExpansion("iminexpansion", $iminexpansion);
+	$print_buffer .= " <b>between</b> ";
+	$print_buffer .= SelectExpansion("imaxexpansion", $imaxexpansion);
+	$print_buffer .= "</td></tr>";
 }
 $print_buffer .= "<tr><td><b>Race : </b></td><td>";
 $print_buffer .= SelectMobRace("irace", $irace);
@@ -46,13 +57,17 @@ $print_buffer .= "</td></tr>";
 //$print_buffer .= "<tr><td><b>Named mob : </b></td><td><input type=checkbox name=inamed " . ($inamed ? " checked" : "") . "></td></tr>";
 $print_buffer .= "<tr><td><b>Named/Rare : </b></td><td><input type=checkbox name=irare " . ($irare ? " checked" : "") . "></td></tr>";
 $print_buffer .= "<tr><td><b>Raid : </b></td><td><input type=checkbox name=iraid " . ($iraid ? " checked" : "") . "></td></tr>";
-$print_buffer .= "</table></td><td><table border=0 width=0%>";
+$print_buffer .= "</table></td>";
+// LEFT SIDE END
+// RIGHT SIDE START
 $print_buffer .= "<tr><td><b>Show level : </b></td><td><input type=checkbox name=ishowlevel " . ($ishowlevel ? " checked" : "") . "></td></tr>";
-$print_buffer .= "<tr><td><b>Show difficulty : </b></td><td><input type=checkbox name=ishowdifficulty " . ($ishowdifficulty ? " checked" : "") . "></td></tr>";
-$print_buffer .= "<br><br>";
-$print_buffer .= "<tr><td><b>Must drop items/cash : </b></td><td><input type=checkbox name=imustdropitems " . ($imustdropitems ? " checked" : "") . "></td></tr>";
-$print_buffer .= "</table>";
-$print_buffer .= "<tr align=center colspan=2><td colspan=2><input type=submit value=Search name=isearch class=form></td></tr>";
+$print_buffer .= "<br>";
+$print_buffer .= "<tr><td><b> Show difficulty : </b></td><td><input type=checkbox name=ishowdifficulty " . ($ishowdifficulty ? " checked" : "") . "></td></tr>";
+$print_buffer .= "<br>";
+$print_buffer .= "<tr><td><b> Must drop items/cash : </b></td><td><input type=checkbox name=imustdropitems " . ($imustdropitems ? " checked" : "") . "></td></tr>";
+// RIGHT SIDE END
+$print_buffer .= "<br><br><tr align=center colspan=2><td colspan=2><input type=submit value=Search name=isearch class=form></td></tr>";
+$print_buffer .= "</td></tr>";
 $print_buffer .= "</form></table>";
 
 if (isset($isearch) && $isearch != '') {
@@ -98,6 +113,19 @@ if (isset($isearch) && $isearch != '') {
 			}
 			$query .= " AND $npc_types_table.`difficulty` BETWEEN $imindiff AND $imaxdiff";
 		}
+	}
+	if ($iminexpansion > 0 && $imaxexpansion > 0) {
+		if ($iminexpansion == 1) { $erarangemin = 1; }
+		if ($iminexpansion == 2) { $erarangemin = 78000; }
+		if ($iminexpansion == 3) { $erarangemin = 110000; }
+		if ($iminexpansion == 4) { $erarangemin = 150000; }
+		if ($iminexpansion == 5) { $erarangemin = 200000; }
+		if ($imaxexpansion == 1) { $erarangemax = 77999; }
+		if ($imaxexpansion == 2) { $erarangemax = 109999; }
+		if ($imaxexpansion == 3) { $erarangemax = 129999; }
+		if ($imaxexpansion == 4) { $erarangemax = 179999; }
+		if ($imaxexpansion == 5) { $erarangemax = 223999; }
+		$query .= " AND $npc_types_table.`id` BETWEEN $erarangemin AND $erarangemax";
 	}
 	if ($irare && !$iraid) {
 		$query .= " AND $npc_types_table.`rare_spawn` = 1";

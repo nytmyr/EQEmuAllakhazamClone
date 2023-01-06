@@ -1615,3 +1615,9 @@ $dbiracenames[676] = "Braxy Mount";
 $dbiracenames[677] = "Kangon Mount";
 $dbiracenames[678] = "Erudite";
 $dbiracenames[679] = "Wurm Mount";
+
+$dbiexpansions[1] = "Classic";
+$dbiexpansions[2] = "Ruins of Kunark";
+$dbiexpansions[3] = "Scars of Velious";
+$dbiexpansions[4] = "Shadows of Luclin";
+$dbiexpansions[5] = "Planes of Power";

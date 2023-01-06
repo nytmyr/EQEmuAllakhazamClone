@@ -386,6 +386,23 @@ function SelectMobBodyType($name, $selected)
     return $return_buffer;
 }
 
+function SelectExpansion($name, $selected)
+{
+    global $dbiexpansions;
+    $return_buffer = "<SELECT name=\"$name\" style='width:100%'>";
+    $return_buffer .= "<option value='0'>-</option>";
+    foreach ($dbiexpansions as $key => $value) {
+        $return_buffer .= "<option value='" . $key . "'";
+        if ($key == $selected) {
+            $return_buffer .= " selected='1'";
+        }
+        $return_buffer .= ">" . $value . "</option>";
+    }
+    $return_buffer .= "</SELECT>";
+
+    return $return_buffer;
+}
+
 function SelectLevel($name, $maxlevel, $selevel)
 {
     $return_buffer = "<SELECT name=\"$name\">";
