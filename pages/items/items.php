@@ -53,6 +53,8 @@ $ishardvalue = (isset($_GET['ishardvalue']) ? addslashes($_GET['ishardvalue']) :
 $ieffectlevel = (isset($_GET['ieffectlevel']) ? addslashes($_GET['ieffectlevel']) : '');
 $ieffectlevelcomp = (isset($_GET['ieffectlevelcomp']) ? addslashes($_GET['ieffectlevelcomp']) : '');
 $ieffecttype = (isset($_GET['ieffecttype']) ? addslashes($_GET['ieffecttype']) : '');
+$ieramin = (isset($_GET['ieramin']) ? addslashes($_GET['ieramin']) : 0);
+$ieramax = (isset($_GET['ieramax']) ? addslashes($_GET['ieramax']) : 0);
 $imindiff = (isset($_GET['imindiff']) ? addslashes($_GET['imindiff']) : '');
 $imaxdiff = (isset($_GET['imaxdiff']) ? addslashes($_GET['imaxdiff']) : '');
 $iraiditemsonly = (isset($_GET['iraiditemsonly']) ? addslashes($_GET['iraiditemsonly']) : '');
@@ -105,7 +107,15 @@ if (count($_GET) > 2) {
 	$s = "AND";	
 	
 	if ($ivegas == 1) {
-		$query .= " $s $items_table.id NOT BETWEEN 600000 AND 899999";
+		$query .= " $s $items_table.id NOT BETWEEN 600000 AND 999999 AND $items_table.difficulty > 0 AND $items_table.MinDropLevel > 0";
+		$s = "AND";
+	}
+	if ($ivegas == 2) {
+		$query .= " $s $items_table.id BETWEEN 600000 AND 799999 AND $items_table.difficulty > 0 AND $items_table.MinDropLevel > 0";
+		$s = "AND";
+	}
+	if ($ivegas == 3) {
+		$query .= " $s $items_table.id BETWEEN 800000 AND 999999 AND $items_table.difficulty > 0 AND $items_table.MinDropLevel > 0";
 		$s = "AND";
 	}
 	if ($ibeingsold != -1) {
@@ -236,6 +246,20 @@ if (count($_GET) > 2) {
         $query .= " $s ($items_table.nodrop=1)";
         $s = "AND";
     }
+	if ($ieramin > 0 && $ieramax > 0) {
+		if ($ieramin == 1) { $erarangemin = 1; }
+		if ($ieramin == 2) { $erarangemin = 78000; }
+		if ($ieramin == 3) { $erarangemin = 110000; }
+		if ($ieramin == 4) { $erarangemin = 150000; }
+		if ($ieramin == 5) { $erarangemin = 200000; }
+		if ($ieramax == 1) { $erarangemax = 77999; }
+		if ($ieramax == 2) { $erarangemax = 109999; }
+		if ($ieramax == 3) { $erarangemax = 129999; }
+		if ($ieramax == 4) { $erarangemax = 179999; }
+		if ($ieramax == 5) { $erarangemax = 223999; }
+		$query .= " $s ($items_table.lowest_drop_npc_id BETWEEN $erarangemin AND $erarangemax)";
+		$s = "AND";
+	}
 	if ($imaxdiff > 0) { // && is_numeric($imaxdiff)) {
 		if ($imindiff == "" OR !is_numeric($imindiff) OR $imindiff <= 0) {
 				$imindiff = 0;
