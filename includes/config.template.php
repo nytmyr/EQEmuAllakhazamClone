@@ -73,6 +73,7 @@ $display_spawn_times          		= true; // If TRUE, will display the spawn times
 $show_npcs_difficulty				= false; // If TRUE, will show the difficulty of an NPCs
 $show_npcs_difficulty_search		= false; // If TRUE, adds a difficulty search to advanced NPCs
 $show_npcs_expansion_search			= false; // If TRUE, adds an expansion search to advanced NPCs
+$show_vegas_drops					= false; // If TRUE, shows Vegas drops on NPC pages.
 
 /**
  * Items
