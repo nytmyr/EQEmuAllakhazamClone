@@ -52,6 +52,10 @@ $page_title = strip_underscores($item['Name']);
 
 $item_data = return_item_stat_box($item, 0);
 $item_icon = return_item_icon_from_icon_id($item['icon'], 40);
+$raw_name = $item['Name'];
+if ($item['id'] >= 600000 AND $item['id'] <= 999999) {
+	$raw_name = strip_asterisks($item['Name']);
+}
 
 $content = '
         <tr>
@@ -60,10 +64,22 @@ $content = '
                     <tr>
                         <td style="vertical-align:middle;width:50px"> ' . $item_icon . '</td>
                         <td style="vertical-align:middle"><h2 style="margin: 0px;">' . $item['Name'] . '</h2></td>
+						
                     </tr>
                 </table>
             </td>
         </tr>
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<td>
+							<a href="https://everquest.allakhazam.com/search.html?q=' . $raw_name . '">Search for this item on Allakhazam</a>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
     ';
 $content .= display_row($item_data);
 if (!isset($_GET['v_tooltip'])) {

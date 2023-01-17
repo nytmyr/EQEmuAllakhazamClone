@@ -73,6 +73,13 @@ function strip_underscores($string)
     return $string;
 }
 
+function strip_asterisks($string)
+{
+    $string = str_replace("*", "", $string);
+
+    return $string;
+}
+
 function print_query_results(
     $mysql_reference_data,
     $rows_to_return,
@@ -1108,6 +1115,11 @@ function return_item_stat_box($item, $show_name_icon)
 	
     $html_string .= "<tr>";
     $html_string .= "<td colspan='2' nowrap='1'>";
+	$testlore = "*" . $item["Name"];
+	if ($item["lore"] == $item["Name"] OR $testlore == $item["lore"]) {
+	} else {
+        $item_tags .= "<i>" . $item["lore"] . "</i><br><br>";
+    }
     if ($item["itemtype"] == 54) {
         $item_tags .= " Augment";
     }
