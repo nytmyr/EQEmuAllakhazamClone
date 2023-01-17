@@ -155,7 +155,8 @@ $query = "
 		OR $items_table.proceffect = $id
 		OR $items_table.worneffect = $id
 		OR $items_table.focuseffect = $id)
-		AND $items_table.id < 600000
+		AND $items_table.id NOT BETWEEN 600000 AND 999999
+		AND $items_table.minstatus = 0
     ORDER BY
         $items_table.`name` ASC
 ";
