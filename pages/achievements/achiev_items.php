@@ -41,28 +41,30 @@ if (isset($itemtype) && $itemtype != "null") {
 					ELSE cd.`name` 
 				END AS CharName,
 				SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) AS 'Time',
+				CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-3), 4) AS INT) * ((60 * 60 * 24 * 31) * 12) -- Year
+				+
 				CASE
-					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jan%' THEN (60 * 60 * 240 * 31) * 1 -- Years 
-					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Feb%' THEN (60 * 60 * 240 * 31) * 2
-					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Mar%' THEN (60 * 60 * 240 * 31) * 3
-					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Apr%' THEN (60 * 60 * 240 * 31) * 4
-					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%May%' THEN (60 * 60 * 240 * 31) * 5
-					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jun%' THEN (60 * 60 * 240 * 31) * 6
-					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jul%' THEN (60 * 60 * 240 * 31) * 7
-					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Aug%' THEN (60 * 60 * 240 * 31) * 8
-					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Sep%' THEN (60 * 60 * 240 * 31) * 9
-					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Oct%' THEN (60 * 60 * 240 * 31) * 10
-					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Nov%' THEN (60 * 60 * 240 * 31) * 11
-					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Dec%' THEN (60 * 60 * 240 * 31) * 12 -- Years
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jan%' THEN (60 * 60 * 24 * 31) * 1 -- Month 
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Feb%' THEN (60 * 60 * 24 * 31) * 2
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Mar%' THEN (60 * 60 * 24 * 31) * 3
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Apr%' THEN (60 * 60 * 24 * 31) * 4
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%May%' THEN (60 * 60 * 24 * 31) * 5
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jun%' THEN (60 * 60 * 24 * 31) * 6
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Jul%' THEN (60 * 60 * 24 * 31) * 7
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Aug%' THEN (60 * 60 * 24 * 31) * 8
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Sep%' THEN (60 * 60 * 24 * 31) * 9
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Oct%' THEN (60 * 60 * 24 * 31) * 10
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Nov%' THEN (60 * 60 * 24 * 31) * 11
+					WHEN SUBSTRING(d.`value`, INSTR(d.`value`,'|')+1) LIKE '%Dec%' THEN (60 * 60 * 24 * 31) * 12 -- Month
 				END 
 				+
-					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-15), 2) AS INT) * (60 * 60 * 240) -- Day
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-15), 2) AS INT) * (60 * 60 * 24) -- Day
 				+
 					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-12), 2) AS INT) * (60 * 60) -- Hours
 				+
-					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-10), 2) AS INT) * 60 -- Minutes
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-9), 2) AS INT) * 60 -- Minutes
 				+
-					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-8), 2) AS INT) -- Seconds
+					CAST(SUBSTRING(d.`value`, (LENGTH(d.`value`)-6), 2) AS INT) -- Seconds
 				AS TimeScore
 			FROM 
 				$data_buckets_table d
