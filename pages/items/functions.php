@@ -73,7 +73,7 @@ function return_where_item_dropped($item_id, $via_ajax = 0)
 			$item_add_chance_to_drop_as_rarity,
             $ignore_zones,
 			$show_all_item_drops;
-	$original_item_id = $item_id;
+		$original_item_id = $item_id;
 	
 	if ($item_id >= 800000) {
 		$item_id = $item_id - 800000;
@@ -378,7 +378,8 @@ function return_where_item_ground_spawn($item_id){
 
     global
             $ground_spawns_table,
-            $zones_table;
+            $zones_table,
+			$show_location_of_ground_spawns;
 	$original_item_id = $item_id;
 	
 	if ($item_id >= 800000) {
@@ -408,10 +409,10 @@ function return_where_item_ground_spawn($item_id){
     if (mysqli_num_rows($result) > 0) {
         $return_buffer .= "<tr>";
 		
-		if ($original_item_id >= 600000) {
+		if ($original_item_id >= 600000 AND $original_item_id <= 999999) {
 			$return_buffer .= "<td><h2 class='section_header'>The non-Vegas version of this item is sold:</h2>";
 		} else {
-			$return_buffer .= "<td><h2 class='section_header'>This item spawns on the ground</h2>";
+			$return_buffer .= "<td><h2 class='section_header'>This item spawns on the ground in</h2>";
 		}
 		#$return_buffer .= "<td><h2 class='section_header'>This item spawns on the ground</h2><br>";
 
@@ -422,11 +423,14 @@ function return_where_item_ground_spawn($item_id){
                 if ($current_zone_iteration != "") {
                     $return_buffer .= "</ul>";
                 }
-                $return_buffer .= "<b><a href='?a=zone&name=" . $row["short_name"] . "'>" . $row["long_name"] . "</a> at: </b>";
+                $return_buffer .= "<b><a href='?a=zone&name=" . $row["short_name"] . "'>" . $row["long_name"] . "</a>";
+            }
+			if ($show_location_of_ground_spawns) {
+				$return_buffer .= " at: </b>";
                 $return_buffer .= "<ul>";
                 $current_zone_iteration = $row["short_name"];
-            }
-            $return_buffer .= "<li>" . $row["max_x"] . " (X), " . $row["max_y"] . " (Y), " . $row["max_z"] . " (Z)</a></li>";
+				$return_buffer .= "<li>" . $row["max_x"] . " (X), " . $row["max_y"] . " (Y), " . $row["max_z"] . " (Z)</a></li>";
+			}
         }
         $return_buffer .= "</ul>";
         $return_buffer .= "</td>";
