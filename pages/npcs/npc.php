@@ -15,33 +15,35 @@ if ($id != "" && is_numeric($id)) {
     $npc = mysqli_fetch_array($QueryResult);
     $name = $npc["name"];
 	
-	$FirstKillQuery = "
-	SELECT n.`id` AS NPCID, n.`name` AS NPCName
-	, GROUP_CONCAT(DISTINCT
-		CASE 
-			WHEN g.`name` <> '' 
-				THEN g.`name`
-		END
-	SEPARATOR ', ') AS GuildKill
-	, GROUP_CONCAT(DISTINCT cd.`name`SEPARATOR ', ') AS PlayerKill
-	, k.`time` AS Time
-	FROM character_data cd
-	INNER JOIN account a ON a.`id` = cd.`account_id`
-	INNER JOIN qs_player_npc_kill_record_entries ke ON ke.`char_id` = cd.`id`
-	INNER JOIN qs_player_npc_kill_record k ON k.`fight_id` = ke.`event_id`
-	INNER JOIN npc_types n ON n.`id` = k.`npc_id`
-	LEFT JOIN guild_members gm ON gm.`char_id` = cd.`id`
-	LEFT JOIN guilds g ON g.`id` = gm.`guild_id`
-	WHERE n.`id` = " . $id . "
-	AND a.`status` < 20
-	GROUP BY k.`fight_id`
-	ORDER BY k.`fight_id` ASC
-	LIMIT 1
-	";
-	$FirstKillQueryResult = db_mysql_query($FirstKillQuery) or message_die('npc.php', 'MYSQL_QUERY', $FirstKillQuery, mysqli_error());
-    if (mysqli_num_rows($FirstKillQueryResult) == 0) {
-    }
-	$firstkill = mysqli_fetch_array($FirstKillQueryResult);
+	if ($npc["raid_target"] == 1 OR $npc["rare_spawn"] == 1) {
+		$FirstKillQuery = "
+		SELECT n.`id` AS NPCID, n.`name` AS NPCName
+		, GROUP_CONCAT(DISTINCT
+			CASE 
+				WHEN g.`name` <> '' 
+					THEN g.`name`
+			END
+		SEPARATOR ', ') AS GuildKill
+		, GROUP_CONCAT(DISTINCT cd.`name`SEPARATOR ', ') AS PlayerKill
+		, k.`time` AS Time
+		FROM character_data cd
+		INNER JOIN account a ON a.`id` = cd.`account_id`
+		INNER JOIN qs_player_npc_kill_record_entries ke ON ke.`char_id` = cd.`id`
+		INNER JOIN qs_player_npc_kill_record k ON k.`fight_id` = ke.`event_id`
+		INNER JOIN npc_types n ON n.`id` = k.`npc_id`
+		LEFT JOIN guild_members gm ON gm.`char_id` = cd.`id`
+		LEFT JOIN guilds g ON g.`id` = gm.`guild_id`
+		WHERE n.`id` = " . $id . "
+		AND a.`status` < 20
+		GROUP BY k.`fight_id`
+		ORDER BY k.`fight_id` ASC
+		LIMIT 1
+		";
+		$FirstKillQueryResult = db_mysql_query($FirstKillQuery) or message_die('npc.php', 'MYSQL_QUERY', $FirstKillQuery, mysqli_error());
+		if (mysqli_num_rows($FirstKillQueryResult) == 0) {
+		}
+		$firstkill = mysqli_fetch_array($FirstKillQueryResult);
+	}
 	
 } elseif ($name != "") {
     $Query = "SELECT * FROM $npc_types_table WHERE name like '$name'";
@@ -54,34 +56,36 @@ if ($id != "" && is_numeric($id)) {
         $id = $npc["id"];
         $name = $npc["name"];
     }
-	$FirstKillQuery = "
-	SELECT n.`id` AS NPCID, n.`name` AS NPCName
-	, GROUP_CONCAT(DISTINCT
-		CASE 
-			WHEN g.`name` <> '' 
-				THEN g.`name`
-		END
-	SEPARATOR ', ') AS GuildKill
-	, GROUP_CONCAT(DISTINCT cd.`name`SEPARATOR ', ') AS PlayerKill
-	, k.`time` AS Time
-	FROM character_data cd
-	INNER JOIN account a ON a.`id` = cd.`account_id`
-	INNER JOIN qs_player_npc_kill_record_entries ke ON ke.`char_id` = cd.`id`
-	INNER JOIN qs_player_npc_kill_record k ON k.`fight_id` = ke.`event_id`
-	INNER JOIN npc_types n ON n.`id` = k.`npc_id`
-	LEFT JOIN guild_members gm ON gm.`char_id` = cd.`id`
-	LEFT JOIN guilds g ON g.`id` = gm.`guild_id`
-	WHERE n.`name` LIKE " . $name . "
-	AND a.`status` < 20
-	GROUP BY n.`id`
-	ORDER BY a.`status` ASC, k.time ASC
-	LIMIT 1
-	";
-	$FirstKillQueryResult = db_mysql_query($FirstKillQuery) or message_die('npc.php', 'MYSQL_QUERY', $FirstKillQuery, mysqli_error());
-    if (mysqli_num_rows($FirstKillQueryResult) == 0) {
-    } else {
-        $firstkill = mysqli_fetch_array($FirstKillQueryResult);
-    }
+	if ($npc["raid_target"] == 1 OR $npc["rare_spawn"] == 1) {
+		$FirstKillQuery = "
+		SELECT n.`id` AS NPCID, n.`name` AS NPCName
+		, GROUP_CONCAT(DISTINCT
+			CASE 
+				WHEN g.`name` <> '' 
+					THEN g.`name`
+			END
+		SEPARATOR ', ') AS GuildKill
+		, GROUP_CONCAT(DISTINCT cd.`name`SEPARATOR ', ') AS PlayerKill
+		, k.`time` AS Time
+		FROM character_data cd
+		INNER JOIN account a ON a.`id` = cd.`account_id`
+		INNER JOIN qs_player_npc_kill_record_entries ke ON ke.`char_id` = cd.`id`
+		INNER JOIN qs_player_npc_kill_record k ON k.`fight_id` = ke.`event_id`
+		INNER JOIN npc_types n ON n.`id` = k.`npc_id`
+		LEFT JOIN guild_members gm ON gm.`char_id` = cd.`id`
+		LEFT JOIN guilds g ON g.`id` = gm.`guild_id`
+		WHERE n.`name` LIKE " . $name . "
+		AND a.`status` < 20
+		GROUP BY n.`id`
+		ORDER BY a.`status` ASC, k.time ASC
+		LIMIT 1
+		";
+		$FirstKillQueryResult = db_mysql_query($FirstKillQuery) or message_die('npc.php', 'MYSQL_QUERY', $FirstKillQuery, mysqli_error());
+		if (mysqli_num_rows($FirstKillQueryResult) == 0) {
+		} else {
+			$firstkill = mysqli_fetch_array($FirstKillQueryResult);
+		}
+	}
 	
 } else {
     header("Location: npcs.php");
@@ -161,7 +165,9 @@ if ($firstkill["GuildKill"] OR $firstkill["PlayerKill"]) {
 		
 	}
 } else {
-	$firstkill_data = '<br><span style="color: purple; font-size: 13px;"><b>Not yet killed.</b>';
+	if ($npc["raid_target"] == 1 OR $npc["rare_spawn"] == 1) {
+		$firstkill_data = '<br><span style="color: purple; font-size: 13px;"><b>Not yet killed.</b>';
+	}
 }
 
 $print_buffer .= "
