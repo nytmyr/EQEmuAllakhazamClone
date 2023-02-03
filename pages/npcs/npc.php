@@ -131,6 +131,7 @@ if ((get_npc_name_human_readable($npc["name"])) == '' || ($npc["trackable"] == 0
  */
 
 $page_title = "NPC :: " . get_npc_name_human_readable($name);
+$raw_name = get_npc_name_human_readable($npc["name"]);
 
 $DebugNpc = FALSE; // for world builders, set this to false for common use
 
@@ -177,6 +178,17 @@ $print_buffer .= "
                 <h1>" . get_npc_name_human_readable($npc["name"]) . " " . $npctype . "" . $firstkill_data . "</h1>
             </td>
         </tr>
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<td>
+							<a href='https://everquest.allakhazam.com/search.html?q=" . $raw_name . "'>Search for this NPC on Allakhazam</a>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
 ";
 $print_buffer .= "
     <tr valign='top'>
