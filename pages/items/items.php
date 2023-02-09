@@ -282,7 +282,7 @@ if (count($_GET) > 2) {
         $s = "AND";
     }
     if ($inodrop == 1) {
-        $query .= " $s ($items_table.nodrop=1)";
+        $query .= " $s ($items_table.nodrop!=0)";
         $s = "AND";
     }
 	if ($ieramin > 0 && $ieramax > 0) {
