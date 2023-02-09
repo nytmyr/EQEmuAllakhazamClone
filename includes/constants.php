@@ -37,6 +37,7 @@ $leaderboard_table 			= "char_leaderboard_data";
 $doors_table                = "doors";
 $zone_points_table          = "zone_points";
 $skill_table         	    = "skill_caps";
+$inventory_table         	= "inventory";
 
 // added tables, source the needed file from the includes/sql directory
 $tbspawnarea  = "spawnarea"; // Tool Specific Table
@@ -1616,8 +1617,9 @@ $dbiracenames[677] = "Kangon Mount";
 $dbiracenames[678] = "Erudite";
 $dbiracenames[679] = "Wurm Mount";
 
-$dbiexpansions[1] = "Classic";
-$dbiexpansions[2] = "Ruins of Kunark";
-$dbiexpansions[3] = "Scars of Velious";
-$dbiexpansions[4] = "Shadows of Luclin";
-$dbiexpansions[5] = "Planes of Power";
+$dbiexpansions[0]   = "All";
+$dbiexpansions[1]   = "Classic";
+$dbiexpansions[2]   = "Ruins of Kunark";
+$dbiexpansions[3]   = "Scars of Velious";
+$dbiexpansions[4]   = "Shadows of Luclin";
+$dbiexpansions[5]   = "Planes of Power";

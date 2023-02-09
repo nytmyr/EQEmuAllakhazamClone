@@ -58,16 +58,44 @@ $ieramax = (isset($_GET['ieramax']) ? addslashes($_GET['ieramax']) : 0);
 $imindiff = (isset($_GET['imindiff']) ? addslashes($_GET['imindiff']) : '');
 $imaxdiff = (isset($_GET['imaxdiff']) ? addslashes($_GET['imaxdiff']) : '');
 $iraiditemsonly = (isset($_GET['iraiditemsonly']) ? addslashes($_GET['iraiditemsonly']) : '');
+$iownedbyname = (isset($_GET['iownedbyname']) ? $_GET['iownedbyname'] : '');
+
+if ($iownedbyname != "") {
+	$userip = getIPAddress();
+	$ipcheckquery = "
+					SELECT ai.`ip` AS CharacterIP
+					FROM account_ip ai
+					INNER JOIN account a ON a.`id` = ai.`accid`
+					INNER JOIN $character_table cd ON cd.`account_id` = a.`id`
+					WHERE cd.`name` LIKE '$iownedbyname'
+					ORDER BY ai.`lastused` DESC
+					LIMIT 1
+					";
+	$IPQueryResult = db_mysql_query($ipcheckquery);
+	$IPQueryrow = mysqli_fetch_array($IPQueryResult);
+	
+	if ($IPQueryrow["CharacterIP"] == $userip || $userip == $defaultedlocalhost || $userip == $localipaddress || $userip == $defaultgateway) {
+		$ipcheck = true;
+	}
+	if (!$ipcheck) {
+		echo "You do not own this character, please go back and try again.";
+		echo "<br><br><br>";
+		echo "<a class='button' onclick='history.back()'>Back</a>";
+		exit;
+	}
+}
 
 if (count($_GET) > 2) {
     $query = "SELECT *, $items_table.icon AS ItemIcon ";
 	
-	if ($ibeingsold != -1) {
-		$query .= ", $items_table.id AS ItemID, $items_table.Name AS ItemName, $items_table.hp AS ItemHP, $items_table.mana AS ItemMana, npc.lastname AS LastName, npc.is_valeen_spawned AS ValeenStatus";
+	if ($ibeingsold != -1 OR $ieffect != "" OR $iownedbyname != "") {
+		$query .= ", $items_table.id AS ItemID, $items_table.Name AS ItemName, $items_table.hp AS ItemHP, $items_table.mana AS ItemMana";
 	}
-	
+	if ($ibeingsold != -1) {
+		$query .= ", npc.lastname AS LastName, npc.is_valeen_spawned AS ValeenStatus";
+	}
 	if ($ieffect != "") {
-		$query .= ", $items_table.id AS ItemID, $items_table.Name AS ItemName, proc_s.icon AS ProcIcon, worn_s.icon AS WornIcon, focus_s.icon AS FocusIcon, click_s.icon AS ClickIcon";
+		$query .= ", proc_s.icon AS ProcIcon, worn_s.icon AS WornIcon, focus_s.icon AS FocusIcon, click_s.icon AS ClickIcon";
 	}
 	$query .= " FROM ($items_table";
 
@@ -83,6 +111,11 @@ if (count($_GET) > 2) {
 	$query .= ")";
 	
 	$s = " WHERE";
+	
+	if ($iownedbyname != "") {
+		$query .= " INNER JOIN $inventory_table AS inv ON inv.`itemid` = $items_table.`id`";
+		$query .= " INNER JOIN $character_table AS cd ON inv.`charid` = cd.`id`";
+	}
 	
 	if ($ibeingsold != -1) {
 		$query .= " INNER JOIN $merchant_list_table AS merch ON merch.item = $items_table.`id`";
@@ -195,6 +228,12 @@ if (count($_GET) > 2) {
     if ($iname != "") {
         $name = addslashes(str_replace("_", "%", str_replace(" ", "%", $iname)));
         $query .= " $s ($items_table.Name like '%" . $name . "%')";
+        $s = "AND";
+    }
+	if ($iownedbyname != "") {
+        #$iownedbyname = addslashes(str_replace("_", "%", str_replace(" ", "%", $iname)));
+        $query .= " $s (cd.`Name` like '$iownedbyname')";		
+		#$query .= " $s (cd.`anon` = 0)";
         $s = "AND";
     }
     if ($iclass > 0) {
@@ -490,7 +529,7 @@ if (isset($QueryResult)) {
             $TableData .= "</td><td align=center>";
 
             # CreateToolTip($row["id"], return_item_stat_box($row, 1));
-			if ($ibeingsold == -1 AND $ieffect == "") {
+			if ($ibeingsold == -1 AND $ieffect == "" AND $iownedbyname == "") {
 				$TableData .= "<a href='?a=item&id=" . $row["id"] . "' id='" . $row["id"] . "'>" . $row["Name"] . "</a>";
 			} else {
 				$TableData .= "<a href='?a=item&id=" . $row["ItemID"] . "' id='" . $row["ItemID"] . "'>" . $row["ItemName"] . "</a>";
@@ -500,13 +539,13 @@ if (isset($QueryResult)) {
             $TableData .= "</td><td align=center>";
             $TableData .= $row["ac"];
             $TableData .= "</td><td align=center>";
-			if ($ibeingsold == -1) {
+			if ($ibeingsold == -1 AND $ieffect == "" AND $iownedbyname == "") {
 				$TableData .= $row["hp"];
 			} else {
 				$TableData .= $row["ItemHP"];
 			}
             $TableData .= "</td><td align=center>";
-            if ($ibeingsold == -1) {
+           if ($ibeingsold == -1 AND $ieffect == "" AND $iownedbyname == "") {
 				$TableData .= $row["mana"];
 			} else {
 				$TableData .= $row["ItemMana"];
