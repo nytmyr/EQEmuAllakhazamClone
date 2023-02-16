@@ -660,7 +660,7 @@ if (isset($itemtype) && $itemtype != "null") {
 				$data_buckets_table d
 			INNER JOIN $character_table cd ON cd.id = SUBSTRING(d.`key`, 14, 10)
 			WHERE d.`key` LIKE 'PVPKillCount%'
-			ORDER BY Count DESC
+			ORDER BY Count DESC, d.`id` ASC
 			LIMIT 1
 		";
 		$result = db_mysql_query($query) or message_die('achiev_items.php', 'MYSQL_QUERY', $query, mysqli_error());
